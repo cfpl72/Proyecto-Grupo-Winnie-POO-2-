@@ -144,6 +144,16 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.vcxproj">
+      <Project>{30c04796-38c1-5553-a373-7bef0a5cdeba}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="MedicamentosPersistance.txt" />
+    <Text Include="UsuariosPresistance.txt" />
+    <Text Include="VentasPersistance.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -173,6 +173,9 @@
     <ProjectReference Include="..\Model\Model.vcxproj">
       <Project>{30c04796-38c1-5553-a373-7bef0a5cdeba}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Persistance\Persistance.vcxproj">
+      <Project>{3b0f4b14-9288-56dd-5b46-75b7e0efe8b0}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FarmaceuticoView.resx">

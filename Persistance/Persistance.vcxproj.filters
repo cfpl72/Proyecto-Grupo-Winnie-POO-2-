@@ -46,4 +46,9 @@
       <Filter>Archivos de recursos</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="UsuariosPresistance.txt" />
+    <Text Include="VentasPersistance.txt" />
+    <Text Include="MedicamentosPersistance.txt" />
+  </ItemGroup>
 </Project>
