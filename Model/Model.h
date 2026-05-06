@@ -52,45 +52,79 @@ namespace WinniePOO_Modelos {
 		}
 	};
 	// 2. SISTEMA DE USUARIOS (Jerarquía de Herencia)
+
 	public ref class Usuario {
 	public:
 		int id;
 		String^ contrasenia;
+		String^ verificationToken;
 		String^ nombre;
 		String^ apellido;
+
+		// Constructor
+		Usuario(String^ nombre, String^ token) {
+			this->nombre = nombre;
+			this->verificationToken = token;
+		}
+
+		bool autentificar(String^ contrasena);
 	};
+
+
+	// ---------------- PACIENTE ----------------
+
 	public ref class Paciente : public Usuario {
 	public:
 		int edad;
 		String^ alergias;
 		String^ sintomas;
-		List<Receta^>^ historialRecetas; // Composición: un paciente tiene muchas recetas
-		Paciente() {
-			// Inicializamos la lista vacía para evitar errores (NullReferenceException)
+		List<Receta^>^ historialRecetas;
+
+		Paciente(String^ nombre, String^ token)
+			: Usuario(nombre, token)  // 🔥 llamada al constructor base
+		{
 			historialRecetas = gcnew List<Receta^>();
 		}
 	};
+
+
+	// ---------------- FARMACEUTICO ----------------
+
 	public ref class Farmaceutico : public Usuario {
 	public:
+		Farmaceutico(String^ nombre, String^ token)
+			: Usuario(nombre, token) {
+		}
+
 		String^ AlertarPaciente() {
 			return "ALERTA: Verifique sus alergias antes de consumir el medicamento recomendado.";
 		}
+
 		void ExaminarReceta(Paciente^ paciente) {
 			Console::WriteLine("Examinando receta del paciente: " + paciente->nombre);
 		}
 	};
+
+
+	// ---------------- OPERADOR DE VENTAS ----------------
+
 	public ref class OperadorVentas : public Usuario {
 	public:
-		// Métodos administrativos
+		OperadorVentas(String^ nombre, String^ token)
+			: Usuario(nombre, token) {
+		}
+
 		void ActualizarPrecio(Medicamento^ medicamento, double nuevoPrecio) {
 			medicamento->ActualizarPrecio(nuevoPrecio);
 			Console::WriteLine("Precio actualizado exitosamente.");
 		}
+
 		void ModificarStock(Medicamento^ medicamento, int cantidad) {
 			medicamento->ActualizarStock(cantidad);
 			Console::WriteLine("Stock modificado exitosamente.");
 		}
 	};
+
 	// 3. TRANSACCIONES, VENTAS Y PAGOS
 	public ref class Venta {
 	public:
