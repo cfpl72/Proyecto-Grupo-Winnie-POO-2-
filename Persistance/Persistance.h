@@ -12,6 +12,7 @@ namespace Persistance {
 	public:
 		static bool exists(String^ filePath);
 
+		/*
 		static void SaveDataToText(String^ filePath, Object^ ObjectData);
 		static Object^ LoadDataFromText(String^ filePath, Type^ tipo);
 
@@ -20,6 +21,7 @@ namespace Persistance {
 
 		static void SaveDataToBinary(String^ filePath, Object^ ObjectData);
 		static Object^ LoadDataFromBinary(String^ filePath, Type^ tipo);
+		*/
 
 
 	};
