@@ -1,1 +1,23 @@
-72506524|474800866d855f3714f2baa59969aba8|Claudio|Paucar|23|Maní|Fiebre
+PACIENTE|1|token1|Juan|Base|21|Ninguna|Sintoma leve
+PACIENTE|2|token2|Paciente2|Base|45|Ninguna|Sintoma leve
+PACIENTE|10|tokenRaro|||-5||CORRUPTO
+PACIENTE|100|bulk|Paciente100|Carga|30|Ninguna|Ninguno
+PACIENTE|101|bulk|Paciente101|Carga|30|Ninguna|Ninguno
+PACIENTE|102|bulk|Paciente102|Carga|30|Ninguna|Ninguno
+PACIENTE|103|bulk|Paciente103|Carga|30|Ninguna|Ninguno
+PACIENTE|104|bulk|Paciente104|Carga|30|Ninguna|Ninguno
+PACIENTE|105|bulk|Paciente105|Carga|30|Ninguna|Ninguno
+PACIENTE|106|bulk|Paciente106|Carga|30|Ninguna|Ninguno
+PACIENTE|107|bulk|Paciente107|Carga|30|Ninguna|Ninguno
+PACIENTE|108|bulk|Paciente108|Carga|30|Ninguna|Ninguno
+PACIENTE|109|bulk|Paciente109|Carga|30|Ninguna|Ninguno
+PACIENTE|110|bulk|Paciente110|Carga|30|Ninguna|Ninguno
+PACIENTE|111|bulk|Paciente111|Carga|30|Ninguna|Ninguno
+PACIENTE|112|bulk|Paciente112|Carga|30|Ninguna|Ninguno
+PACIENTE|113|bulk|Paciente113|Carga|30|Ninguna|Ninguno
+PACIENTE|114|bulk|Paciente114|Carga|30|Ninguna|Ninguno
+PACIENTE|115|bulk|Paciente115|Carga|30|Ninguna|Ninguno
+PACIENTE|116|bulk|Paciente116|Carga|30|Ninguna|Ninguno
+PACIENTE|117|bulk|Paciente117|Carga|30|Ninguna|Ninguno
+PACIENTE|118|bulk|Paciente118|Carga|30|Ninguna|Ninguno
+PACIENTE|119|bulk|Paciente119|Carga|30|Ninguna|Ninguno

@@ -4,9 +4,11 @@ using namespace System;
 using namespace System::Collections::Generic;
 using namespace WinniePOO_Modelos; // Para usar las clases de modelos sin necesidad de prefijo
 using namespace Persistance;
+using namespace System::Collections::Generic;
+using namespace System::IO;
 
 namespace Controller {
-	
+
 	public ref class ServicioVenta {
 	public:
 
@@ -98,129 +100,24 @@ namespace Controller {
 		}
 	};
 
-	public ref class ServicioUsuarios {
+
+	public ref class PacienteController {
+	private:
+		Persistance::persistance^ repo;
+		String^ filePath;
+
 	public:
-
-		Dictionary<int, Usuario^>^ usuarios = gcnew Dictionary<int, Usuario^>();
-
-
-		//=====================Pacientes==================================================
-		// CREATE
-		void RegistrarPaciente(int id, String^ nombre, String^ apellido,
-			String^ contrasenia, int edad, String^ alergias, String^ sintomas) {
-
-			// 1. Generar token
-			String^ token = WinniePOO_Modelos::Utils::GetMD5Hash(nombre + contrasenia);
-
-			// 2. Crear paciente
-			Paciente^ paciente = gcnew Paciente(nombre, token);
-
-			// 3. Asignar datos
-			paciente->id = id;
-			paciente->apellido = apellido;
-			paciente->contrasenia = contrasenia;
-			paciente->edad = edad;
-			paciente->alergias = alergias;
-			paciente->sintomas = sintomas;
-
-			// 4. Guardar en archivo
-			//Persistance::persistance::SaveDataToText("PacientesPersistance.txt", paciente);
-
-			Console::WriteLine("Paciente registrado correctamente: " + nombre);
+		PacienteController(String^ path) {
+			repo = gcnew Persistance::persistance();
+			filePath = path;
 		}
 
-		// READ (por ID)
-		Usuario^ ObtenerUsuario(int id) {
-			if (usuarios->ContainsKey(id)) {
-				return usuarios[id];
-			}
-			else {
-				Console::WriteLine("Error: Usuario no encontrado.");
-				return nullptr;
-			}
-		}
+		Dictionary<int, Paciente^>^ Controller::PacienteController::LeerTodos();
+		Paciente^ ObtenerPorId(int id);
+		void Registrar(Paciente^ p);
+		void Modificar(int id, String^ atributo, String^ nuevoValor);
+		void Eliminar(int id);
+		bool ValidarPaciente(Paciente^ p, String^% error);
 
-		// READ (todos)
-		void ListarUsuarios() {
-			if (usuarios->Count == 0) {
-				Console::WriteLine("No hay usuarios registrados.");
-				return;
-			}
-
-			for each (KeyValuePair<int, Usuario^> kvp in usuarios) {
-				Usuario^ u = kvp.Value;
-				Console::WriteLine("ID: " + u->id +
-					" | Nombre: " + u->nombre +
-					" " + u->apellido);
-			}
-		}
-
-		// UPDATE (genérico)
-		void ModificarUsuario(int id, String^ nuevoNombre, String^ nuevoApellido, String^ nuevaContrasenia) {
-			if (usuarios->ContainsKey(id)) {
-				Usuario^ u = usuarios[id];
-				u->nombre = nuevoNombre;
-				u->apellido = nuevoApellido;
-				u->contrasenia = nuevaContrasenia;
-
-				Console::WriteLine("Usuario modificado correctamente.");
-			}
-			else {
-				Console::WriteLine("Error: Usuario no encontrado.");
-			}
-		}
-
-		// UPDATE específico para Paciente
-		void ModificarPaciente(int id, int nuevaEdad, String^ nuevasAlergias, String^ nuevosSintomas) {
-			if (usuarios->ContainsKey(id)) {
-				Paciente^ p = dynamic_cast<Paciente^>(usuarios[id]);
-
-				if (p != nullptr) {
-					p->edad = nuevaEdad;
-					p->alergias = nuevasAlergias;
-					p->sintomas = nuevosSintomas;
-
-					Console::WriteLine("Paciente modificado correctamente.");
-				}
-				else {
-					Console::WriteLine("Error: El usuario no es un paciente.");
-				}
-			}
-			else {
-				Console::WriteLine("Error: Usuario no encontrado.");
-			}
-		}
-
-		// DELETE
-		void EliminarUsuario(int id) {
-			if (usuarios->ContainsKey(id)) {
-				usuarios->Remove(id);
-				Console::WriteLine("Usuario eliminado correctamente.");
-			}
-			else {
-				Console::WriteLine("Error: No se encontró el usuario.");
-			}
-		}
-
-		// EXTRA: Filtrar por tipo
-		void ListarPacientes() {
-			for each (KeyValuePair<int, Usuario^> kvp in usuarios) {
-				Paciente^ p = dynamic_cast<Paciente^>(kvp.Value);
-				if (p != nullptr) {
-					Console::WriteLine("Paciente: " + p->nombre + " | Edad: " + p->edad);
-				}
-			}
-		}
-
-		void ListarFarmaceuticos() {
-			for each (KeyValuePair<int, Usuario^> kvp in usuarios) {
-				Farmaceutico^ f = dynamic_cast<Farmaceutico^>(kvp.Value);
-				if (f != nullptr) {
-					Console::WriteLine("Farmacéutico: " + f->nombre);
-				}
-			}
-		}
 	};
-
-
-	}
+}

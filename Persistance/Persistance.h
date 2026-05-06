@@ -1,37 +1,32 @@
 #pragma once
-using namespace WinniePOO_Modelos;
+
 using namespace System;
 using namespace System::Collections::Generic;
-using namespace System::Xml::Serialization;
-using namespace System::Runtime::Serialization::Formatters::Binary;
+using namespace WinniePOO_Modelos;
 using namespace System::IO;
 
 namespace Persistance {
-	public ref class persistance
-	{
-	public:
-		static bool exists(String^ filePath);
 
-		static void RegistrarPaciente(String^ filePath, Paciente^ p);
-		static void ModificarPaciente(String^ filePath, int idPaciente, String^ opAtributo, String^ nuevoValor);
-		String^ Persistance::persistance::LeerPaciente(String^ filePath, int idPaciente);
-		void Persistance::persistance::EliminarPaciente(String^ filePath, int idPaciente);
+    public ref class persistance {
+    public:
 
-		static void RegistrarMedicamento(String^ filePath, Medicamento^ med);
+        static bool exists(String^ filePath);
 
-		static void RegistrarVenta(String^ filePath, Venta^ v);
+        // ================= PACIENTE =================
+        static void RegistrarPaciente(String^ filePath, Paciente^ p);
+        static void GuardarPacientes(String^ filePath, Dictionary<int, Paciente^>^ diccionario);
+        static Paciente^ LeerPaciente(String^ filePath, int idPaciente);
+        static void EliminarPaciente(String^ filePath, int idPaciente);
 
+        // ================= MEDICAMENTO =================
+        static void RegistrarMedicamento(String^ filePath, Medicamento^ med);
+        static void GuardarMedicamentos(String^ filePath, Dictionary<int, Medicamento^>^ diccionario);
+        static Dictionary<int, Medicamento^>^ LeerMedicamentos(String^ filePath);
 
-		/*
-		static Object^ LoadDataFromText(String^ filePath, Type^ tipo);
+        // ================= VENTA =================
+        static void RegistrarVenta(String^ filePath, Venta^ v);
+        static void GuardarVentas(String^ filePath, Dictionary<int, Venta^>^ diccionario);
+        static Dictionary<int, Venta^>^ LeerVentas(String^ filePath);
 
-		static void SaveDataToXML(String^ filePath, Object^ ObjectData);
-		static Object^ LoadDataFromXML(String^ filePath, Type^ tipo);
-
-		static void SaveDataToBinary(String^ filePath, Object^ ObjectData);
-		static Object^ LoadDataFromBinary(String^ filePath, Type^ tipo);
-		*/
-
-
-	};
+    };
 }

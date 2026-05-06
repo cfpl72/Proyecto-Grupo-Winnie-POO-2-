@@ -62,8 +62,8 @@ namespace WinniePOO_Modelos {
 		String^ apellido;
 
 		// Constructor
-		Usuario(String^ nombre, String^ token) {
-			this->nombre = nombre;
+		Usuario(int idBus, String^ token) {
+			this->id = idBus;
 			this->verificationToken = token;
 		}
 
@@ -80,8 +80,8 @@ namespace WinniePOO_Modelos {
 		String^ sintomas;
 		List<Receta^>^ historialRecetas;
 
-		Paciente(String^ nombre, String^ token)
-			: Usuario(nombre, token)  // 🔥 llamada al constructor base
+		Paciente(int idBus, String^ token)
+			: Usuario(idBus, token)  // 🔥 llamada al constructor base
 		{
 			historialRecetas = gcnew List<Receta^>();
 		}
@@ -92,8 +92,8 @@ namespace WinniePOO_Modelos {
 
 	public ref class Farmaceutico : public Usuario {
 	public:
-		Farmaceutico(String^ nombre, String^ token)
-			: Usuario(nombre, token) {
+		Farmaceutico(int idBus, String^ token)
+			: Usuario(idBus, token) {
 		}
 
 		String^ AlertarPaciente() {
@@ -110,8 +110,8 @@ namespace WinniePOO_Modelos {
 
 	public ref class OperadorVentas : public Usuario {
 	public:
-		OperadorVentas(String^ nombre, String^ token)
-			: Usuario(nombre, token) {
+		OperadorVentas(int idBus, String^ token)
+			: Usuario(idBus, token) {
 		}
 
 		void ActualizarPrecio(Medicamento^ medicamento, double nuevoPrecio) {
