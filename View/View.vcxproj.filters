@@ -74,7 +74,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="UsuariosPersistance.txt">
+    <Text Include="PacientesPersistance.txt">
       <Filter>Archivos de texto</Filter>
     </Text>
     <Text Include="MedicamentosPersistance.txt">

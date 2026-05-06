@@ -193,7 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="MedicamentosPersistance.txt" />
-    <Text Include="UsuariosPersistance.txt" />
+    <Text Include="PacientesPersistance.txt" />
     <Text Include="VentasPersistance.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -3,6 +3,7 @@
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace WinniePOO_Modelos; // Para usar las clases de modelos sin necesidad de prefijo
+using namespace Persistance;
 
 namespace Controller {
 	
@@ -103,15 +104,27 @@ namespace Controller {
 		Dictionary<int, Usuario^>^ usuarios = gcnew Dictionary<int, Usuario^>();
 
 		// CREATE
-		Usuario^ RegistrarUsuario(Usuario^ usuario) {
-			if (usuarios->ContainsKey(usuario->id)) {
-				Console::WriteLine("Error: Ya existe un usuario con ese ID.");
-				return nullptr;
-			}
+		void RegistrarPaciente(int id, String^ nombre, String^ apellido,
+			String^ contrasenia, int edad, String^ alergias, String^ sintomas) {
 
-			usuarios->Add(usuario->id, usuario);
-			Console::WriteLine("Usuario registrado correctamente.");
-			return usuario;
+			// 1. Generar token
+			String^ token = WinniePOO_Modelos::Utils::GetMD5Hash(nombre + contrasenia);
+
+			// 2. Crear paciente
+			Paciente^ paciente = gcnew Paciente(nombre, token);
+
+			// 3. Asignar datos
+			paciente->id = id;
+			paciente->apellido = apellido;
+			paciente->contrasenia = contrasenia;
+			paciente->edad = edad;
+			paciente->alergias = alergias;
+			paciente->sintomas = sintomas;
+
+			// 4. Guardar en archivo
+			Persistance::persistance::SaveDataToText("PacientesPersistance.txt", paciente);
+
+			Console::WriteLine("Paciente registrado correctamente: " + nombre);
 		}
 
 		// READ (por ID)

@@ -4,33 +4,49 @@
 using namespace System;
 using namespace WinniePOO_Modelos;
 using namespace Controller;
-using namespace Persistance;
 
-int main() {q
+int main() {
 
-	//Verificamos si existen los 3 arhivos que pusimos en el persistance
-	if (Persistance::persistance::exists("UsuariosPersistance.txt")) {
-		Console::WriteLine("El archivo de usuarios existe.");
-	}
-	else {
-		Console::WriteLine("El archivo de usuarios no existe.");
-	}
+    ServicioUsuarios^ servicio = gcnew ServicioUsuarios();
 
-	if (Persistance::persistance::exists("ventas.txt")) {
-		Console::WriteLine("El archivo de ventas existe.");
-	}
-	else {
-		Console::WriteLine("El archivo de ventas no existe.");
-	}
+    Console::WriteLine("=== REGISTRO DE PACIENTE ===");
 
-	if (Persistance::persistance::exists("medicamentos.txt")) {
-		Console::WriteLine("El archivo de medicamentos existe.");
-	}
-	else {
-		Console::WriteLine("El archivo de medicamentos no existe.");
-	}
+    // Variables
+    int id;
+    String^ nombre;
+    String^ apellido;
+    String^ contrasenia;
+    int edad;
+    String^ alergias;
+    String^ sintomas;
 
+    // Entrada de datos
+    Console::Write("ID: ");
+    id = Int32::Parse(Console::ReadLine());
 
+    Console::Write("Nombre: ");
+    nombre = Console::ReadLine();
 
-	return 0;
+    Console::Write("Apellido: ");
+    apellido = Console::ReadLine();
+
+    Console::Write("Contraseña: ");
+    contrasenia = Console::ReadLine();
+
+    Console::Write("Edad: ");
+    edad = Int32::Parse(Console::ReadLine());
+
+    Console::Write("Alergias: ");
+    alergias = Console::ReadLine();
+
+    Console::Write("Síntomas: ");
+    sintomas = Console::ReadLine();
+
+    // Llamada al servicio
+    servicio->RegistrarPaciente(id, nombre, apellido, contrasenia, edad, alergias, sintomas);
+
+    Console::WriteLine("\nPaciente registrado. Presiona cualquier tecla para salir...");
+    Console::ReadKey();
+
+    return 0;
 }

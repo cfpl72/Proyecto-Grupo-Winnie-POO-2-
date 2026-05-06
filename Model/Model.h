@@ -133,6 +133,7 @@ namespace WinniePOO_Modelos {
 		int cantidadVendida;
 		DateTime^ fecha;
 		Medicamento^ medicamento; // Relación con el Medicamento vendido
+		int idMedicamento;
 
 
 		//Constructor para facilitar la creación de ventas
@@ -143,6 +144,7 @@ namespace WinniePOO_Modelos {
 			cantidadVendida = cantidad;
 			fecha = fechaVenta;
 			medicamento = med;
+			idMedicamento = this->medicamento->idMedicamento;
 		}
 
 		void MostrarBoleta() {
