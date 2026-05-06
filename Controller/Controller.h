@@ -103,6 +103,8 @@ namespace Controller {
 
 		Dictionary<int, Usuario^>^ usuarios = gcnew Dictionary<int, Usuario^>();
 
+
+		//=====================Pacientes==================================================
 		// CREATE
 		void RegistrarPaciente(int id, String^ nombre, String^ apellido,
 			String^ contrasenia, int edad, String^ alergias, String^ sintomas) {
