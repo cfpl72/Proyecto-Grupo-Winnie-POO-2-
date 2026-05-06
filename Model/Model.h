@@ -212,15 +212,6 @@ namespace WinniePOO_Modelos {
 		};
 	};
 
-
-		void RegistrarNuevoFarmaceutico(int id, String^ contrasena, String^ nombre, String^ apellido) {
-			Farmaceutico^ f = gcnew Farmaceutico();
-			f->id = id;
-			f->contrasenia = contrasena;
-			f->nombre = nombre;
-			f->apellido = apellido;
-			Console::WriteLine("Personal Farmacéutico registrado.");
-		}
 };
 
 

@@ -192,7 +192,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="MedicamentosPersistance.txt" />
     <Text Include="UsuariosPersistance.txt" />
+    <Text Include="VentasPersistance.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

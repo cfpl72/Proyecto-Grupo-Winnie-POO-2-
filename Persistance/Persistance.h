@@ -11,9 +11,9 @@ namespace Persistance {
 	{
 	public:
 		static bool exists(String^ filePath);
+		static void SaveDataToText(String^ filePath, Object^ ObjectData);
 
 		/*
-		static void SaveDataToText(String^ filePath, Object^ ObjectData);
 		static Object^ LoadDataFromText(String^ filePath, Type^ tipo);
 
 		static void SaveDataToXML(String^ filePath, Object^ ObjectData);
