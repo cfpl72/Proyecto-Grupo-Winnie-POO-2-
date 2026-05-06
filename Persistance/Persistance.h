@@ -13,6 +13,9 @@ namespace Persistance {
 		static bool exists(String^ filePath);
 
 		static void RegistrarPaciente(String^ filePath, Paciente^ p);
+		static void ModificarPaciente(String^ filePath, int idPaciente, String^ opAtributo, String^ nuevoValor);
+		String^ Persistance::persistance::LeerPaciente(String^ filePath, int idPaciente);
+		void Persistance::persistance::EliminarPaciente(String^ filePath, int idPaciente);
 
 		static void RegistrarMedicamento(String^ filePath, Medicamento^ med);
 

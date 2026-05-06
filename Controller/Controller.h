@@ -124,7 +124,7 @@ namespace Controller {
 			paciente->sintomas = sintomas;
 
 			// 4. Guardar en archivo
-			Persistance::persistance::SaveDataToText("PacientesPersistance.txt", paciente);
+			//Persistance::persistance::SaveDataToText("PacientesPersistance.txt", paciente);
 
 			Console::WriteLine("Paciente registrado correctamente: " + nombre);
 		}
