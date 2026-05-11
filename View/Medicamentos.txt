@@ -1,3 +1,3 @@
-MEDICAMENTO|1|Paracetamol|5.5|95|Acetaminofen
+MEDICAMENTO|1|Paracetamol|6|95|Acetaminofen
 MEDICAMENTO|2|Ibuprofeno|8|50|Ibuprofeno
 MEDICAMENTO|3|Amoxicilina|12|30|Amoxicilina

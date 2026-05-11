@@ -44,9 +44,6 @@ void MostrarVentas(Dictionary<int, Venta^>^ dic) {
 
 int main(array<System::String^>^ args)
 {
-    
-   
-
     String^ pathPac = "Pacientes.txt";
     String^ pathMed = "Medicamentos.txt";
     String^ pathVen = "Ventas.txt";
@@ -127,6 +124,10 @@ int main(array<System::String^>^ args)
     Esperar();
 
     Console::WriteLine("=== FIN ESCENARIO ===");
+
+	Controller::OperadorDeVentasController^ ov = gcnew Controller::OperadorDeVentasController();
+
+	ov->BotonActualizar(1, 6.0, 95); // Actualiza el precio y stock del medicamento con ID 1
 
     return 0;
 }

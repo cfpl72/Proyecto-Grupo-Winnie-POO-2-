@@ -111,3 +111,62 @@ bool Controller::PacienteController::ValidarPaciente(Paciente^ p, String^% error
 }
 
 //=========================Requerimientos Operador de Ventas===========================================================//
+List<Medicamento^>^ Controller::OperadorDeVentasController::ObtenerInventarioCompleto() {
+    Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
+    List<Medicamento^>^ lista = gcnew List<Medicamento^>();
+    for each (KeyValuePair<int, Medicamento^> kvp in dic) {
+        lista->Add(kvp.Value);
+    }
+    return lista;
+} 
+//Función Testeada (Requerimiento para cargar tablas)
+
+List<Venta^>^ Controller::OperadorDeVentasController::ObtenerTodasLasVentas() {
+    Dictionary<int, Venta^>^ dic = repo->LeerVentas("Ventas.txt");
+    List<Venta^>^ lista = gcnew List<Venta^>();
+    for each (KeyValuePair<int, Venta^> kvp in dic) {
+        lista->Add(kvp.Value);
+    }
+    return lista;
+} 
+//Función Testeada (Requerimiento para cargar tablas)
+
+bool Controller::OperadorDeVentasController::BotonActualizar(int id, double nuevoPrecio, int nuevoStock) {
+    Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
+
+    if (!dic->ContainsKey(id)) {
+		Console::WriteLine("Error: No se encontró el medicamento con ID " + id);
+        return false;
+    }
+
+    Medicamento^ m = dic[id];
+
+    m->precio = nuevoPrecio;
+    m->stock = nuevoStock;
+
+    repo->GuardarMedicamentos("Medicamentos.txt", dic);
+	Console::WriteLine("Medicamento con ID " + id + " actualizado: Precio = " + nuevoPrecio + ", Stock = " + nuevoStock);
+    return true;
+};
+//Función Testeada (Requerimiento para actualizar precio y stock desde la tabla)
+
+
+/*bool Controller::OperadorDeVentasController::Modificar(int id, String^ atributo, String^ nuevoValor) {
+    Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
+
+    if (!dic->ContainsKey(id)) return false;
+
+    Medicamento^ m = dic[id];
+
+    if (atributo == "nombre") m->nombre = nuevoValor;
+    else if (atributo == "precio") m->precio = Convert::ToDouble(nuevoValor);
+    else if (atributo == "principio activo") m->principioActivo = nuevoValor;
+    else if (atributo == "alergias") m->stock = Convert::ToInt32(nuevoValor);
+
+    repo->GuardarMedicamentos("Medicamentos.txt", dic);
+    return true;
+};*/
+//Función modificar provisional 
+
+
+
