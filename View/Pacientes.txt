@@ -1,3 +1,4 @@
-PACIENTE|1|token1|Paciente1|Test|21|Ninguna|Leve
-PACIENTE|2|token2|Paciente2|Test|22|Ninguna|Leve
-PACIENTE|3|token3|Paciente3|Test|23|Ninguna|Leve
+PACIENTE|1|DNI1|Paciente1|Apellido1|99|Ninguna|Sintoma1
+PACIENTE|3|DNI3|Paciente3|Apellido3|23|Ninguna|Sintoma3
+PACIENTE|4|DNI4|Paciente4|Apellido4|24|Ninguna|Sintoma4
+PACIENTE|5|DNI5|Paciente5|Apellido5|25|Ninguna|Sintoma5

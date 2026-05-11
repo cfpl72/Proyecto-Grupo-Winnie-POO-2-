@@ -9,7 +9,7 @@ namespace WinniePOO_Modelos {
 
 	public ref class Medicamento {
 	public:
-		int idMedicamento;
+		int id;
 		String^ nombre;
 		String^ principioActivo;
 		double precio;
@@ -25,7 +25,7 @@ namespace WinniePOO_Modelos {
 	public:
 		// Constructor para facilitar la creación de medicamentos
 		Medicamento(int id, String^ nom, String^ pActivo, double prec, int stk) {
-			idMedicamento = id;
+			this->id = id;
 			nombre = nom;
 			principioActivo = pActivo;
 			precio = prec;
@@ -130,21 +130,31 @@ namespace WinniePOO_Modelos {
 	public:
 		int id;
 		int idPaciente; // Para relacionar la venta con el paciente que la realizó
-		int cantidadVendida;
-		DateTime^ fecha;
-		Medicamento^ medicamento; // Relación con el Medicamento vendido
 		int idMedicamento;
+		int cantidadVendida;
+		double precioMedicamento; // Precio al momento de la venta (puede ser diferente al precio actual del medicamento)
+		double totalVenta; // Calculado como precioMedicamento * cantidadVendida
+		DateTime^ fecha;
+		String^ nombreMedicamento; // Relación con el Medicamento vendido
+		
 
-
-		//Constructor para facilitar la creación de ventas
         // Constructor para facilitar la creación de ventas
-		Venta(int idVenta, int id_paciente, int cantidad, DateTime^ fechaVenta, Medicamento^ med) {
-			id = idVenta;
-			idPaciente = id_paciente;
-			cantidadVendida = cantidad;
-			fecha = fechaVenta;
-			medicamento = med;
-			idMedicamento = this->medicamento->idMedicamento;
+		Venta(int idVenta, int idPaciente, int cantidad, Medicamento^ med, DateTime^ fechaVenta)
+		{
+			this->id = idVenta;
+			this->idPaciente = idPaciente;
+			this->idMedicamento = med->id;
+
+			this->cantidadVendida = cantidad;
+
+			// 🔥 Snapshot del medicamento en el momento de la venta
+			this->precioMedicamento = med->precio;
+			this->nombreMedicamento = med->nombre;
+
+			// 🔥 Total congelado
+			this->totalVenta = this->precioMedicamento * this->cantidadVendida;
+
+			this->fecha = fechaVenta;
 		}
 
 		void MostrarBoleta() {

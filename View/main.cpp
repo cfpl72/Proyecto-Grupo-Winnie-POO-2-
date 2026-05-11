@@ -2,132 +2,91 @@
 
 using namespace System;
 using namespace System::Collections::Generic;
-using namespace System::IO;
 using namespace Controller;
 using namespace WinniePOO_Modelos;
-using namespace Persistance;
+using namespace System::IO;
 
-void Esperar() {
-    Console::WriteLine("\nPresiona ENTER para continuar...");
-    Console::ReadLine();
+// ================= RESET =================
+void ResetVentas()
+{
+    File::WriteAllText("Ventas.txt", "");
+    File::WriteAllText("Medicamentos.txt", "");
 }
 
-void MostrarPacientes(Controller::PacienteController^ pc) {
-    auto dic = pc->LeerTodos();
-
-    Console::WriteLine("\n--- PACIENTES ---");
-    for each (KeyValuePair<int, Paciente^> kvp in dic) {
-        auto p = kvp.Value;
-        Console::WriteLine("ID:{0} | {1} {2} | Edad:{3}",
-            p->id, p->nombre, p->apellido, p->edad);
-    }
-}
-
-void MostrarMedicamentos(Dictionary<int, Medicamento^>^ dic) {
-    Console::WriteLine("\n--- MEDICAMENTOS ---");
-    for each (KeyValuePair<int, Medicamento^> kvp in dic) {
-        auto m = kvp.Value;
-        Console::WriteLine("ID:{0} | {1} | Precio:{2} | Stock:{3}",
-            m->idMedicamento, m->nombre, m->precio, m->stock);
-    }
-}
-
-void MostrarVentas(Dictionary<int, Venta^>^ dic) {
-    Console::WriteLine("\n--- VENTAS ---");
-    for each (KeyValuePair<int, Venta^> kvp in dic) {
-        auto v = kvp.Value;
-        Console::WriteLine("ID:{0} | Paciente:{1} | Med:{2} | Cant:{3} | Fecha:{4}",
-            v->id, v->idPaciente, v->idMedicamento,
-            v->cantidadVendida, v->fecha->ToShortDateString());
-    }
-}
-
+// ================= MAIN =================
 int main(array<System::String^>^ args)
 {
-    String^ pathPac = "Pacientes.txt";
-    String^ pathMed = "Medicamentos.txt";
-    String^ pathVen = "Ventas.txt";
+    ResetVentas();
 
-    Controller::PacienteController^ pc = gcnew Controller::PacienteController(pathPac);
+    Persistance::persistance^ repo = gcnew Persistance::persistance();
 
-    Console::WriteLine("=== INICIO ESCENARIO INTEGRADO ===");
-
-    // 🔹 1. Limpiar todo
-    File::WriteAllText(pathPac, "");
-    File::WriteAllText(pathMed, "");
-    File::WriteAllText(pathVen, "");
-
-    Esperar();
-
-    // 🔹 2. Registrar pacientes
-    Console::WriteLine("Registrando pacientes...");
+    // ================= CREAR MEDICAMENTOS =================
+    Dictionary<int, Medicamento^>^ dicMed = gcnew Dictionary<int, Medicamento^>();
 
     for (int i = 1; i <= 3; i++) {
-        Paciente^ p = gcnew Paciente(i, "token" + i);
-        p->nombre = "Paciente" + i;
-        p->apellido = "Test";
-        p->edad = 20 + i;
-        p->alergias = "Ninguna";
-        p->sintomas = "Leve";
-
-        pc->Registrar(p);
+        Medicamento^ m = gcnew Medicamento(
+            i,
+            "Med" + i,
+            "Compuesto" + i,
+            10.0 * i,
+            100
+        );
+        dicMed->Add(i, m);
     }
 
-    MostrarPacientes(pc);
-    Esperar();
+    repo->GuardarMedicamentos("Medicamentos.txt", dicMed);
 
-    // 🔹 3. Registrar medicamentos
-    Console::WriteLine("Registrando medicamentos...");
+    // ================= CREAR VENTAS =================
+    Dictionary<int, Medicamento^>^ meds = repo->LeerMedicamentos("Medicamentos.txt");
+    Dictionary<int, Venta^>^ dicVentas = gcnew Dictionary<int, Venta^>();
 
-    Dictionary<int, Medicamento^>^ meds = gcnew Dictionary<int, Medicamento^>();
+    for (int i = 1; i <= 3; i++) {
 
-    meds->Add(1, gcnew Medicamento(1, "Paracetamol", "Acetaminofen", 5.5, 100));
-    meds->Add(2, gcnew Medicamento(2, "Ibuprofeno", "Ibuprofeno", 8.0, 50));
-    meds->Add(3, gcnew Medicamento(3, "Amoxicilina", "Amoxicilina", 12.0, 30));
+        Venta^ v = gcnew Venta(
+            i,                  // idVenta
+            i,                  // idPaciente
+            i + 1,              // cantidadVendida
+            meds[i],            // 🔥 Medicamento completo
+            DateTime::Now
+        );
 
-    Persistance::persistance::GuardarMedicamentos(pathMed, meds);
+        dicVentas->Add(i, v);
+    }
 
-    meds = Persistance::persistance::LeerMedicamentos(pathMed);
-    MostrarMedicamentos(meds);
+    repo->GuardarVentas("Ventas.txt", dicVentas);
 
-    Esperar();
+    // ================= MOSTRAR MEDICAMENTOS =================
+    Console::WriteLine("=== INVENTARIO ===");
 
-    // 🔹 4. Registrar ventas
-    Console::WriteLine("Registrando ventas...");
+    for each (KeyValuePair<int, Medicamento^> kvp in dicMed) {
+        Medicamento^ m = kvp.Value;
 
-    Dictionary<int, Venta^>^ ventas = gcnew Dictionary<int, Venta^>();
+        Console::WriteLine(
+            "ID: " + m->id +
+            " | Nombre: " + m->nombre +
+            " | Precio: " + m->precio +
+            " | Stock: " + m->stock
+        );
+    }
 
-    ventas->Add(1, gcnew Venta(1, 1, 2, DateTime::Now, meds[1]));
-    ventas->Add(2, gcnew Venta(2, 2, 1, DateTime::Now, meds[2]));
-    ventas->Add(3, gcnew Venta(3, 3, 3, DateTime::Now, meds[3]));
+    // ================= MOSTRAR VENTAS =================
+    Console::WriteLine("\n=== VENTAS ===");
 
-    Persistance::persistance::GuardarVentas(pathVen, ventas);
+    Dictionary<int, Venta^>^ ventas = repo->LeerVentas("Ventas.txt");
 
-    ventas = Persistance::persistance::LeerVentas(pathVen);
-    MostrarVentas(ventas);
+    for each (KeyValuePair<int, Venta^> kvp in ventas) {
+        Venta^ v = kvp.Value;
 
-    Esperar();
+        Console::WriteLine(
+            "Venta ID: " + v->id +
+            " | Medicamento: " + v->nombreMedicamento +
+            " | Cantidad: " + v->cantidadVendida +
+            " | Precio Unitario: " + v->precioMedicamento +
+            " | Total: " + v->totalVenta +
+            " | Nombre: " + v->nombreMedicamento
+        );
+    }
 
-    // 🔹 5. Flujo real: modificar + vender
-    Console::WriteLine("Actualizando stock y registrando nueva venta...");
-
-    meds[1]->ActualizarStock(meds[1]->stock - 5);
-
-    ventas->Add(4, gcnew Venta(4, 1, 5, DateTime::Now, meds[1]));
-
-    Persistance::persistance::GuardarMedicamentos(pathMed, meds);
-    Persistance::persistance::GuardarVentas(pathVen, ventas);
-
-    MostrarMedicamentos(meds);
-    MostrarVentas(ventas);
-
-    Esperar();
-
-    Console::WriteLine("=== FIN ESCENARIO ===");
-
-	Controller::OperadorDeVentasController^ ov = gcnew Controller::OperadorDeVentasController();
-
-	ov->BotonActualizar(1, 6.0, 95); // Actualiza el precio y stock del medicamento con ID 1
-
+    Console::ReadLine();
     return 0;
 }

@@ -2,8 +2,8 @@
 #include "Controller.h"
 
 
-
-Dictionary<int,Paciente^>^ Controller::PacienteController::LeerTodos() { //Retorna una lista con todos los pacientes registrados
+//=========================Requerimientos Servicio de Pacientes===========================================================//
+Dictionary<int,Paciente^>^ Controller::ServicioPacientes::LeerTodos() { //Retorna una lista con todos los pacientes registrados
 
     Dictionary<int, Paciente^>^ dic = gcnew Dictionary<int,Paciente^ > ();
     array<String^>^ lineas = File::ReadAllLines(filePath);
@@ -32,11 +32,11 @@ Dictionary<int,Paciente^>^ Controller::PacienteController::LeerTodos() { //Retor
     return dic;
 }
 
-Paciente^ Controller::PacienteController::ObtenerPorId(int id) {
+Paciente^ Controller::ServicioPacientes::ObtenerPorId(int id) {
     return repo->LeerPaciente(filePath, id);
 }
 
-void Controller::PacienteController::Registrar(Paciente^ p) {
+void Controller::ServicioPacientes::Registrar(Paciente^ p) {
 
     if (p == nullptr) return;
 
@@ -57,7 +57,7 @@ void Controller::PacienteController::Registrar(Paciente^ p) {
     repo->GuardarPacientes(filePath, dic);
 }
 
-void Controller::PacienteController::Modificar(int id, String^ atributo, String^ nuevoValor) {
+void Controller::ServicioPacientes::Modificar(int id, String^ atributo, String^ nuevoValor) {
 
     Dictionary<int, Paciente^>^ dic = LeerTodos();
 
@@ -74,7 +74,7 @@ void Controller::PacienteController::Modificar(int id, String^ atributo, String^
     repo->GuardarPacientes(filePath, dic);
 }
 
-void Controller::PacienteController::Eliminar(int id) {
+void Controller::ServicioPacientes::Eliminar(int id) {
 
     Dictionary<int, Paciente^>^ diccionario = LeerTodos();
 
@@ -85,7 +85,7 @@ void Controller::PacienteController::Eliminar(int id) {
     repo->GuardarPacientes(filePath, diccionario);
 }
 
-bool Controller::PacienteController::ValidarPaciente(Paciente^ p, String^% error) {
+bool Controller::ServicioPacientes::ValidarPaciente(Paciente^ p, String^% error) {
 
     if (p == nullptr) {
         error = "Paciente nulo";
@@ -110,45 +110,45 @@ bool Controller::PacienteController::ValidarPaciente(Paciente^ p, String^% error
     return true;
 }
 
-//=========================Requerimientos Operador de Ventas===========================================================//
-List<Medicamento^>^ Controller::OperadorDeVentasController::ObtenerInventarioCompleto() {
+
+
+//=========================Requerimientos Servicio de Medicamentos===========================================================//
+List<Medicamento^>^ Controller::ServicioMedicamentos::ObtenerInventarioCompleto() {
     Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
     List<Medicamento^>^ lista = gcnew List<Medicamento^>();
+
     for each (KeyValuePair<int, Medicamento^> kvp in dic) {
         lista->Add(kvp.Value);
     }
-    return lista;
-} 
-//Función Testeada (Requerimiento para cargar tablas)
 
-List<Venta^>^ Controller::OperadorDeVentasController::ObtenerTodasLasVentas() {
-    Dictionary<int, Venta^>^ dic = repo->LeerVentas("Ventas.txt");
-    List<Venta^>^ lista = gcnew List<Venta^>();
-    for each (KeyValuePair<int, Venta^> kvp in dic) {
-        lista->Add(kvp.Value);
-    }
     return lista;
-} 
-//Función Testeada (Requerimiento para cargar tablas)
+}
 
-bool Controller::OperadorDeVentasController::BotonActualizar(int id, double nuevoPrecio, int nuevoStock) {
+bool Controller::ServicioMedicamentos::ActualizarMedicamento(int id, double nuevoPrecio, int nuevoStock) {
     Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
 
-    if (!dic->ContainsKey(id)) {
-		Console::WriteLine("Error: No se encontró el medicamento con ID " + id);
-        return false;
-    }
+    if (!dic->ContainsKey(id)) return false;
 
     Medicamento^ m = dic[id];
-
     m->precio = nuevoPrecio;
     m->stock = nuevoStock;
 
-    repo->GuardarMedicamentos("Medicamentos.txt", dic);
-	Console::WriteLine("Medicamento con ID " + id + " actualizado: Precio = " + nuevoPrecio + ", Stock = " + nuevoStock);
+    repo->GuardarMedicamentos(filePath, dic);
     return true;
-};
-//Función Testeada (Requerimiento para actualizar precio y stock desde la tabla)
+}
+
+
+//=========================Requerimientos Servicio de Ventas===========================================================//
+List<Venta^>^ Controller::ServicioVentas::ObtenerTodasLasVentas() {
+    Dictionary<int, Venta^>^ dic = repo->LeerVentas(filePath);
+    List<Venta^>^ lista = gcnew List<Venta^>();
+
+    for each (KeyValuePair<int, Venta^> kvp in dic) {
+        lista->Add(kvp.Value);
+    }
+
+    return lista;
+}
 
 
 /*bool Controller::OperadorDeVentasController::Modificar(int id, String^ atributo, String^ nuevoValor) {

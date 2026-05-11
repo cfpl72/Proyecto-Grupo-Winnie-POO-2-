@@ -121,7 +121,7 @@ void Persistance::persistance::GuardarMedicamentos(String^ filePath, Dictionary<
         Medicamento^ m = kvp.Value;
 
         lineas->Add(String::Format("MEDICAMENTO|{0}|{1}|{2}|{3}|{4}",
-            m->idMedicamento,
+            m->id,
             m->nombre,
             m->precio,
             m->stock,
@@ -164,54 +164,75 @@ Dictionary<int, Medicamento^>^ Persistance::persistance::LeerMedicamentos(String
 }
 
 // ================= VENTAS =================
-void Persistance::persistance::GuardarVentas(String^ filePath, Dictionary<int, Venta^>^ diccionario) {
-
+void Persistance::persistance::GuardarVentas(String^ filePath, Dictionary<int, Venta^>^ diccionario)
+{
     List<String^>^ lineas = gcnew List<String^>();
 
-    for each (KeyValuePair<int, Venta^> kvp in diccionario) {
-
+    for each (KeyValuePair<int, Venta^> kvp in diccionario)
+    {
         Venta^ v = kvp.Value;
 
-        lineas->Add(String::Format("VENTA|{0}|{1}|{2}|{3}|{4}",
+        lineas->Add(String::Format("VENTA|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}",
             v->id,
             v->idPaciente,
             v->idMedicamento,
             v->cantidadVendida,
-            v->fecha->ToString("yyyy-MM-dd")
+            v->precioMedicamento,
+            v->totalVenta,
+            v->fecha->ToString("yyyy-MM-dd"),
+            v->nombreMedicamento
         ));
     }
 
     File::WriteAllLines(filePath, lineas->ToArray());
 }
-Dictionary<int, Venta^>^ Persistance::persistance::LeerVentas(String^ filePath) {
 
+Dictionary<int, Venta^>^ Persistance::persistance::LeerVentas(String^ filePath)
+{
     Dictionary<int, Venta^>^ dic = gcnew Dictionary<int, Venta^>();
 
     if (!File::Exists(filePath)) return dic;
 
     array<String^>^ lineas = File::ReadAllLines(filePath);
 
-    for each (String ^ linea in lineas) {
-
+    for each (String ^ linea in lineas)
+    {
         array<String^>^ campos = linea->Split('|');
 
         for (int i = 0; i < campos->Length; i++)
             campos[i] = campos[i]->Trim();
 
-        if (campos[0] == "VENTA") {
-
+        if (campos[0] == "VENTA")
+        {
             int id = Int32::Parse(campos[1]);
             int idPaciente = Int32::Parse(campos[2]);
             int idMedicamento = Int32::Parse(campos[3]);
             int cantidad = Int32::Parse(campos[4]);
-            DateTime fecha = DateTime::Parse(campos[5]);
+            double precio = Double::Parse(campos[5]);
+            double total = Double::Parse(campos[6]);
+            DateTime fecha = DateTime::Parse(campos[7]);
+            String^ nombre = campos[8];
 
-            // ⚠️ IMPORTANTE: aquí no tienes el objeto Medicamento completo
-            // así que creamos uno dummy (esto es una limitación del diseño actual)
+            // 🔥 Creamos medicamento "snapshot"
+            Medicamento^ med = gcnew Medicamento(
+                idMedicamento,
+                nombre,
+                "N/A",
+                precio,
+                0
+            );
 
-            Medicamento^ dummy = gcnew Medicamento(idMedicamento, "N/A", "N/A", 0, 0);
+            // 🔥 Usamos tu constructor real
+            Venta^ v = gcnew Venta(
+                id,
+                idPaciente,
+                cantidad,
+                med,
+                fecha
+            );
 
-            Venta^ v = gcnew Venta(id, idPaciente, cantidad, fecha, dummy);
+            // 🔥 Sobrescribimos total (por seguridad)
+            v->totalVenta = total;
 
             dic->Add(id, v);
         }
