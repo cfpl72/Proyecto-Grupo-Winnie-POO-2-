@@ -1,92 +1,37 @@
 #include "pch.h"
 
+
 using namespace System;
-using namespace System::Collections::Generic;
-using namespace Controller;
-using namespace WinniePOO_Modelos;
-using namespace System::IO;
+using namespace IA_CLASS;
 
-// ================= RESET =================
-void ResetVentas()
+
+int main(array<String^>^ args)
 {
-    File::WriteAllText("Ventas.txt", "");
-    File::WriteAllText("Medicamentos.txt", "");
-}
+    // Creamos la IA
+    IA^ sistemaIA = gcnew IA();
 
-// ================= MAIN =================
-int main(array<System::String^>^ args)
-{
-    ResetVentas();
+    // Simulación de datos del paciente
+    String^ sintomas = "dolor de cabeza intenso y fiebre";
+    String^ historial = "alergia a la penicilina";
 
-    Persistance::persistance^ repo = gcnew Persistance::persistance();
+    // Simulación de stock del sistema (como si viniera de tu archivo Medicamentos.txt)
+    String^ listaMedicamentos = "Paracetamol, Ibuprofeno, Aspirina";
 
-    // ================= CREAR MEDICAMENTOS =================
-    Dictionary<int, Medicamento^>^ dicMed = gcnew Dictionary<int, Medicamento^>();
+    Console::WriteLine("=== SIMULACIÓN FARMACIA ROBÓTICA ===");
+    Console::WriteLine("Síntomas: " + sintomas);
+    Console::WriteLine("Historial: " + historial);
+    Console::WriteLine("Stock disponible: " + listaMedicamentos);
+    Console::WriteLine("\nGenerando recomendación...\n");
 
-    for (int i = 1; i <= 3; i++) {
-        Medicamento^ m = gcnew Medicamento(
-            i,
-            "Med" + i,
-            "Compuesto" + i,
-            10.0 * i,
-            100
-        );
-        dicMed->Add(i, m);
-    }
+    // Llamada a la IA
+    String^ recomendacion = sistemaIA->GenerarRecomendacion(sintomas, historial, listaMedicamentos);
 
-    repo->GuardarMedicamentos("Medicamentos.txt", dicMed);
+    // Resultado
+    Console::WriteLine("=== RECOMENDACIÓN ===");
+    Console::WriteLine(recomendacion);
 
-    // ================= CREAR VENTAS =================
-    Dictionary<int, Medicamento^>^ meds = repo->LeerMedicamentos("Medicamentos.txt");
-    Dictionary<int, Venta^>^ dicVentas = gcnew Dictionary<int, Venta^>();
+    Console::WriteLine("\nPresiona cualquier tecla para salir...");
+    Console::ReadKey();
 
-    for (int i = 1; i <= 3; i++) {
-
-        Venta^ v = gcnew Venta(
-            i,                  // idVenta
-            i,                  // idPaciente
-            i + 1,              // cantidadVendida
-            meds[i],            // 🔥 Medicamento completo
-            DateTime::Now
-        );
-
-        dicVentas->Add(i, v);
-    }
-
-    repo->GuardarVentas("Ventas.txt", dicVentas);
-
-    // ================= MOSTRAR MEDICAMENTOS =================
-    Console::WriteLine("=== INVENTARIO ===");
-
-    for each (KeyValuePair<int, Medicamento^> kvp in dicMed) {
-        Medicamento^ m = kvp.Value;
-
-        Console::WriteLine(
-            "ID: " + m->id +
-            " | Nombre: " + m->nombre +
-            " | Precio: " + m->precio +
-            " | Stock: " + m->stock
-        );
-    }
-
-    // ================= MOSTRAR VENTAS =================
-    Console::WriteLine("\n=== VENTAS ===");
-
-    Dictionary<int, Venta^>^ ventas = repo->LeerVentas("Ventas.txt");
-
-    for each (KeyValuePair<int, Venta^> kvp in ventas) {
-        Venta^ v = kvp.Value;
-
-        Console::WriteLine(
-            "Venta ID: " + v->id +
-            " | Medicamento: " + v->nombreMedicamento +
-            " | Cantidad: " + v->cantidadVendida +
-            " | Precio Unitario: " + v->precioMedicamento +
-            " | Total: " + v->totalVenta +
-            " | Nombre: " + v->nombreMedicamento
-        );
-    }
-
-    Console::ReadLine();
     return 0;
 }

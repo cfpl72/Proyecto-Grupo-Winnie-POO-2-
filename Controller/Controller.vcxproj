@@ -120,6 +120,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="IA.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
@@ -140,6 +141,9 @@
     <Image Include="app.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
