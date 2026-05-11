@@ -74,13 +74,13 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="PacientesPersistance.txt">
+    <Text Include="Pacientes.txt">
       <Filter>Archivos de texto</Filter>
     </Text>
-    <Text Include="MedicamentosPersistance.txt">
+    <Text Include="Medicamentos.txt">
       <Filter>Archivos de texto</Filter>
     </Text>
-    <Text Include="VentasPersistance.txt">
+    <Text Include="Ventas.txt">
       <Filter>Archivos de texto</Filter>
     </Text>
   </ItemGroup>

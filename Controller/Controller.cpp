@@ -109,3 +109,5 @@ bool Controller::PacienteController::ValidarPaciente(Paciente^ p, String^% error
 
     return true;
 }
+
+//=========================Requerimientos Operador de Ventas===========================================================//

@@ -19,12 +19,12 @@ namespace Persistance {
         static void EliminarPaciente(String^ filePath, int idPaciente);
 
         // ================= MEDICAMENTO =================
-        static void RegistrarMedicamento(String^ filePath, Medicamento^ med);
+        //static void RegistrarMedicamento(String^ filePath, Medicamento^ med);
         static void GuardarMedicamentos(String^ filePath, Dictionary<int, Medicamento^>^ diccionario);
         static Dictionary<int, Medicamento^>^ LeerMedicamentos(String^ filePath);
 
         // ================= VENTA =================
-        static void RegistrarVenta(String^ filePath, Venta^ v);
+        //static void RegistrarVenta(String^ filePath, Venta^ v);
         static void GuardarVentas(String^ filePath, Dictionary<int, Venta^>^ diccionario);
         static Dictionary<int, Venta^>^ LeerVentas(String^ filePath);
 

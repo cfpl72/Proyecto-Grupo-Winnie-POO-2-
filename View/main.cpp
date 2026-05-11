@@ -2,6 +2,7 @@
 
 using namespace System;
 using namespace System::Collections::Generic;
+using namespace System::IO;
 using namespace Controller;
 using namespace WinniePOO_Modelos;
 using namespace Persistance;
@@ -43,11 +44,14 @@ void MostrarVentas(Dictionary<int, Venta^>^ dic) {
 
 int main(array<System::String^>^ args)
 {
-    Controller::PacienteController^ pc = gcnew Controller::PacienteController();
+    
+   
 
     String^ pathPac = "Pacientes.txt";
     String^ pathMed = "Medicamentos.txt";
     String^ pathVen = "Ventas.txt";
+
+    Controller::PacienteController^ pc = gcnew Controller::PacienteController(pathPac);
 
     Console::WriteLine("=== INICIO ESCENARIO INTEGRADO ===");
 
