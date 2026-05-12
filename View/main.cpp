@@ -1,238 +1,92 @@
 #include "pch.h"
 
-
 using namespace System;
-using namespace WinniePOO_Modelos;
+using namespace System::Collections::Generic;
 using namespace Controller;
+using namespace WinniePOO_Modelos;
+using namespace System::IO;
 
-void MenuUsuarios(ServicioUsuarios^ servicioUsuarios);
-void MenuVentas(ServicioVenta^ servicioVentas, ServicioUsuarios^ servicioUsuarios);
+// ================= RESET =================
+void ResetVentas()
+{
+    File::WriteAllText("Ventas.txt", "");
+    File::WriteAllText("Medicamentos.txt", "");
+}
 
-int main() {
+// ================= MAIN =================
+int main(array<System::String^>^ args)
+{
+    ResetVentas();
 
-    ServicioUsuarios^ servicioUsuarios = gcnew ServicioUsuarios();
-    ServicioVenta^ servicioVentas = gcnew ServicioVenta();
+    Persistance::persistance^ repo = gcnew Persistance::persistance();
 
-    int opcion;
+    // ================= CREAR MEDICAMENTOS =================
+    Dictionary<int, Medicamento^>^ dicMed = gcnew Dictionary<int, Medicamento^>();
 
-    do {
-        Console::WriteLine("\n====== SISTEMA FARMACIA ======");
-        Console::WriteLine("1. Gestionar Usuarios");
-        Console::WriteLine("2. Gestionar Ventas");
-        Console::WriteLine("0. Salir");
-        Console::Write("Seleccione una opcion: ");
-        opcion = Convert::ToInt32(Console::ReadLine());
+    for (int i = 1; i <= 3; i++) {
+        Medicamento^ m = gcnew Medicamento(
+            i,
+            "Med" + i,
+            "Compuesto" + i,
+            10.0 * i,
+            100
+        );
+        dicMed->Add(i, m);
+    }
 
-        switch (opcion) {
-        case 1:
-            MenuUsuarios(servicioUsuarios);
-            break;
-        case 2:
-            MenuVentas(servicioVentas, servicioUsuarios);
-            break;
-        }
+    repo->GuardarMedicamentos("Medicamentos.txt", dicMed);
 
-    } while (opcion != 0);
+    // ================= CREAR VENTAS =================
+    Dictionary<int, Medicamento^>^ meds = repo->LeerMedicamentos("Medicamentos.txt");
+    Dictionary<int, Venta^>^ dicVentas = gcnew Dictionary<int, Venta^>();
 
-    Console::WriteLine("Saliendo del sistema...");
+    for (int i = 1; i <= 3; i++) {
+
+        Venta^ v = gcnew Venta(
+            i,                  // idVenta
+            i,                  // idPaciente
+            i + 1,              // cantidadVendida
+            meds[i],            // 🔥 Medicamento completo
+            DateTime::Now
+        );
+
+        dicVentas->Add(i, v);
+    }
+
+    repo->GuardarVentas("Ventas.txt", dicVentas);
+
+    // ================= MOSTRAR MEDICAMENTOS =================
+    Console::WriteLine("=== INVENTARIO ===");
+
+    for each (KeyValuePair<int, Medicamento^> kvp in dicMed) {
+        Medicamento^ m = kvp.Value;
+
+        Console::WriteLine(
+            "ID: " + m->id +
+            " | Nombre: " + m->nombre +
+            " | Precio: " + m->precio +
+            " | Stock: " + m->stock
+        );
+    }
+
+    // ================= MOSTRAR VENTAS =================
+    Console::WriteLine("\n=== VENTAS ===");
+
+    Dictionary<int, Venta^>^ ventas = repo->LeerVentas("Ventas.txt");
+
+    for each (KeyValuePair<int, Venta^> kvp in ventas) {
+        Venta^ v = kvp.Value;
+
+        Console::WriteLine(
+            "Venta ID: " + v->id +
+            " | Medicamento: " + v->nombreMedicamento +
+            " | Cantidad: " + v->cantidadVendida +
+            " | Precio Unitario: " + v->precioMedicamento +
+            " | Total: " + v->totalVenta +
+            " | Nombre: " + v->nombreMedicamento
+        );
+    }
+
+    Console::ReadLine();
     return 0;
-}
-
-// ================== MENU USUARIOS ==================
-void MenuUsuarios(ServicioUsuarios^ servicioUsuarios) {
-
-    int op;
-
-    do {
-        Console::WriteLine("\n--- CRUD USUARIOS ---");
-        Console::WriteLine("1. Registrar Paciente");
-        Console::WriteLine("2. Listar Usuarios");
-        Console::WriteLine("3. Modificar Usuario");
-        Console::WriteLine("4. Eliminar Usuario");
-        Console::WriteLine("5. Listar Pacientes");
-        Console::WriteLine("0. Volver");
-        Console::Write("Opcion: ");
-        op = Convert::ToInt32(Console::ReadLine());
-
-        switch (op) {
-
-        case 1: {
-            Paciente^ p = gcnew Paciente();
-
-            Console::Write("ID: ");
-            p->id = Convert::ToInt32(Console::ReadLine());
-
-            Console::Write("Nombre: ");
-            p->nombre = Console::ReadLine();
-
-            Console::Write("Apellido: ");
-            p->apellido = Console::ReadLine();
-
-            Console::Write("Contrasenia: ");
-            p->contrasenia = Console::ReadLine();
-
-            Console::Write("Edad: ");
-            p->edad = Convert::ToInt32(Console::ReadLine());
-
-            Console::Write("Alergias: ");
-            p->alergias = Console::ReadLine();
-
-            Console::Write("Sintomas: ");
-            p->sintomas = Console::ReadLine();
-
-            servicioUsuarios->RegistrarUsuario(p);
-            break;
-        }
-
-        case 2:
-            servicioUsuarios->ListarUsuarios();
-            break;
-
-        case 3: {
-            int id;
-            Console::Write("ID a modificar: ");
-            id = Convert::ToInt32(Console::ReadLine());
-
-            String^ nombre, ^ apellido, ^ pass;
-
-            Console::Write("Nuevo nombre: ");
-            nombre = Console::ReadLine();
-
-            Console::Write("Nuevo apellido: ");
-            apellido = Console::ReadLine();
-
-            Console::Write("Nueva contrasenia: ");
-            pass = Console::ReadLine();
-
-            servicioUsuarios->ModificarUsuario(id, nombre, apellido, pass);
-            break;
-        }
-
-        case 4: {
-            int id;
-            Console::Write("ID a eliminar: ");
-            id = Convert::ToInt32(Console::ReadLine());
-
-            servicioUsuarios->EliminarUsuario(id);
-            break;
-        }
-
-        case 5:
-            servicioUsuarios->ListarPacientes();
-            break;
-        }
-
-    } while (op != 0);
-}
-
-// ================== MENU VENTAS ==================
-void MenuVentas(ServicioVenta^ servicioVentas, ServicioUsuarios^ servicioUsuarios) {
-
-    int op;
-
-    do {
-        Console::WriteLine("\n--- CRUD VENTAS ---");
-        Console::WriteLine("1. Registrar Venta");
-        Console::WriteLine("2. Listar Ventas");
-        Console::WriteLine("3. Modificar Venta");
-        Console::WriteLine("4. Eliminar Venta");
-        Console::WriteLine("5. Buscar Venta por ID");
-        Console::WriteLine("6. Historial por Paciente");
-        Console::WriteLine("0. Volver");
-        Console::Write("Opcion: ");
-        op = Convert::ToInt32(Console::ReadLine());
-
-        switch (op) {
-
-        case 1: {
-            int idVenta, idPaciente, cantidad;
-
-            Console::Write("ID Venta: ");
-            idVenta = Convert::ToInt32(Console::ReadLine());
-
-            Console::Write("ID Paciente: ");
-            idPaciente = Convert::ToInt32(Console::ReadLine());
-
-            Console::Write("Cantidad: ");
-            cantidad = Convert::ToInt32(Console::ReadLine());
-
-            // Medicamento simple simulado
-            Medicamento^ med = gcnew Medicamento(
-                1,
-                "Paracetamol",
-                "Acetaminofen",
-                5.0,
-                100
-            );
-
-            servicioVentas->RegistrarNuevaVenta(
-                idVenta,
-                idPaciente,
-                med,
-                cantidad,
-                DateTime::Now
-            );
-
-            break;
-        }
-
-        case 2:
-            servicioVentas->ListarVentas();
-            break;
-
-        case 3: {
-            int id, cantidad;
-
-            Console::Write("ID Venta: ");
-            id = Convert::ToInt32(Console::ReadLine());
-
-            Console::Write("Nueva cantidad: ");
-            cantidad = Convert::ToInt32(Console::ReadLine());
-
-            Medicamento^ med = gcnew Medicamento(
-                2,
-                "Ibuprofeno",
-                "Ibuprofeno",
-                8.0,
-                50
-            );
-
-            servicioVentas->ModificarVenta(id, cantidad, med);
-            break;
-        }
-
-        case 4: {
-            int id;
-            Console::Write("ID Venta: ");
-            id = Convert::ToInt32(Console::ReadLine());
-
-            servicioVentas->EliminarVenta(id);
-            break;
-        }
-
-        case 5: {
-            int id;
-            Console::Write("ID Venta: ");
-            id = Convert::ToInt32(Console::ReadLine());
-
-            Venta^ v = servicioVentas->ObtenerVenta(id);
-            if (v != nullptr) {
-                Console::WriteLine("Venta -> ID: " + v->id +
-                    " | Cantidad: " + v->cantidadVendida);
-            }
-            break;
-        }
-
-        case 6: {
-            int idPaciente;
-            Console::Write("ID Paciente: ");
-            idPaciente = Convert::ToInt32(Console::ReadLine());
-
-            servicioVentas->VerHistorialPaciente(idPaciente);
-            break;
-        }
-
-        }
-
-    } while (op != 0);
 }

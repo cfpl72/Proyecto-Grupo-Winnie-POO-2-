@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Archivos de texto">
+      <UniqueIdentifier>{4c56853a-8c4f-4c27-8b54-8dbc0de40f87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
@@ -81,5 +84,16 @@
     <Image Include="app.ico">
       <Filter>Archivos de recursos</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Pacientes.txt">
+      <Filter>Archivos de texto</Filter>
+    </Text>
+    <Text Include="Medicamentos.txt">
+      <Filter>Archivos de texto</Filter>
+    </Text>
+    <Text Include="Ventas.txt">
+      <Filter>Archivos de texto</Filter>
+    </Text>
   </ItemGroup>
 </Project>

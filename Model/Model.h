@@ -9,7 +9,7 @@ namespace WinniePOO_Modelos {
 
 	public ref class Medicamento {
 	public:
-		int idMedicamento;
+		int id;
 		String^ nombre;
 		String^ principioActivo;
 		double precio;
@@ -25,7 +25,7 @@ namespace WinniePOO_Modelos {
 	public:
 		// Constructor para facilitar la creación de medicamentos
 		Medicamento(int id, String^ nom, String^ pActivo, double prec, int stk) {
-			idMedicamento = id;
+			this->id = id;
 			nombre = nom;
 			principioActivo = pActivo;
 			precio = prec;
@@ -52,63 +52,109 @@ namespace WinniePOO_Modelos {
 		}
 	};
 	// 2. SISTEMA DE USUARIOS (Jerarquía de Herencia)
+
 	public ref class Usuario {
 	public:
 		int id;
 		String^ contrasenia;
+		String^ verificationToken;
 		String^ nombre;
 		String^ apellido;
+
+		// Constructor
+		Usuario(int idBus, String^ token) {
+			this->id = idBus;
+			this->verificationToken = token;
+		}
+
+		bool autentificar(String^ contrasena);
 	};
+
+
+	// ---------------- PACIENTE ----------------
+
 	public ref class Paciente : public Usuario {
 	public:
 		int edad;
 		String^ alergias;
 		String^ sintomas;
-		List<Receta^>^ historialRecetas; // Composición: un paciente tiene muchas recetas
-		Paciente() {
-			// Inicializamos la lista vacía para evitar errores (NullReferenceException)
+		List<Receta^>^ historialRecetas;
+
+		Paciente(int idBus, String^ token)
+			: Usuario(idBus, token)  // 🔥 llamada al constructor base
+		{
 			historialRecetas = gcnew List<Receta^>();
 		}
 	};
+
+
+	// ---------------- FARMACEUTICO ----------------
+
 	public ref class Farmaceutico : public Usuario {
 	public:
+		Farmaceutico(int idBus, String^ token)
+			: Usuario(idBus, token) {
+		}
+
 		String^ AlertarPaciente() {
 			return "ALERTA: Verifique sus alergias antes de consumir el medicamento recomendado.";
 		}
+
 		void ExaminarReceta(Paciente^ paciente) {
 			Console::WriteLine("Examinando receta del paciente: " + paciente->nombre);
 		}
 	};
+
+
+	// ---------------- OPERADOR DE VENTAS ----------------
+
 	public ref class OperadorVentas : public Usuario {
 	public:
-		// Métodos administrativos
+		OperadorVentas(int idBus, String^ token)
+			: Usuario(idBus, token) {
+		}
+
 		void ActualizarPrecio(Medicamento^ medicamento, double nuevoPrecio) {
 			medicamento->ActualizarPrecio(nuevoPrecio);
 			Console::WriteLine("Precio actualizado exitosamente.");
 		}
+
 		void ModificarStock(Medicamento^ medicamento, int cantidad) {
 			medicamento->ActualizarStock(cantidad);
 			Console::WriteLine("Stock modificado exitosamente.");
 		}
 	};
+
 	// 3. TRANSACCIONES, VENTAS Y PAGOS
 	public ref class Venta {
 	public:
 		int id;
 		int idPaciente; // Para relacionar la venta con el paciente que la realizó
+		int idMedicamento;
 		int cantidadVendida;
+		double precioMedicamento; // Precio al momento de la venta (puede ser diferente al precio actual del medicamento)
+		double totalVenta; // Calculado como precioMedicamento * cantidadVendida
 		DateTime^ fecha;
-		Medicamento^ medicamento; // Relación con el Medicamento vendido
+		String^ nombreMedicamento; // Relación con el Medicamento vendido
+		
 
-
-		//Constructor para facilitar la creación de ventas
         // Constructor para facilitar la creación de ventas
-		Venta(int idVenta, int id_paciente, int cantidad, DateTime^ fechaVenta, Medicamento^ med) {
-			id = idVenta;
-			idPaciente = id_paciente;
-			cantidadVendida = cantidad;
-			fecha = fechaVenta;
-			medicamento = med;
+		Venta(int idVenta, int idPaciente, int cantidad, Medicamento^ med, DateTime^ fechaVenta)
+		{
+			this->id = idVenta;
+			this->idPaciente = idPaciente;
+			this->idMedicamento = med->id;
+
+			this->cantidadVendida = cantidad;
+
+			// 🔥 Snapshot del medicamento en el momento de la venta
+			this->precioMedicamento = med->precio;
+			this->nombreMedicamento = med->nombre;
+
+			// 🔥 Total congelado
+			this->totalVenta = this->precioMedicamento * this->cantidadVendida;
+
+			this->fecha = fechaVenta;
 		}
 
 		void MostrarBoleta() {
@@ -178,15 +224,6 @@ namespace WinniePOO_Modelos {
 		};
 	};
 
-
-		void RegistrarNuevoFarmaceutico(int id, String^ contrasena, String^ nombre, String^ apellido) {
-			Farmaceutico^ f = gcnew Farmaceutico();
-			f->id = id;
-			f->contrasenia = contrasena;
-			f->nombre = nombre;
-			f->apellido = apellido;
-			Console::WriteLine("Personal Farmacéutico registrado.");
-		}
 };
 
 
