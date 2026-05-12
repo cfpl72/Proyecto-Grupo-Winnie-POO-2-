@@ -362,23 +362,3 @@ String^ Controller::ServicioVentas::MostrarBoletaVenta(int idVenta) {
 
 
 
-
-/*bool Controller::OperadorDeVentasController::Modificar(int id, String^ atributo, String^ nuevoValor) {
-    Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
-
-    if (!dic->ContainsKey(id)) return false;
-
-    Medicamento^ m = dic[id];
-
-    if (atributo == "nombre") m->nombre = nuevoValor;
-    else if (atributo == "precio") m->precio = Convert::ToDouble(nuevoValor);
-    else if (atributo == "principio activo") m->principioActivo = nuevoValor;
-    else if (atributo == "alergias") m->stock = Convert::ToInt32(nuevoValor);
-
-    repo->GuardarMedicamentos("Medicamentos.txt", dic);
-    return true;
-};*/
-//Función modificar provisional 
-
-
-
