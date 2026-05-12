@@ -144,6 +144,77 @@ bool Controller::ServicioMedicamentos::ActualizarMedicamento(int id, double nuev
 
 
 //=========================Requerimientos Servicio de Ventas===========================================================//
+bool Controller::ServicioVentas::RegistrarVenta(int idVenta, int idPaciente, int idMedicamento, int cantidad) {
+
+    Controller::ServicioMedicamentos^ sm = gcnew Controller::ServicioMedicamentos("Medicamentos.txt");
+
+    Dictionary<int, Venta^>^ dicVentas = repo->LeerVentas(filePath);
+    Dictionary<int, Medicamento^>^ dicMed = sm->ObtenerDiccionarioCompleto();
+
+    // =========================
+    // VALIDACIONES
+    // =========================
+
+    if (dicVentas->ContainsKey(idVenta)) {
+        Console::WriteLine("ERROR: Ya existe una venta con ese ID");
+        return false;
+    }
+
+    if (!dicMed->ContainsKey(idMedicamento)) {
+        Console::WriteLine("ERROR: Medicamento no encontrado");
+        return false;
+    }
+
+    if (cantidad <= 0) {
+        Console::WriteLine("ERROR: Cantidad inválida");
+        return false;
+    }
+
+    Medicamento^ med = dicMed[idMedicamento];
+
+    if (med->stock < cantidad) {
+        Console::WriteLine("ERROR: Stock insuficiente");
+        return false;
+    }
+
+    // =========================
+    // ACTUALIZAR STOCK
+    // =========================
+    med->stock -= cantidad;
+
+    // =========================
+    // CREAR VENTA
+    // =========================
+
+    // 🔥 snapshot del medicamento
+    Medicamento^ medSnapshot = gcnew Medicamento(
+        med->id,
+        med->nombre,
+        med->principioActivo,
+        med->precio,
+        0
+    );
+
+    Venta^ nuevaVenta = gcnew Venta(
+        idVenta,
+        idPaciente,
+        cantidad,
+        medSnapshot,
+        DateTime::Now
+    );
+
+    // =========================
+    // GUARDAR
+    // =========================
+
+    dicVentas->Add(idVenta, nuevaVenta);
+
+    repo->GuardarVentas(filePath, dicVentas);
+    sm->ActualizarMedicamento(med->id, med->precio, med->stock);
+
+    return true;
+}
+
 List<Venta^>^ Controller::ServicioVentas::ObtenerTodasLasVentas() {
     Dictionary<int, Venta^>^ dic = repo->LeerVentas(filePath);
     List<Venta^>^ lista = gcnew List<Venta^>();
@@ -160,10 +231,10 @@ bool Controller::ServicioVentas::EliminarVenta(int idVenta) {
     Controller::ServicioMedicamentos^ sm = gcnew Controller::ServicioMedicamentos("Medicamentos.txt");
     Dictionary<int, Venta^>^ diccionarioVen = repo->LeerVentas(filePath);
     Dictionary<int, Medicamento^>^ diccionarioMed = sm->ObtenerDiccionarioCompleto();
-    Venta^ venta = diccionarioVen[idVenta];
 
     if (diccionarioVen->ContainsKey(idVenta)) {
-        diccionarioVen->Remove(idVenta);
+        Venta^ venta = diccionarioVen[idVenta];
+        
 
         //Se actualiza el stock del nuevo medicamento en la base de datos
         int idMed = venta->idMedicamento;
@@ -171,6 +242,7 @@ bool Controller::ServicioVentas::EliminarVenta(int idVenta) {
         int nuevoStock = diccionarioMed[idMed]->stock + venta->cantidadVendida; //Devuelve la cantidad vendida al stock del medicamento
 
         sm->ActualizarMedicamento(idMed, nuevoPrecio, nuevoStock);
+        diccionarioVen->Remove(idVenta);
         repo->GuardarVentas(filePath, diccionarioVen);
         return true;
     }
@@ -180,6 +252,52 @@ bool Controller::ServicioVentas::EliminarVenta(int idVenta) {
     }
 
     
+}
+
+bool Controller::ServicioVentas::ModificarVenta(int idVenta, int nuevaCantidadVendida) {
+    Controller::ServicioMedicamentos^ sm = gcnew Controller::ServicioMedicamentos("Medicamentos.txt");
+    Dictionary<int, Venta^>^ diccionarioVen = repo->LeerVentas(filePath);
+    Dictionary<int, Medicamento^>^ diccionarioMed = sm->ObtenerDiccionarioCompleto();
+    
+    if (!diccionarioVen->ContainsKey(idVenta)) {
+        Console::WriteLine("ERROR: No se encontró ID de la venta específicada");
+        return false;
+    }
+
+    //Se duplica el puntero
+    Venta^ venta = diccionarioVen[idVenta];
+    int antiguaCantidadVendida = venta->cantidadVendida;
+    int diferenciaCantidades = nuevaCantidadVendida - antiguaCantidadVendida;
+
+    //Se modifica la cantidad Vendida
+    if (nuevaCantidadVendida <= 0) {
+        Console::WriteLine("ERROR: la nueva cantidad vendida no puede ser menor a 0");
+        return false;
+    }
+    venta->cantidadVendida = nuevaCantidadVendida;
+    venta->totalVenta = venta->totalVenta + (diferenciaCantidades * venta->precioMedicamento);
+
+    //Se ajustan los atributos del medicamento especificado
+
+    if (!diccionarioMed->ContainsKey(venta->idMedicamento)) {
+        Console::WriteLine("ERROR: ID del medicamento no está registrado en la base de datos");
+        return false;
+    }
+
+    Medicamento^ med = diccionarioMed[venta->idMedicamento];
+    int nuevoStock = med->stock - (diferenciaCantidades);
+
+    if (nuevoStock < 0) {
+        Console::WriteLine("ERROR: El nuevo stock es inválido (<0)");
+        return false;
+    }
+
+    med->stock = nuevoStock;
+
+    //Se sube a la persistencia los cambios incorporados   
+    repo->GuardarVentas("Ventas.txt", diccionarioVen);
+    sm->ActualizarMedicamento(med->id, med->precio, med->stock);
+    return true;
 }
 
 

@@ -1,4 +1,1 @@
-PACIENTE|1|DNI1|Paciente1|Apellido1|99|Ninguna|Sintoma1
-PACIENTE|3|DNI3|Paciente3|Apellido3|23|Ninguna|Sintoma3
-PACIENTE|4|DNI4|Paciente4|Apellido4|24|Ninguna|Sintoma4
-PACIENTE|5|DNI5|Paciente5|Apellido5|25|Ninguna|Sintoma5
+PACIENTE|101|tok1|Claudio|A|30||
