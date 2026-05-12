@@ -1,1 +1,5 @@
-PACIENTE|1|t1|Claudio|Rios|25|Ninguna|Dolor
+PACIENTE|1|t1|Claudio|Rios|21|Ninguna|Dolor de cabeza
+PACIENTE|2|t2|Ana|Lopez|30|Penicilina|Fiebre
+PACIENTE|3|t3|Luis|Torres|45|Aspirina|Dolor muscular
+PACIENTE|4|t4|Maria|Perez|60|Ninguna|PresiÃ³n alta
+PACIENTE|5|t5|Carlos|Vega|28|Polen|Alergia

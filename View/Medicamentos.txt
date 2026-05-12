@@ -1,2 +1,5 @@
-MEDICAMENTO|1|Paracetamol|6.5|32|Acetaminofen
-MEDICAMENTO|2|Ibuprofeno|8|30|Ibuprofeno
+MEDICAMENTO|1|Paracetamol|5|96|Acetaminofen
+MEDICAMENTO|2|Ibuprofeno|8|75|Ibuprofeno
+MEDICAMENTO|3|Amoxicilina|12|47|AntibiÃ³tico
+MEDICAMENTO|4|Loratadina|6.5|67|AntialÃ©rgico
+MEDICAMENTO|5|Omeprazol|10|59|Protector gÃ¡strico
