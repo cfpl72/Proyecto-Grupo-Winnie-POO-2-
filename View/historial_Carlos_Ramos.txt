@@ -1,0 +1,6 @@
+REC-001,Aspirina 500mg,2 c/8h,01/04/2026,false
+REC-002,Ibuprofeno 400mg,1 c/12h,2/04/2026,true
+REC-003,Ibuprofeno 400mg,1 c/8h,3/04/2026,true
+REC-004,Omeprazol 20mg,1 c/24h,8/04/2026,false
+REC-005,Omeprazol 20mg,2 c/8h,01/05/2026,false
+REC-006,Omeprazol 20mg,1 c/12h,05/05/2026,true

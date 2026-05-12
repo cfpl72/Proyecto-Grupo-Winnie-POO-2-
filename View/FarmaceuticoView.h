@@ -44,7 +44,9 @@ namespace ViewFarmaceutico {
 		   // CONTROLES - Panel principal	  
 	private: System::Windows::Forms::Panel^ panel3;
 
-		   // Vista 2: Examinar Receta (panel5)   
+		   // Vista 2: Examinar Receta (panel5)
+		   // ---------------agregando la declaracion de la libreria
+	private: System::Collections::Generic::Dictionary<String^, int>^ _frecuencias;
 	private: System::Windows::Forms::Panel^ panel5;
 	private: System::Windows::Forms::Label^ label5;      // titulo "Examinar Receta"
 	private: System::Windows::Forms::Label^ labelPac2;
@@ -85,6 +87,9 @@ namespace ViewFarmaceutico {
 	private: System::Windows::Forms::TabPage^ tabPage2;
 	private: System::Windows::Forms::DataVisualization::Charting::Chart^ chart1;
 	private: System::Windows::Forms::DataVisualization::Charting::Chart^ chart2;
+	private: System::Windows::Forms::Label^ labelFiltroMed;
+
+	private: System::Windows::Forms::ComboBox^ cmbMedicamento;
 
 
 	protected:
@@ -95,14 +100,14 @@ namespace ViewFarmaceutico {
 #pragma region Windows Form Designer generated code
 		void InitializeComponent(void)
 		{
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea1 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
-			System::Windows::Forms::DataVisualization::Charting::Legend^ legend1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
-			System::Windows::Forms::DataVisualization::Charting::Series^ series1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
-			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea2 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
-			System::Windows::Forms::DataVisualization::Charting::Legend^ legend2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
-			System::Windows::Forms::DataVisualization::Charting::Series^ series2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea3 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
+			System::Windows::Forms::DataVisualization::Charting::Legend^ legend3 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
+			System::Windows::Forms::DataVisualization::Charting::Series^ series3 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea4 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
+			System::Windows::Forms::DataVisualization::Charting::Legend^ legend4 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
+			System::Windows::Forms::DataVisualization::Charting::Series^ series4 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->lblBienvenida = (gcnew System::Windows::Forms::Label());
@@ -116,7 +121,9 @@ namespace ViewFarmaceutico {
 			this->panel5 = (gcnew System::Windows::Forms::Panel());
 			this->Graficos = (gcnew System::Windows::Forms::TabControl());
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
+			this->chart1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
 			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
+			this->chart2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->labelPac2 = (gcnew System::Windows::Forms::Label());
 			this->cmbPaciente = (gcnew System::Windows::Forms::ComboBox());
@@ -140,20 +147,20 @@ namespace ViewFarmaceutico {
 			this->colHDos = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->colHFec = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->colHEnt = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
-			this->chart1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
-			this->chart2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
+			this->cmbMedicamento = (gcnew System::Windows::Forms::ComboBox());
+			this->labelFiltroMed = (gcnew System::Windows::Forms::Label());
 			this->panel1->SuspendLayout();
 			this->panel2->SuspendLayout();
 			this->panel3->SuspendLayout();
 			this->panel5->SuspendLayout();
 			this->Graficos->SuspendLayout();
 			this->tabPage1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chart1))->BeginInit();
 			this->tabPage2->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chart2))->BeginInit();
 			this->panel6->SuspendLayout();
 			this->panel7->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView2))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chart1))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chart2))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// panel1
@@ -180,6 +187,7 @@ namespace ViewFarmaceutico {
 			this->label1->Size = System::Drawing::Size(181, 29);
 			this->label1->TabIndex = 8;
 			this->label1->Text = L"FARMACEUTICO";
+			this->label1->Click += gcnew System::EventHandler(this, &Farmaceutico::label1_Click_1);
 			// 
 			// lblBienvenida
 			// 
@@ -312,6 +320,8 @@ namespace ViewFarmaceutico {
 			// panel5
 			// 
 			this->panel5->BackColor = System::Drawing::Color::Transparent;
+			this->panel5->Controls->Add(this->labelFiltroMed);
+			this->panel5->Controls->Add(this->cmbMedicamento);
 			this->panel5->Controls->Add(this->Graficos);
 			this->panel5->Controls->Add(this->label5);
 			this->panel5->Controls->Add(this->labelPac2);
@@ -321,16 +331,15 @@ namespace ViewFarmaceutico {
 			this->panel5->Name = L"panel5";
 			this->panel5->Size = System::Drawing::Size(768, 433);
 			this->panel5->TabIndex = 1;
-			this->panel5->Visible = false;
 			// 
 			// Graficos
 			// 
 			this->Graficos->Controls->Add(this->tabPage1);
 			this->Graficos->Controls->Add(this->tabPage2);
-			this->Graficos->Location = System::Drawing::Point(10, 82);
+			this->Graficos->Location = System::Drawing::Point(25, 147);
 			this->Graficos->Name = L"Graficos";
 			this->Graficos->SelectedIndex = 0;
-			this->Graficos->Size = System::Drawing::Size(510, 337);
+			this->Graficos->Size = System::Drawing::Size(441, 272);
 			this->Graficos->TabIndex = 6;
 			// 
 			// tabPage1
@@ -339,10 +348,34 @@ namespace ViewFarmaceutico {
 			this->tabPage1->Location = System::Drawing::Point(4, 24);
 			this->tabPage1->Name = L"tabPage1";
 			this->tabPage1->Padding = System::Windows::Forms::Padding(3);
-			this->tabPage1->Size = System::Drawing::Size(502, 309);
+			this->tabPage1->Size = System::Drawing::Size(433, 244);
 			this->tabPage1->TabIndex = 0;
 			this->tabPage1->Text = L"Bar Chart";
 			this->tabPage1->UseVisualStyleBackColor = true;
+			// 
+			// chart1
+			// 
+			chartArea3->AxisX->IsLabelAutoFit = false;
+			chartArea3->AxisX->LabelStyle->Angle = -35;
+			chartArea3->AxisX->Title = L"Tiempo";
+			chartArea3->AxisY->LabelStyle->Interval = 0;
+			chartArea3->AxisY->Title = L"Dosis";
+			chartArea3->Name = L"ChartArea1";
+			this->chart1->ChartAreas->Add(chartArea3);
+			legend3->Name = L"Legend1";
+			this->chart1->Legends->Add(legend3);
+			this->chart1->Location = System::Drawing::Point(3, 0);
+			this->chart1->Name = L"chart1";
+			this->chart1->Palette = System::Windows::Forms::DataVisualization::Charting::ChartColorPalette::Grayscale;
+			series3->ChartArea = L"ChartArea1";
+			series3->Label = L"#VAL veces";
+			series3->Legend = L"Legend1";
+			series3->Name = L"Series1";
+			this->chart1->Series->Add(series3);
+			this->chart1->Size = System::Drawing::Size(471, 250);
+			this->chart1->TabIndex = 0;
+			this->chart1->Text = L"BarChart";
+			this->chart1->Click += gcnew System::EventHandler(this, &Farmaceutico::chart1_Click);
 			// 
 			// tabPage2
 			// 
@@ -354,6 +387,25 @@ namespace ViewFarmaceutico {
 			this->tabPage2->TabIndex = 1;
 			this->tabPage2->Text = L"Pie Chart";
 			this->tabPage2->UseVisualStyleBackColor = true;
+			// 
+			// chart2
+			// 
+			chartArea4->Name = L"ChartArea1";
+			this->chart2->ChartAreas->Add(chartArea4);
+			legend4->Name = L"Legend1";
+			this->chart2->Legends->Add(legend4);
+			this->chart2->Location = System::Drawing::Point(7, 7);
+			this->chart2->Name = L"chart2";
+			this->chart2->Palette = System::Windows::Forms::DataVisualization::Charting::ChartColorPalette::SeaGreen;
+			series4->ChartArea = L"ChartArea1";
+			series4->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Pie;
+			series4->Legend = L"Legend1";
+			series4->Name = L"Series1";
+			this->chart2->Series->Add(series4);
+			this->chart2->Size = System::Drawing::Size(424, 300);
+			this->chart2->TabIndex = 0;
+			this->chart2->Text = L"PieChart";
+			this->chart2->Click += gcnew System::EventHandler(this, &Farmaceutico::chart2_Click_1);
 			// 
 			// label5
 			// 
@@ -574,25 +626,25 @@ namespace ViewFarmaceutico {
 			this->dataGridView2->AllowUserToAddRows = false;
 			this->dataGridView2->BackgroundColor = System::Drawing::SystemColors::ButtonHighlight;
 			this->dataGridView2->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			dataGridViewCellStyle1->BackColor = System::Drawing::Color::Gainsboro;
-			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 7.8F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle3->BackColor = System::Drawing::Color::Gainsboro;
+			dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 7.8F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle1->ForeColor = System::Drawing::Color::DimGray;
-			this->dataGridView2->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle3->ForeColor = System::Drawing::Color::DimGray;
+			this->dataGridView2->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
 			this->dataGridView2->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridView2->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(5) {
 				this->colHId,
 					this->colHMed, this->colHDos, this->colHFec, this->colHEnt
 			});
-			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle2->BackColor = System::Drawing::Color::White;
-			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 7.8F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle4->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle4->BackColor = System::Drawing::Color::White;
+			dataGridViewCellStyle4->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 7.8F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle2->ForeColor = System::Drawing::Color::Gray;
-			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::Color::CadetBlue;
-			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::Color::White;
-			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
-			this->dataGridView2->DefaultCellStyle = dataGridViewCellStyle2;
+			dataGridViewCellStyle4->ForeColor = System::Drawing::Color::Gray;
+			dataGridViewCellStyle4->SelectionBackColor = System::Drawing::Color::CadetBlue;
+			dataGridViewCellStyle4->SelectionForeColor = System::Drawing::Color::White;
+			dataGridViewCellStyle4->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
+			this->dataGridView2->DefaultCellStyle = dataGridViewCellStyle4;
 			this->dataGridView2->GridColor = System::Drawing::Color::WhiteSmoke;
 			this->dataGridView2->Location = System::Drawing::Point(20, 100);
 			this->dataGridView2->Name = L"dataGridView2";
@@ -644,41 +696,28 @@ namespace ViewFarmaceutico {
 			this->colHEnt->ReadOnly = true;
 			this->colHEnt->Width = 80;
 			// 
-			// chart1
+			// cmbMedicamento
 			// 
-			chartArea1->Name = L"ChartArea1";
-			this->chart1->ChartAreas->Add(chartArea1);
-			legend1->Name = L"Legend1";
-			this->chart1->Legends->Add(legend1);
-			this->chart1->Location = System::Drawing::Point(11, 6);
-			this->chart1->Name = L"chart1";
-			this->chart1->Palette = System::Windows::Forms::DataVisualization::Charting::ChartColorPalette::Grayscale;
-			series1->ChartArea = L"ChartArea1";
-			series1->Legend = L"Legend1";
-			series1->Name = L"Series1";
-			this->chart1->Series->Add(series1);
-			this->chart1->Size = System::Drawing::Size(448, 297);
-			this->chart1->TabIndex = 0;
-			this->chart1->Text = L"BarChart";
+			this->cmbMedicamento->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->cmbMedicamento->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F));
+			this->cmbMedicamento->FormattingEnabled = true;
+			this->cmbMedicamento->Location = System::Drawing::Point(133, 79);
+			this->cmbMedicamento->Name = L"cmbMedicamento";
+			this->cmbMedicamento->Size = System::Drawing::Size(167, 25);
+			this->cmbMedicamento->TabIndex = 7;
+			this->cmbMedicamento->SelectedIndexChanged += gcnew System::EventHandler(this, &Farmaceutico::cmbMedicamento_SelectedIndexChanged);
 			// 
-			// chart2
+			// labelFiltroMed
 			// 
-			chartArea2->Name = L"ChartArea1";
-			this->chart2->ChartAreas->Add(chartArea2);
-			legend2->Name = L"Legend1";
-			this->chart2->Legends->Add(legend2);
-			this->chart2->Location = System::Drawing::Point(7, 7);
-			this->chart2->Name = L"chart2";
-			this->chart2->Palette = System::Windows::Forms::DataVisualization::Charting::ChartColorPalette::SeaGreen;
-			series2->ChartArea = L"ChartArea1";
-			series2->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Pie;
-			series2->Legend = L"Legend1";
-			series2->Name = L"Series1";
-			this->chart2->Series->Add(series2);
-			this->chart2->Size = System::Drawing::Size(424, 300);
-			this->chart2->TabIndex = 0;
-			this->chart2->Text = L"PieChart";
-			this->chart2->Click += gcnew System::EventHandler(this, &Farmaceutico::chart2_Click_1);
+			this->labelFiltroMed->AutoSize = true;
+			this->labelFiltroMed->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->labelFiltroMed->Location = System::Drawing::Point(17, 86);
+			this->labelFiltroMed->Name = L"labelFiltroMed";
+			this->labelFiltroMed->Size = System::Drawing::Size(110, 17);
+			this->labelFiltroMed->TabIndex = 8;
+			this->labelFiltroMed->Text = L"Medicamento:";
+			this->labelFiltroMed->Click += gcnew System::EventHandler(this, &Farmaceutico::label3_Click_1);
 			// 
 			// Farmaceutico
 			// 
@@ -705,14 +744,14 @@ namespace ViewFarmaceutico {
 			this->panel5->PerformLayout();
 			this->Graficos->ResumeLayout(false);
 			this->tabPage1->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chart1))->EndInit();
 			this->tabPage2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chart2))->EndInit();
 			this->panel6->ResumeLayout(false);
 			this->panel6->PerformLayout();
 			this->panel7->ResumeLayout(false);
 			this->panel7->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView2))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chart1))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chart2))->EndInit();
 			this->ResumeLayout(false);
 
 		}
@@ -754,13 +793,64 @@ namespace ViewFarmaceutico {
 	}
 
 		   // Vista 2: Examinar Receta
+		   //=========================================
 	private: System::Void btnCargarReceta_Click(System::Object^ sender, System::EventArgs^ e) {
+		//PARA VER LA UBIACCION DE DONDE VA A LEER EL ARCHIVO HISTORIAL DEL PACIENTE
+		//MessageBox::Show(System::IO::Directory::GetCurrentDirectory(), L"Ruta actual");
+
 		if (this->cmbPaciente->SelectedIndex < 0) {
-			MessageBox::Show(L"Seleccione un paciente.", L"Aviso", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			MessageBox::Show(L"Seleccione un paciente.", L"Aviso",
+				MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			return;
 		}
+
+		// 1. Limpiar estado anterior
+		this->cmbMedicamento->Items->Clear();
 		
+		this->chart1->Series["Series1"]->Points->Clear();
+		_frecuencias = gcnew System::Collections::Generic::Dictionary<String^, int>();
+
+		// 2. Construir nombre del archivo
+		String^ paciente = this->cmbPaciente->SelectedItem->ToString();
+		String^ nombreArchivo = L"historial_" + paciente->Replace(L" ", L"_") + L".txt";
+		String^ ruta = System::IO::Path::Combine(
+			System::IO::Directory::GetCurrentDirectory(),
+			nombreArchivo);
+		//===============================================================verifica si el arhivo existe
+		if (!System::IO::File::Exists(ruta)) {
+			MessageBox::Show(L"No se encontró el archivo:\n" + ruta,
+				L"Aviso", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			return;
+		}
+		//=============================================================== LEE LAS LINEAS DEL ARCHIVO Y CUENTA LAS FRECUENCIAS DE CADA MEDICAMENTO
+		// 4. Leer líneas y contar frecuencias por medicamento (columna [1])
+		array<String^>^ lineas = System::IO::File::ReadAllLines(ruta);
+
+		for each (String ^ linea in lineas) {
+			if (String::IsNullOrWhiteSpace(linea) || linea->StartsWith(L"#"))
+				continue;
+
+			array<String^>^ partes = linea->Split(L',');
+			if (partes->Length < 2) continue;
+
+			String^ med = partes[1]->Trim(); // columna [1] = Medicamento
+
+			if (_frecuencias->ContainsKey(med))
+				_frecuencias[med]++;
+			else
+				_frecuencias->Add(med, 1);
+		}
+
+		// 5. Llenar cmbMedicamento con los medicamentos únicos
+		for each (String ^ med in _frecuencias->Keys)
+			this->cmbMedicamento->Items->Add(med);
+
+		// 6. Seleccionar el primero automáticamente (dispara el evento SelectedIndexChanged)
+		if (this->cmbMedicamento->Items->Count > 0)
+			this->cmbMedicamento->SelectedIndex = 0;
 	}
+
+		   //================================================
 	private: System::Void btnReporte_Click(System::Object^ sender, System::EventArgs^ e) {
 		// TODO: Receta::EmitirReporte() via Controller
 		MessageBox::Show(L"Reporte emitido.", L"Reporte", MessageBoxButtons::OK, MessageBoxIcon::Information);
@@ -809,6 +899,40 @@ private: System::Void panel2_Paint(System::Object^ sender, System::Windows::Form
 private: System::Void chart2_Click(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void chart2_Click_1(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label1_Click_1(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void chart1_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label3_Click_1(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void cmbMedicamento_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+	if (this->cmbMedicamento->SelectedIndex < 0 || _frecuencias == nullptr)
+		return;
+	String^ medSeleccionado = this->cmbMedicamento->SelectedItem->ToString();
+	//borar las barras anteriores para que no se acumulen
+	this->chart1->Series["Series1"]->Points->Clear();
+	this->chart1->Series["Series1"]->ChartType =
+		System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Column;
+	this->chart1->ChartAreas["ChartArea1"]->AxisX->Title = L"Tiempo";
+	this->chart1->ChartAreas["ChartArea1"]->AxisY->Title = L"Dosis";
+	this->chart1->ChartAreas["ChartArea1"]->AxisY->Minimum = 0;
+	this->chart1->ChartAreas["ChartArea1"]->AxisY->Interval = 1;
+	for each (System::Collections::Generic::KeyValuePair<String^, int> par in _frecuencias) {
+
+		int idx = this->chart1->Series["Series1"]->Points->AddXY(par.Key, par.Value);
+
+		this->chart1->Series["Series1"]->Points[idx]->Label =
+			par.Value.ToString() + L" veces";
+
+		if (par.Key == medSeleccionado)
+			this->chart1->Series["Series1"]->Points[idx]->Color =
+			System::Drawing::Color::CadetBlue;
+		else
+			this->chart1->Series["Series1"]->Points[idx]->Color =
+			System::Drawing::Color::White;
+	}
+
 }
 };
 }
