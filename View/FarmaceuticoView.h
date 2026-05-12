@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace View {
+namespace ViewFarmaceutico {
 
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -9,16 +9,16 @@ namespace View {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-	public ref class MyForm : public System::Windows::Forms::Form
+	public ref class Farmaceutico : public System::Windows::Forms::Form
 	{
 	public:
-		MyForm(void)
+		Farmaceutico(void)
 		{
 			InitializeComponent();
 		}
 
 	protected:
-		~MyForm()
+		~Farmaceutico()
 		{
 			if (components)
 			{
@@ -36,7 +36,7 @@ namespace View {
 		   // CONTROLES - Panel lateral 	   
 	private: System::Windows::Forms::Panel^ panel2;
 	private: System::Windows::Forms::Label^ label2;  // MENU
-	private: System::Windows::Forms::Button^ button1; // Ver Pacientes
+		   // Ver Pacientes
 	private: System::Windows::Forms::Button^ button2; // Examinar Receta
 	private: System::Windows::Forms::Button^ button3; // Alertar Paciente
 	private: System::Windows::Forms::Button^ button4; // Historial Recetas
@@ -44,34 +44,13 @@ namespace View {
 		   // CONTROLES - Panel principal	  
 	private: System::Windows::Forms::Panel^ panel3;
 
-
-		   // Vista 1: Ver Pacientes (panel4)	  
-	private: System::Windows::Forms::Panel^ panel4;
-	private: System::Windows::Forms::Label^ label4;   // titulo "Pacientes"
-	private: System::Windows::Forms::Label^ labelBuscar;
-	private: System::Windows::Forms::TextBox^ txtBuscar;
-	private: System::Windows::Forms::Button^ btnBuscar;
-	private: System::Windows::Forms::DataGridView^ dataGridView1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ ColNombre;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ colApellido;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ colEdad;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ colAlergias;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ colSintomas;
-
 		   // Vista 2: Examinar Receta (panel5)   
 	private: System::Windows::Forms::Panel^ panel5;
 	private: System::Windows::Forms::Label^ label5;      // titulo "Examinar Receta"
 	private: System::Windows::Forms::Label^ labelPac2;
 	private: System::Windows::Forms::ComboBox^ cmbPaciente;
 	private: System::Windows::Forms::Button^ btnCargarReceta;
-	private: System::Windows::Forms::GroupBox^ groupBox1;
-	private: System::Windows::Forms::Label^ lblIdL;   private: System::Windows::Forms::Label^ lblIdV;
-	private: System::Windows::Forms::Label^ lblMedL;  private: System::Windows::Forms::Label^ lblMedV;
-	private: System::Windows::Forms::Label^ lblDosL;  private: System::Windows::Forms::Label^ lblDosV;
-	private: System::Windows::Forms::Label^ lblFecL;  private: System::Windows::Forms::Label^ lblFecV;
-	private: System::Windows::Forms::Label^ lblEntL;  private: System::Windows::Forms::Label^ lblEntV;
-	private: System::Windows::Forms::Button^ btnConfirmar;
-	private: System::Windows::Forms::Button^ btnReporte;
+
 
 		   // Vista 3: Alertar Paciente (panel6)
 	private: System::Windows::Forms::Panel^ panel6;
@@ -99,6 +78,14 @@ namespace View {
 	private: System::Windows::Forms::Label^ lblTituloPpal;
 	private: System::Windows::Forms::Label^ lblBienvenida;
 	private: System::Windows::Forms::Label^ label1;
+	private: System::Windows::Forms::TabControl^ Graficos;
+
+
+	private: System::Windows::Forms::TabPage^ tabPage1;
+	private: System::Windows::Forms::TabPage^ tabPage2;
+	private: System::Windows::Forms::DataVisualization::Charting::Chart^ chart1;
+	private: System::Windows::Forms::DataVisualization::Charting::Chart^ chart2;
+
 
 	protected:
 
@@ -110,9 +97,12 @@ namespace View {
 		{
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea1 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
+			System::Windows::Forms::DataVisualization::Charting::Legend^ legend1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
+			System::Windows::Forms::DataVisualization::Charting::Series^ series1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea2 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
+			System::Windows::Forms::DataVisualization::Charting::Legend^ legend2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
+			System::Windows::Forms::DataVisualization::Charting::Series^ series2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->lblBienvenida = (gcnew System::Windows::Forms::Label());
@@ -121,38 +111,16 @@ namespace View {
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->panel3 = (gcnew System::Windows::Forms::Panel());
-			this->panel4 = (gcnew System::Windows::Forms::Panel());
-			this->label4 = (gcnew System::Windows::Forms::Label());
-			this->labelBuscar = (gcnew System::Windows::Forms::Label());
-			this->txtBuscar = (gcnew System::Windows::Forms::TextBox());
-			this->btnBuscar = (gcnew System::Windows::Forms::Button());
-			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
-			this->ColNombre = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->colApellido = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->colEdad = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->colAlergias = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->colSintomas = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->panel5 = (gcnew System::Windows::Forms::Panel());
+			this->Graficos = (gcnew System::Windows::Forms::TabControl());
+			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
+			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->labelPac2 = (gcnew System::Windows::Forms::Label());
 			this->cmbPaciente = (gcnew System::Windows::Forms::ComboBox());
 			this->btnCargarReceta = (gcnew System::Windows::Forms::Button());
-			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->lblIdL = (gcnew System::Windows::Forms::Label());
-			this->lblIdV = (gcnew System::Windows::Forms::Label());
-			this->lblMedL = (gcnew System::Windows::Forms::Label());
-			this->lblMedV = (gcnew System::Windows::Forms::Label());
-			this->lblDosL = (gcnew System::Windows::Forms::Label());
-			this->lblDosV = (gcnew System::Windows::Forms::Label());
-			this->lblFecL = (gcnew System::Windows::Forms::Label());
-			this->lblFecV = (gcnew System::Windows::Forms::Label());
-			this->lblEntL = (gcnew System::Windows::Forms::Label());
-			this->lblEntV = (gcnew System::Windows::Forms::Label());
-			this->btnConfirmar = (gcnew System::Windows::Forms::Button());
-			this->btnReporte = (gcnew System::Windows::Forms::Button());
 			this->panel6 = (gcnew System::Windows::Forms::Panel());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->labelPac3 = (gcnew System::Windows::Forms::Label());
@@ -172,16 +140,20 @@ namespace View {
 			this->colHDos = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->colHFec = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->colHEnt = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
+			this->chart1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
+			this->chart2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
 			this->panel1->SuspendLayout();
 			this->panel2->SuspendLayout();
 			this->panel3->SuspendLayout();
-			this->panel4->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->panel5->SuspendLayout();
-			this->groupBox1->SuspendLayout();
+			this->Graficos->SuspendLayout();
+			this->tabPage1->SuspendLayout();
+			this->tabPage2->SuspendLayout();
 			this->panel6->SuspendLayout();
 			this->panel7->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView2))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chart1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chart2))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// panel1
@@ -194,7 +166,7 @@ namespace View {
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(952, 56);
 			this->panel1->TabIndex = 0;
-			this->panel1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MyForm::panel1_Paint);
+			this->panel1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &Farmaceutico::panel1_Paint);
 			// 
 			// label1
 			// 
@@ -233,7 +205,7 @@ namespace View {
 			this->lblTituloPpal->Size = System::Drawing::Size(115, 16);
 			this->lblTituloPpal->TabIndex = 3;
 			this->lblTituloPpal->Text = L"Portal de Control";
-			this->lblTituloPpal->Click += gcnew System::EventHandler(this, &MyForm::lblTituloPpal_Click);
+			this->lblTituloPpal->Click += gcnew System::EventHandler(this, &Farmaceutico::lblTituloPpal_Click);
 			// 
 			// panel2
 			// 
@@ -242,13 +214,13 @@ namespace View {
 			this->panel2->Controls->Add(this->button4);
 			this->panel2->Controls->Add(this->button3);
 			this->panel2->Controls->Add(this->button2);
-			this->panel2->Controls->Add(this->button1);
 			this->panel2->Controls->Add(this->label2);
 			this->panel2->ForeColor = System::Drawing::Color::White;
 			this->panel2->Location = System::Drawing::Point(0, 55);
 			this->panel2->Name = L"panel2";
 			this->panel2->Size = System::Drawing::Size(184, 433);
 			this->panel2->TabIndex = 0;
+			this->panel2->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &Farmaceutico::panel2_Paint);
 			// 
 			// button4
 			// 
@@ -262,13 +234,13 @@ namespace View {
 			this->button4->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button4->ForeColor = System::Drawing::Color::White;
-			this->button4->Location = System::Drawing::Point(0, 147);
+			this->button4->Location = System::Drawing::Point(3, 106);
 			this->button4->Name = L"button4";
 			this->button4->Size = System::Drawing::Size(184, 30);
 			this->button4->TabIndex = 4;
 			this->button4->Text = L"Historial Recetas";
 			this->button4->UseVisualStyleBackColor = false;
-			this->button4->Click += gcnew System::EventHandler(this, &MyForm::button4_Click);
+			this->button4->Click += gcnew System::EventHandler(this, &Farmaceutico::button4_Click);
 			// 
 			// button3
 			// 
@@ -283,13 +255,13 @@ namespace View {
 			this->button3->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button3->ForeColor = System::Drawing::Color::White;
-			this->button3->Location = System::Drawing::Point(0, 111);
+			this->button3->Location = System::Drawing::Point(3, 73);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(184, 30);
 			this->button3->TabIndex = 3;
 			this->button3->Text = L"Alertar Paciente";
 			this->button3->UseVisualStyleBackColor = false;
-			this->button3->Click += gcnew System::EventHandler(this, &MyForm::button3_Click);
+			this->button3->Click += gcnew System::EventHandler(this, &Farmaceutico::button3_Click);
 			// 
 			// button2
 			// 
@@ -304,35 +276,13 @@ namespace View {
 			this->button2->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button2->ForeColor = System::Drawing::Color::White;
-			this->button2->Location = System::Drawing::Point(0, 76);
+			this->button2->Location = System::Drawing::Point(3, 42);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(184, 30);
 			this->button2->TabIndex = 2;
 			this->button2->Text = L"Examinar Receta";
 			this->button2->UseVisualStyleBackColor = false;
-			this->button2->Click += gcnew System::EventHandler(this, &MyForm::button2_Click);
-			// 
-			// button1
-			// 
-			this->button1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
-				static_cast<System::Int32>(static_cast<System::Byte>(30)));
-			this->button1->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)),
-				static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(30)));
-			this->button1->FlatAppearance->MouseDownBackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(30)),
-				static_cast<System::Int32>(static_cast<System::Byte>(30)), static_cast<System::Int32>(static_cast<System::Byte>(60)));
-			this->button1->FlatAppearance->MouseOverBackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(30)),
-				static_cast<System::Int32>(static_cast<System::Byte>(30)), static_cast<System::Int32>(static_cast<System::Byte>(60)));
-			this->button1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button1->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->button1->ForeColor = System::Drawing::Color::White;
-			this->button1->Location = System::Drawing::Point(0, 40);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(184, 30);
-			this->button1->TabIndex = 1;
-			this->button1->Text = L"Ver Pacientes";
-			this->button1->UseVisualStyleBackColor = false;
-			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
+			this->button2->Click += gcnew System::EventHandler(this, &Farmaceutico::button2_Click);
 			// 
 			// label2
 			// 
@@ -341,7 +291,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->label2->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->label2->Location = System::Drawing::Point(62, 12);
+			this->label2->Location = System::Drawing::Point(65, 22);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(52, 17);
 			this->label2->TabIndex = 0;
@@ -351,7 +301,6 @@ namespace View {
 			// 
 			this->panel3->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(245)), static_cast<System::Int32>(static_cast<System::Byte>(245)),
 				static_cast<System::Int32>(static_cast<System::Byte>(250)));
-			this->panel3->Controls->Add(this->panel4);
 			this->panel3->Controls->Add(this->panel5);
 			this->panel3->Controls->Add(this->panel6);
 			this->panel3->Controls->Add(this->panel7);
@@ -360,165 +309,51 @@ namespace View {
 			this->panel3->Size = System::Drawing::Size(768, 433);
 			this->panel3->TabIndex = 2;
 			// 
-			// panel4
-			// 
-			this->panel4->BackColor = System::Drawing::Color::Transparent;
-			this->panel4->Controls->Add(this->label4);
-			this->panel4->Controls->Add(this->labelBuscar);
-			this->panel4->Controls->Add(this->txtBuscar);
-			this->panel4->Controls->Add(this->btnBuscar);
-			this->panel4->Controls->Add(this->dataGridView1);
-			this->panel4->Location = System::Drawing::Point(0, 0);
-			this->panel4->Name = L"panel4";
-			this->panel4->Size = System::Drawing::Size(768, 433);
-			this->panel4->TabIndex = 0;
-			this->panel4->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MyForm::panel4_Paint);
-			// 
-			// label4
-			// 
-			this->label4->AllowDrop = true;
-			this->label4->AutoSize = true;
-			this->label4->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 13.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label4->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(30)), static_cast<System::Int32>(static_cast<System::Byte>(30)),
-				static_cast<System::Int32>(static_cast<System::Byte>(45)));
-			this->label4->Location = System::Drawing::Point(20, 18);
-			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(123, 27);
-			this->label4->TabIndex = 0;
-			this->label4->Text = L"Pacientes";
-			// 
-			// labelBuscar
-			// 
-			this->labelBuscar->AutoSize = true;
-			this->labelBuscar->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->labelBuscar->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(30)), static_cast<System::Int32>(static_cast<System::Byte>(30)),
-				static_cast<System::Int32>(static_cast<System::Byte>(45)));
-			this->labelBuscar->Location = System::Drawing::Point(20, 62);
-			this->labelBuscar->Name = L"labelBuscar";
-			this->labelBuscar->Size = System::Drawing::Size(133, 17);
-			this->labelBuscar->TabIndex = 1;
-			this->labelBuscar->Text = L"Buscar paciente:";
-			// 
-			// txtBuscar
-			// 
-			this->txtBuscar->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->txtBuscar->Location = System::Drawing::Point(155, 58);
-			this->txtBuscar->Name = L"txtBuscar";
-			this->txtBuscar->Size = System::Drawing::Size(200, 25);
-			this->txtBuscar->TabIndex = 2;
-			this->txtBuscar->TextChanged += gcnew System::EventHandler(this, &MyForm::txtBuscar_TextChanged);
-			// 
-			// btnBuscar
-			// 
-			this->btnBuscar->BackColor = System::Drawing::Color::CadetBlue;
-			this->btnBuscar->FlatAppearance->BorderSize = 0;
-			this->btnBuscar->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->btnBuscar->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->btnBuscar->ForeColor = System::Drawing::Color::White;
-			this->btnBuscar->Location = System::Drawing::Point(365, 56);
-			this->btnBuscar->Name = L"btnBuscar";
-			this->btnBuscar->Size = System::Drawing::Size(80, 28);
-			this->btnBuscar->TabIndex = 3;
-			this->btnBuscar->Text = L"Buscar";
-			this->btnBuscar->UseVisualStyleBackColor = false;
-			this->btnBuscar->Click += gcnew System::EventHandler(this, &MyForm::btnBuscar_Click);
-			// 
-			// dataGridView1
-			// 
-			this->dataGridView1->AllowUserToAddRows = false;
-			this->dataGridView1->AllowUserToOrderColumns = true;
-			dataGridViewCellStyle1->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->dataGridView1->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-			this->dataGridView1->BackgroundColor = System::Drawing::SystemColors::ButtonHighlight;
-			this->dataGridView1->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle2->BackColor = System::Drawing::Color::Gainsboro;
-			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 7.8F, System::Drawing::FontStyle::Regular,
-				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle2->ForeColor = System::Drawing::Color::DimGray;
-			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::Color::DimGray;
-			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::Color::DimGray;
-			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dataGridView1->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(5) {
-				this->ColNombre,
-					this->colApellido, this->colEdad, this->colAlergias, this->colSintomas
-			});
-			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
-			dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 7.8F, System::Drawing::FontStyle::Regular,
-				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle3->ForeColor = System::Drawing::Color::Gray;
-			dataGridViewCellStyle3->SelectionBackColor = System::Drawing::Color::CadetBlue;
-			dataGridViewCellStyle3->SelectionForeColor = System::Drawing::Color::White;
-			dataGridViewCellStyle3->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
-			this->dataGridView1->DefaultCellStyle = dataGridViewCellStyle3;
-			this->dataGridView1->GridColor = System::Drawing::Color::WhiteSmoke;
-			this->dataGridView1->Location = System::Drawing::Point(14, 89);
-			this->dataGridView1->Name = L"dataGridView1";
-			this->dataGridView1->RowHeadersBorderStyle = System::Windows::Forms::DataGridViewHeaderBorderStyle::None;
-			this->dataGridView1->RowHeadersWidth = 51;
-			this->dataGridView1->RowTemplate->Height = 24;
-			this->dataGridView1->SelectionMode = System::Windows::Forms::DataGridViewSelectionMode::FullRowSelect;
-			this->dataGridView1->ShowCellErrors = false;
-			this->dataGridView1->Size = System::Drawing::Size(726, 99);
-			this->dataGridView1->TabIndex = 4;
-			// 
-			// ColNombre
-			// 
-			this->ColNombre->HeaderText = L"Nombre";
-			this->ColNombre->MinimumWidth = 6;
-			this->ColNombre->Name = L"ColNombre";
-			this->ColNombre->Width = 130;
-			// 
-			// colApellido
-			// 
-			this->colApellido->HeaderText = L"Apellido";
-			this->colApellido->MinimumWidth = 6;
-			this->colApellido->Name = L"colApellido";
-			this->colApellido->Width = 130;
-			// 
-			// colEdad
-			// 
-			this->colEdad->HeaderText = L"Edad";
-			this->colEdad->MinimumWidth = 6;
-			this->colEdad->Name = L"colEdad";
-			this->colEdad->Width = 60;
-			// 
-			// colAlergias
-			// 
-			this->colAlergias->HeaderText = L"Alergias";
-			this->colAlergias->MinimumWidth = 6;
-			this->colAlergias->Name = L"colAlergias";
-			this->colAlergias->Width = 150;
-			// 
-			// colSintomas
-			// 
-			this->colSintomas->HeaderText = L"Sintomas";
-			this->colSintomas->MinimumWidth = 6;
-			this->colSintomas->Name = L"colSintomas";
-			this->colSintomas->Width = 200;
-			// 
 			// panel5
 			// 
 			this->panel5->BackColor = System::Drawing::Color::Transparent;
+			this->panel5->Controls->Add(this->Graficos);
 			this->panel5->Controls->Add(this->label5);
 			this->panel5->Controls->Add(this->labelPac2);
 			this->panel5->Controls->Add(this->cmbPaciente);
 			this->panel5->Controls->Add(this->btnCargarReceta);
-			this->panel5->Controls->Add(this->groupBox1);
-			this->panel5->Controls->Add(this->btnConfirmar);
-			this->panel5->Controls->Add(this->btnReporte);
 			this->panel5->Location = System::Drawing::Point(0, 0);
 			this->panel5->Name = L"panel5";
 			this->panel5->Size = System::Drawing::Size(768, 433);
 			this->panel5->TabIndex = 1;
 			this->panel5->Visible = false;
+			// 
+			// Graficos
+			// 
+			this->Graficos->Controls->Add(this->tabPage1);
+			this->Graficos->Controls->Add(this->tabPage2);
+			this->Graficos->Location = System::Drawing::Point(10, 82);
+			this->Graficos->Name = L"Graficos";
+			this->Graficos->SelectedIndex = 0;
+			this->Graficos->Size = System::Drawing::Size(510, 337);
+			this->Graficos->TabIndex = 6;
+			// 
+			// tabPage1
+			// 
+			this->tabPage1->Controls->Add(this->chart1);
+			this->tabPage1->Location = System::Drawing::Point(4, 24);
+			this->tabPage1->Name = L"tabPage1";
+			this->tabPage1->Padding = System::Windows::Forms::Padding(3);
+			this->tabPage1->Size = System::Drawing::Size(502, 309);
+			this->tabPage1->TabIndex = 0;
+			this->tabPage1->Text = L"Bar Chart";
+			this->tabPage1->UseVisualStyleBackColor = true;
+			// 
+			// tabPage2
+			// 
+			this->tabPage2->Controls->Add(this->chart2);
+			this->tabPage2->Location = System::Drawing::Point(4, 24);
+			this->tabPage2->Name = L"tabPage2";
+			this->tabPage2->Padding = System::Windows::Forms::Padding(3);
+			this->tabPage2->Size = System::Drawing::Size(502, 309);
+			this->tabPage2->TabIndex = 1;
+			this->tabPage2->Text = L"Pie Chart";
+			this->tabPage2->UseVisualStyleBackColor = true;
 			// 
 			// label5
 			// 
@@ -527,7 +362,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->label5->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(30)), static_cast<System::Int32>(static_cast<System::Byte>(30)),
 				static_cast<System::Int32>(static_cast<System::Byte>(45)));
-			this->label5->Location = System::Drawing::Point(20, 18);
+			this->label5->Location = System::Drawing::Point(20, 12);
 			this->label5->Name = L"label5";
 			this->label5->Size = System::Drawing::Size(204, 27);
 			this->label5->TabIndex = 0;
@@ -538,7 +373,7 @@ namespace View {
 			this->labelPac2->AutoSize = true;
 			this->labelPac2->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->labelPac2->Location = System::Drawing::Point(20, 62);
+			this->labelPac2->Location = System::Drawing::Point(20, 52);
 			this->labelPac2->Name = L"labelPac2";
 			this->labelPac2->Size = System::Drawing::Size(77, 17);
 			this->labelPac2->TabIndex = 1;
@@ -549,7 +384,7 @@ namespace View {
 			this->cmbPaciente->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 			this->cmbPaciente->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->cmbPaciente->Location = System::Drawing::Point(100, 59);
+			this->cmbPaciente->Location = System::Drawing::Point(100, 48);
 			this->cmbPaciente->Name = L"cmbPaciente";
 			this->cmbPaciente->Size = System::Drawing::Size(200, 25);
 			this->cmbPaciente->TabIndex = 2;
@@ -562,183 +397,13 @@ namespace View {
 			this->btnCargarReceta->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->btnCargarReceta->ForeColor = System::Drawing::Color::White;
-			this->btnCargarReceta->Location = System::Drawing::Point(315, 57);
+			this->btnCargarReceta->Location = System::Drawing::Point(315, 46);
 			this->btnCargarReceta->Name = L"btnCargarReceta";
 			this->btnCargarReceta->Size = System::Drawing::Size(120, 28);
 			this->btnCargarReceta->TabIndex = 3;
 			this->btnCargarReceta->Text = L"Cargar Receta";
 			this->btnCargarReceta->UseVisualStyleBackColor = false;
-			this->btnCargarReceta->Click += gcnew System::EventHandler(this, &MyForm::btnCargarReceta_Click);
-			// 
-			// groupBox1
-			// 
-			this->groupBox1->Controls->Add(this->lblIdL);
-			this->groupBox1->Controls->Add(this->lblIdV);
-			this->groupBox1->Controls->Add(this->lblMedL);
-			this->groupBox1->Controls->Add(this->lblMedV);
-			this->groupBox1->Controls->Add(this->lblDosL);
-			this->groupBox1->Controls->Add(this->lblDosV);
-			this->groupBox1->Controls->Add(this->lblFecL);
-			this->groupBox1->Controls->Add(this->lblFecV);
-			this->groupBox1->Controls->Add(this->lblEntL);
-			this->groupBox1->Controls->Add(this->lblEntV);
-			this->groupBox1->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->groupBox1->Location = System::Drawing::Point(20, 100);
-			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(720, 210);
-			this->groupBox1->TabIndex = 4;
-			this->groupBox1->TabStop = false;
-			this->groupBox1->Text = L"Datos de la Receta";
-			// 
-			// lblIdL
-			// 
-			this->lblIdL->AutoSize = true;
-			this->lblIdL->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lblIdL->Location = System::Drawing::Point(15, 32);
-			this->lblIdL->Name = L"lblIdL";
-			this->lblIdL->Size = System::Drawing::Size(85, 17);
-			this->lblIdL->TabIndex = 0;
-			this->lblIdL->Text = L"ID Receta:";
-			// 
-			// lblIdV
-			// 
-			this->lblIdV->AutoSize = true;
-			this->lblIdV->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lblIdV->ForeColor = System::Drawing::Color::DimGray;
-			this->lblIdV->Location = System::Drawing::Point(130, 32);
-			this->lblIdV->Name = L"lblIdV";
-			this->lblIdV->Size = System::Drawing::Size(13, 17);
-			this->lblIdV->TabIndex = 1;
-			this->lblIdV->Text = L"-";
-			// 
-			// lblMedL
-			// 
-			this->lblMedL->AutoSize = true;
-			this->lblMedL->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lblMedL->Location = System::Drawing::Point(15, 67);
-			this->lblMedL->Name = L"lblMedL";
-			this->lblMedL->Size = System::Drawing::Size(110, 17);
-			this->lblMedL->TabIndex = 2;
-			this->lblMedL->Text = L"Medicamento:";
-			// 
-			// lblMedV
-			// 
-			this->lblMedV->AutoSize = true;
-			this->lblMedV->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lblMedV->ForeColor = System::Drawing::Color::DimGray;
-			this->lblMedV->Location = System::Drawing::Point(130, 67);
-			this->lblMedV->Name = L"lblMedV";
-			this->lblMedV->Size = System::Drawing::Size(13, 17);
-			this->lblMedV->TabIndex = 3;
-			this->lblMedV->Text = L"-";
-			// 
-			// lblDosL
-			// 
-			this->lblDosL->AutoSize = true;
-			this->lblDosL->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lblDosL->Location = System::Drawing::Point(15, 102);
-			this->lblDosL->Name = L"lblDosL";
-			this->lblDosL->Size = System::Drawing::Size(53, 17);
-			this->lblDosL->TabIndex = 4;
-			this->lblDosL->Text = L"Dosis:";
-			// 
-			// lblDosV
-			// 
-			this->lblDosV->AutoSize = true;
-			this->lblDosV->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lblDosV->ForeColor = System::Drawing::Color::DimGray;
-			this->lblDosV->Location = System::Drawing::Point(130, 102);
-			this->lblDosV->Name = L"lblDosV";
-			this->lblDosV->Size = System::Drawing::Size(13, 17);
-			this->lblDosV->TabIndex = 5;
-			this->lblDosV->Text = L"-";
-			// 
-			// lblFecL
-			// 
-			this->lblFecL->AutoSize = true;
-			this->lblFecL->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lblFecL->Location = System::Drawing::Point(15, 137);
-			this->lblFecL->Name = L"lblFecL";
-			this->lblFecL->Size = System::Drawing::Size(119, 17);
-			this->lblFecL->TabIndex = 6;
-			this->lblFecL->Text = L"Fecha Emision:";
-			// 
-			// lblFecV
-			// 
-			this->lblFecV->AutoSize = true;
-			this->lblFecV->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lblFecV->ForeColor = System::Drawing::Color::DimGray;
-			this->lblFecV->Location = System::Drawing::Point(130, 137);
-			this->lblFecV->Name = L"lblFecV";
-			this->lblFecV->Size = System::Drawing::Size(13, 17);
-			this->lblFecV->TabIndex = 7;
-			this->lblFecV->Text = L"-";
-			// 
-			// lblEntL
-			// 
-			this->lblEntL->AutoSize = true;
-			this->lblEntL->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lblEntL->Location = System::Drawing::Point(15, 172);
-			this->lblEntL->Name = L"lblEntL";
-			this->lblEntL->Size = System::Drawing::Size(89, 17);
-			this->lblEntL->TabIndex = 8;
-			this->lblEntL->Text = L"Entregado:";
-			// 
-			// lblEntV
-			// 
-			this->lblEntV->AutoSize = true;
-			this->lblEntV->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lblEntV->ForeColor = System::Drawing::Color::Red;
-			this->lblEntV->Location = System::Drawing::Point(130, 172);
-			this->lblEntV->Name = L"lblEntV";
-			this->lblEntV->Size = System::Drawing::Size(13, 17);
-			this->lblEntV->TabIndex = 9;
-			this->lblEntV->Text = L"-";
-			// 
-			// btnConfirmar
-			// 
-			this->btnConfirmar->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(34)), static_cast<System::Int32>(static_cast<System::Byte>(139)),
-				static_cast<System::Int32>(static_cast<System::Byte>(34)));
-			this->btnConfirmar->FlatAppearance->BorderSize = 0;
-			this->btnConfirmar->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->btnConfirmar->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->btnConfirmar->ForeColor = System::Drawing::Color::White;
-			this->btnConfirmar->Location = System::Drawing::Point(20, 325);
-			this->btnConfirmar->Name = L"btnConfirmar";
-			this->btnConfirmar->Size = System::Drawing::Size(150, 30);
-			this->btnConfirmar->TabIndex = 5;
-			this->btnConfirmar->Text = L"Confirmar Entrega";
-			this->btnConfirmar->UseVisualStyleBackColor = false;
-			this->btnConfirmar->Click += gcnew System::EventHandler(this, &MyForm::btnConfirmar_Click);
-			// 
-			// btnReporte
-			// 
-			this->btnReporte->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(180)), static_cast<System::Int32>(static_cast<System::Byte>(100)),
-				static_cast<System::Int32>(static_cast<System::Byte>(0)));
-			this->btnReporte->FlatAppearance->BorderSize = 0;
-			this->btnReporte->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->btnReporte->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->btnReporte->ForeColor = System::Drawing::Color::White;
-			this->btnReporte->Location = System::Drawing::Point(185, 325);
-			this->btnReporte->Name = L"btnReporte";
-			this->btnReporte->Size = System::Drawing::Size(130, 30);
-			this->btnReporte->TabIndex = 6;
-			this->btnReporte->Text = L"Emitir Reporte";
-			this->btnReporte->UseVisualStyleBackColor = false;
-			this->btnReporte->Click += gcnew System::EventHandler(this, &MyForm::btnReporte_Click);
+			this->btnCargarReceta->Click += gcnew System::EventHandler(this, &Farmaceutico::btnCargarReceta_Click);
 			// 
 			// panel6
 			// 
@@ -827,7 +492,7 @@ namespace View {
 			this->btnEnviarAlerta->TabIndex = 5;
 			this->btnEnviarAlerta->Text = L"Enviar Alerta";
 			this->btnEnviarAlerta->UseVisualStyleBackColor = false;
-			this->btnEnviarAlerta->Click += gcnew System::EventHandler(this, &MyForm::btnEnviarAlerta_Click);
+			this->btnEnviarAlerta->Click += gcnew System::EventHandler(this, &Farmaceutico::btnEnviarAlerta_Click);
 			// 
 			// labelResultado
 			// 
@@ -902,32 +567,32 @@ namespace View {
 			this->btnCargarHist->TabIndex = 3;
 			this->btnCargarHist->Text = L"Cargar Historial";
 			this->btnCargarHist->UseVisualStyleBackColor = false;
-			this->btnCargarHist->Click += gcnew System::EventHandler(this, &MyForm::btnCargarHist_Click);
+			this->btnCargarHist->Click += gcnew System::EventHandler(this, &Farmaceutico::btnCargarHist_Click);
 			// 
 			// dataGridView2
 			// 
 			this->dataGridView2->AllowUserToAddRows = false;
 			this->dataGridView2->BackgroundColor = System::Drawing::SystemColors::ButtonHighlight;
 			this->dataGridView2->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			dataGridViewCellStyle4->BackColor = System::Drawing::Color::Gainsboro;
-			dataGridViewCellStyle4->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 7.8F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle1->BackColor = System::Drawing::Color::Gainsboro;
+			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 7.8F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle4->ForeColor = System::Drawing::Color::DimGray;
-			this->dataGridView2->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+			dataGridViewCellStyle1->ForeColor = System::Drawing::Color::DimGray;
+			this->dataGridView2->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			this->dataGridView2->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridView2->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(5) {
 				this->colHId,
 					this->colHMed, this->colHDos, this->colHFec, this->colHEnt
 			});
-			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle5->BackColor = System::Drawing::Color::White;
-			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 7.8F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle2->BackColor = System::Drawing::Color::White;
+			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 7.8F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle5->ForeColor = System::Drawing::Color::Gray;
-			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::Color::CadetBlue;
-			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::Color::White;
-			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
-			this->dataGridView2->DefaultCellStyle = dataGridViewCellStyle5;
+			dataGridViewCellStyle2->ForeColor = System::Drawing::Color::Gray;
+			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::Color::CadetBlue;
+			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::Color::White;
+			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
+			this->dataGridView2->DefaultCellStyle = dataGridViewCellStyle2;
 			this->dataGridView2->GridColor = System::Drawing::Color::WhiteSmoke;
 			this->dataGridView2->Location = System::Drawing::Point(20, 100);
 			this->dataGridView2->Name = L"dataGridView2";
@@ -979,7 +644,43 @@ namespace View {
 			this->colHEnt->ReadOnly = true;
 			this->colHEnt->Width = 80;
 			// 
-			// MyForm
+			// chart1
+			// 
+			chartArea1->Name = L"ChartArea1";
+			this->chart1->ChartAreas->Add(chartArea1);
+			legend1->Name = L"Legend1";
+			this->chart1->Legends->Add(legend1);
+			this->chart1->Location = System::Drawing::Point(11, 6);
+			this->chart1->Name = L"chart1";
+			this->chart1->Palette = System::Windows::Forms::DataVisualization::Charting::ChartColorPalette::Grayscale;
+			series1->ChartArea = L"ChartArea1";
+			series1->Legend = L"Legend1";
+			series1->Name = L"Series1";
+			this->chart1->Series->Add(series1);
+			this->chart1->Size = System::Drawing::Size(448, 297);
+			this->chart1->TabIndex = 0;
+			this->chart1->Text = L"BarChart";
+			// 
+			// chart2
+			// 
+			chartArea2->Name = L"ChartArea1";
+			this->chart2->ChartAreas->Add(chartArea2);
+			legend2->Name = L"Legend1";
+			this->chart2->Legends->Add(legend2);
+			this->chart2->Location = System::Drawing::Point(7, 7);
+			this->chart2->Name = L"chart2";
+			this->chart2->Palette = System::Windows::Forms::DataVisualization::Charting::ChartColorPalette::SeaGreen;
+			series2->ChartArea = L"ChartArea1";
+			series2->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Pie;
+			series2->Legend = L"Legend1";
+			series2->Name = L"Series1";
+			this->chart2->Series->Add(series2);
+			this->chart2->Size = System::Drawing::Size(424, 300);
+			this->chart2->TabIndex = 0;
+			this->chart2->Text = L"PieChart";
+			this->chart2->Click += gcnew System::EventHandler(this, &Farmaceutico::chart2_Click_1);
+			// 
+			// Farmaceutico
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 15);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
@@ -992,26 +693,26 @@ namespace View {
 			this->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->Margin = System::Windows::Forms::Padding(4);
-			this->Name = L"MyForm";
+			this->Name = L"Farmaceutico";
 			this->Text = L"Sistema Farmacia - Farmaceutico";
-			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
+			this->Load += gcnew System::EventHandler(this, &Farmaceutico::MyForm_Load);
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			this->panel2->ResumeLayout(false);
 			this->panel2->PerformLayout();
 			this->panel3->ResumeLayout(false);
-			this->panel4->ResumeLayout(false);
-			this->panel4->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
 			this->panel5->ResumeLayout(false);
 			this->panel5->PerformLayout();
-			this->groupBox1->ResumeLayout(false);
-			this->groupBox1->PerformLayout();
+			this->Graficos->ResumeLayout(false);
+			this->tabPage1->ResumeLayout(false);
+			this->tabPage2->ResumeLayout(false);
 			this->panel6->ResumeLayout(false);
 			this->panel6->PerformLayout();
 			this->panel7->ResumeLayout(false);
 			this->panel7->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView2))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chart1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chart2))->EndInit();
 			this->ResumeLayout(false);
 
 		}
@@ -1019,7 +720,6 @@ namespace View {
 
 		// Oculta todos los paneles y muestra solo el pedido
 	private: void MostrarPanel(System::Windows::Forms::Panel^ panelActivo) {
-		this->panel4->Visible = false;
 		this->panel5->Visible = false;
 		this->panel6->Visible = false;
 		this->panel7->Visible = false;
@@ -1029,25 +729,12 @@ namespace View {
 		   // Filtra filas del dataGridView1 por nombre o apellido
 	private: void FiltrarPacientes(String^ texto) {
 		String^ busqueda = texto->ToLower()->Trim();
-		for each (System::Windows::Forms::DataGridViewRow ^ fila in this->dataGridView1->Rows)
-		{
-			if (fila->IsNewRow) continue;
-			String^ nombre = fila->Cells[L"ColNombre"]->Value != nullptr ? fila->Cells[L"ColNombre"]->Value->ToString()->ToLower() : L"";
-			String^ apellido = fila->Cells[L"colApellido"]->Value != nullptr ? fila->Cells[L"colApellido"]->Value->ToString()->ToLower() : L"";
-			if (busqueda == String::Empty) {
-				fila->Visible = true;
-			}
-			else {
-				fila->Visible = nombre->Contains(busqueda) || apellido->Contains(busqueda);
-			}
-		}
+		
 	}
 		   // MyForm_Load - datos de prueba
 	private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
 		// TODO: reemplazar con datos reales del Controller/ServicioUsuarios
-		this->dataGridView1->Rows->Add(L"Jenna", L"Quezada", L"21", L"Penicilina", L"Fiebre, tos");
-		this->dataGridView1->Rows->Add(L"Luis", L"Lopez", L"28", L"Ninguna", L"Dolor de cabeza");
-		this->dataGridView1->Rows->Add(L"Carlos", L"Ramos", L"52", L"Ibuprofeno", L"Dolor articular");
+		
 		array<String^>^ pacientes = { L"Jenna Quezada", L"Luis Lopez", L"Carlos Ramos" };
 		this->cmbPaciente->Items->AddRange(pacientes);
 		this->cmbPacAlerta->Items->AddRange(pacientes);
@@ -1055,9 +742,7 @@ namespace View {
 	}
 
 		   // Sidebar - navegacion entre paneles
-	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-		MostrarPanel(this->panel4);
-	}
+	
 	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
 		MostrarPanel(this->panel5);
 	}
@@ -1068,34 +753,13 @@ namespace View {
 		MostrarPanel(this->panel7);
 	}
 
-		   // Vista 1: Buscar paciente
-	private: System::Void txtBuscar_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-		FiltrarPacientes(this->txtBuscar->Text);
-	}
-	private: System::Void btnBuscar_Click(System::Object^ sender, System::EventArgs^ e) {
-		FiltrarPacientes(this->txtBuscar->Text);
-	}
-
 		   // Vista 2: Examinar Receta
 	private: System::Void btnCargarReceta_Click(System::Object^ sender, System::EventArgs^ e) {
 		if (this->cmbPaciente->SelectedIndex < 0) {
 			MessageBox::Show(L"Seleccione un paciente.", L"Aviso", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			return;
 		}
-		// TODO: obtener receta real via Controller -> Farmaceutico::ExaminarReceta(paciente)
-		this->lblIdV->Text = L"REC-001";
-		this->lblMedV->Text = L"Aspirina 500mg";
-		this->lblDosV->Text = L"2 comprimidos cada 8 horas";
-		this->lblFecV->Text = DateTime::Today.ToShortDateString();
-		this->lblEntV->Text = L"No";
-		this->lblEntV->ForeColor = System::Drawing::Color::Red;
-	}
-	private: System::Void btnConfirmar_Click(System::Object^ sender, System::EventArgs^ e) {
-		// TODO: Receta::entregado = true via Controller
-		this->lblEntV->Text = L"Si";
-		this->lblEntV->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(34)),
-			static_cast<System::Int32>(static_cast<System::Byte>(139)), static_cast<System::Int32>(static_cast<System::Byte>(34)));
-		MessageBox::Show(L"Entrega confirmada.", L"Exito", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		
 	}
 	private: System::Void btnReporte_Click(System::Object^ sender, System::EventArgs^ e) {
 		// TODO: Receta::EmitirReporte() via Controller
@@ -1135,11 +799,16 @@ namespace View {
 	}
 	private: System::Void dateTimePicker1_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
-	private: System::Void panel4_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
-	}
+	
 	private: System::Void lblTituloPpal_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
 private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void panel2_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+}
+private: System::Void chart2_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void chart2_Click_1(System::Object^ sender, System::EventArgs^ e) {
 }
 };
 }
