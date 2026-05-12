@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #using <System.dll>
 #using <System.Net.Http.dll>
 // Asegúrate de haber agregado la referencia a Newtonsoft.Json.dll como hicimos antes
@@ -47,6 +47,6 @@ namespace IA_CLASS {
         }
     };
 
-}
+}*/
 
 

@@ -114,7 +114,7 @@ bool Controller::ServicioPacientes::ValidarPaciente(Paciente^ p, String^% error)
 
 //=========================Requerimientos Servicio de Medicamentos===========================================================//
 List<Medicamento^>^ Controller::ServicioMedicamentos::ObtenerInventarioCompleto() {
-    Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
+    Dictionary<int, Medicamento^>^ dic = ObtenerDiccionarioCompleto();
     List<Medicamento^>^ lista = gcnew List<Medicamento^>();
 
     for each (KeyValuePair<int, Medicamento^> kvp in dic) {
@@ -123,6 +123,11 @@ List<Medicamento^>^ Controller::ServicioMedicamentos::ObtenerInventarioCompleto(
 
     return lista;
 }
+
+Dictionary<int, Medicamento^>^ Controller::ServicioMedicamentos::ObtenerDiccionarioCompleto() {
+    Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
+    return dic;
+} //Función para obtener el diccionario directamente
 
 bool Controller::ServicioMedicamentos::ActualizarMedicamento(int id, double nuevoPrecio, int nuevoStock) {
     Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
@@ -149,6 +154,35 @@ List<Venta^>^ Controller::ServicioVentas::ObtenerTodasLasVentas() {
 
     return lista;
 }
+
+//Elimina la venta y actualiza el stock del medicamento previamente vendido
+bool Controller::ServicioVentas::EliminarVenta(int idVenta) {
+    Controller::ServicioMedicamentos^ sm = gcnew Controller::ServicioMedicamentos("Medicamentos.txt");
+    Dictionary<int, Venta^>^ diccionarioVen = repo->LeerVentas(filePath);
+    Dictionary<int, Medicamento^>^ diccionarioMed = sm->ObtenerDiccionarioCompleto();
+    Venta^ venta = diccionarioVen[idVenta];
+
+    if (diccionarioVen->ContainsKey(idVenta)) {
+        diccionarioVen->Remove(idVenta);
+
+        //Se actualiza el stock del nuevo medicamento en la base de datos
+        int idMed = venta->idMedicamento;
+        double nuevoPrecio = venta->precioMedicamento;
+        int nuevoStock = diccionarioMed[idMed]->stock + venta->cantidadVendida; //Devuelve la cantidad vendida al stock del medicamento
+
+        sm->ActualizarMedicamento(idMed, nuevoPrecio, nuevoStock);
+        repo->GuardarVentas(filePath, diccionarioVen);
+        return true;
+    }
+    else {
+        Console::WriteLine("ERROR: ID no encontrado.");
+        return false;
+    }
+
+    
+}
+
+
 
 
 /*bool Controller::OperadorDeVentasController::Modificar(int id, String^ atributo, String^ nuevoValor) {

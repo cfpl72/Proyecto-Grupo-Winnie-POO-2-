@@ -39,6 +39,7 @@ namespace Controller {
         }
 
         List<Medicamento^>^ ObtenerInventarioCompleto();
+        Dictionary<int, Medicamento^>^ Controller::ServicioMedicamentos::ObtenerDiccionarioCompleto();
         bool ActualizarMedicamento(int id, double nuevoPrecio, int nuevoStock);
     };
 
@@ -54,6 +55,8 @@ namespace Controller {
         }
 
         List<Venta^>^ ObtenerTodasLasVentas();
+        bool EliminarVenta(int idVenta);
+
     };
 }
 
