@@ -147,11 +147,9 @@ namespace WinniePOO_Modelos {
 
 			this->cantidadVendida = cantidad;
 
-			// 🔥 Snapshot del medicamento en el momento de la venta
 			this->precioMedicamento = med->precio;
 			this->nombreMedicamento = med->nombre;
 
-			// 🔥 Total congelado
 			this->totalVenta = this->precioMedicamento * this->cantidadVendida;
 
 			this->fecha = fechaVenta;

@@ -55,9 +55,11 @@ namespace Controller {
         }
 
         bool RegistrarVenta(int idVenta, int idPaciente, int idMedicamento, int cantidad);
+        Venta^ Controller::ServicioVentas::LeerVenta(int idVenta);
         List<Venta^>^ ObtenerTodasLasVentas();
         bool ModificarVenta(int idVenta, int nuevaCantidadVendida);
         bool EliminarVenta(int idVenta);
+        String^ Controller::ServicioVentas::MostrarBoletaVenta(int idVenta);
 
     };
 }

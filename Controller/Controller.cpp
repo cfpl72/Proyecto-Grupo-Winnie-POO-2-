@@ -215,6 +215,18 @@ bool Controller::ServicioVentas::RegistrarVenta(int idVenta, int idPaciente, int
     return true;
 }
 
+Venta^ Controller::ServicioVentas::LeerVenta(int idVenta) {
+
+    Dictionary<int, Venta^>^ dic = repo->LeerVentas(filePath);
+
+    if (dic->ContainsKey(idVenta)) {
+        return dic[idVenta];
+    }
+
+    Console::WriteLine("ERROR: Venta no encontrada");
+    return nullptr;
+}
+
 List<Venta^>^ Controller::ServicioVentas::ObtenerTodasLasVentas() {
     Dictionary<int, Venta^>^ dic = repo->LeerVentas(filePath);
     List<Venta^>^ lista = gcnew List<Venta^>();
@@ -298,6 +310,38 @@ bool Controller::ServicioVentas::ModificarVenta(int idVenta, int nuevaCantidadVe
     repo->GuardarVentas("Ventas.txt", diccionarioVen);
     sm->ActualizarMedicamento(med->id, med->precio, med->stock);
     return true;
+}
+
+String^ Controller::ServicioVentas::MostrarBoletaVenta(int idVenta) {
+
+    Venta^ v = LeerVenta(idVenta);
+
+    if (v == nullptr) {
+        return "ERROR: No se pudo generar boleta";
+    }
+
+    String^ boleta = "";
+
+    boleta += "=============================\n";
+    boleta += "        BOLETA DE VENTA      \n";
+    boleta += "=============================\n";
+
+    boleta += "ID Venta: " + v->id + "\n";
+    boleta += "ID Paciente: " + v->idPaciente + "\n";
+
+    boleta += "\n--- DETALLE ---\n";
+    boleta += "Medicamento: " + v->nombreMedicamento + "\n";
+    boleta += "Cantidad: " + v->cantidadVendida + "\n";
+    boleta += "Precio Unitario: " + v->precioMedicamento + "\n";
+
+    boleta += "\n--- TOTAL ---\n";
+    boleta += "Total: " + v->totalVenta + "\n";
+
+    boleta += "\nFecha: " + ((DateTime)v->fecha).ToString("yyyy-MM-dd") + "\n";
+
+    boleta += "=============================\n";
+
+    return boleta;
 }
 
 
