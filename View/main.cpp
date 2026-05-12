@@ -6,137 +6,151 @@ using namespace System::IO;
 using namespace Controller;
 using namespace WinniePOO_Modelos;
 
-void LimpiarArchivos() {
+void Reset() {
     File::WriteAllText("Pacientes.txt", "");
     File::WriteAllText("Medicamentos.txt", "");
     File::WriteAllText("Ventas.txt", "");
 }
 
-void ImprimirTodo() {
-
-    ServicioPacientes^ sp = gcnew ServicioPacientes("Pacientes.txt");
-    ServicioMedicamentos^ sm = gcnew ServicioMedicamentos("Medicamentos.txt");
-    ServicioVentas^ sv = gcnew ServicioVentas("Ventas.txt");
-
-    auto pacientes = sp->LeerTodos();
-    auto meds = sm->ObtenerDiccionarioCompleto();
-    auto ventas = sv->ObtenerTodasLasVentas();
-
-    Console::WriteLine("\n===============================");
-    Console::WriteLine("ESTADO ACTUAL");
-    Console::WriteLine("===============================");
-
-    Console::WriteLine("\nPACIENTES:");
-    for each(KeyValuePair<int, Paciente^> kvp in pacientes) {
-        auto p = kvp.Value;
-        Console::WriteLine("ID:{0} Nombre:{1} {2} Edad:{3}",
-            p->id, p->nombre, p->apellido, p->edad);
+void PrintPacientes(ServicioPacientes^ sp) {
+    Console::WriteLine("\n[BD PACIENTES]");
+    for each (auto kvp in sp->LeerTodos()) {
+        Paciente^ p = kvp.Value;
+        Console::WriteLine("ID: " + p->id + " | " + p->nombre + " " + p->apellido +
+            " | Edad: " + p->edad +
+            " | Alergias: " + p->alergias);
     }
-
-    Console::WriteLine("\nMEDICAMENTOS:");
-    for each(KeyValuePair<int, Medicamento^> kvp in meds) {
-        auto m = kvp.Value;
-        Console::WriteLine("ID:{0} Nombre:{1} Stock:{2} Precio:{3}",
-            m->id, m->nombre, m->stock, m->precio);
-    }
-
-    Console::WriteLine("\nVENTAS:");
-    for each(Venta ^ v in ventas) {
-        Console::WriteLine("Venta:{0} Paciente:{1} Med:{2} Cant:{3} Total:{4}",
-            v->id, v->idPaciente, v->idMedicamento, v->cantidadVendida, v->totalVenta);
-    }
-
-    Console::WriteLine("\n--------------------------------\n");
 }
 
-int main() {
+void PrintMedicamentos(ServicioMedicamentos^ sm) {
+    Console::WriteLine("\n[BD MEDICAMENTOS]");
+    for each (Medicamento ^ m in sm->ObtenerInventarioCompleto()) {
+        Console::WriteLine("ID: " + m->id +
+            " | " + m->nombre +
+            " | Precio: " + m->precio +
+            " | Stock: " + m->stock);
+    }
+}
 
-    Console::WriteLine("INICIO TEST COMPLETO");
+void PrintVentas(ServicioVentas^ sv) {
+    Console::WriteLine("\n[BD VENTAS]");
+    for each (Venta ^ v in sv->ObtenerTodasLasVentas()) {
+        Console::WriteLine("ID: " + v->id +
+            " | Paciente: " + v->idPaciente +
+            " | Med: " + v->nombreMedicamento +
+            " | Cant: " + v->cantidadVendida +
+            " | Total: " + v->totalVenta);
+    }
+}
 
-    LimpiarArchivos();
+void PrintLine(String^ titulo) {
+    Console::WriteLine("\n==============================");
+    Console::WriteLine(titulo);
+    Console::WriteLine("==============================");
+}
 
-    ServicioPacientes^ sp = gcnew ServicioPacientes("Pacientes.txt");
-    ServicioMedicamentos^ sm = gcnew ServicioMedicamentos("Medicamentos.txt");
-    ServicioVentas^ sv = gcnew ServicioVentas("Ventas.txt");
+int main(array<System::String^>^ args)
+{
+    Reset();
 
-    Persistance::persistance repo;
+    ServicioPacientes^ sp = gcnew ServicioPacientes();
+    ServicioMedicamentos^ sm = gcnew ServicioMedicamentos();
+    ServicioVentas^ sv = gcnew ServicioVentas();
 
-    // =========================
+    // ==============================
     // PACIENTES
-    // =========================
+    // ==============================
+    PrintLine("PACIENTES");
 
-    Console::WriteLine("\nAgregar pacientes");
+    Paciente^ p1 = gcnew Paciente(1, "t1");
+    p1->nombre = "Claudio"; p1->apellido = "Rios";
+    p1->edad = 21; p1->alergias = "Ninguna"; p1->sintomas = "Dolor";
 
-    Paciente^ p1 = gcnew Paciente(101, "tok1");
-    p1->nombre = "Claudio";
-    p1->apellido = "A";
-    p1->edad = 21;
-
-    Paciente^ p2 = gcnew Paciente(102, "tok2");
-    p2->nombre = "Lucia";
-    p2->apellido = "B";
-    p2->edad = 25;
-
+    Console::WriteLine("→ Registrando p1");
     sp->Registrar(p1);
-    ImprimirTodo();
+    PrintPacientes(sp);
 
+    Paciente^ p2 = gcnew Paciente(2, "t2");
+    p2->nombre = "Ana"; p2->apellido = "Lopez";
+    p2->edad = 30; p2->alergias = "Penicilina"; p2->sintomas = "Fiebre";
+
+    Console::WriteLine("→ Registrando p2");
     sp->Registrar(p2);
-    ImprimirTodo();
+    PrintPacientes(sp);
 
-    Console::WriteLine("\nModificar paciente 101 (edad -> 30)");
-    sp->Modificar(101, "edad", "30");
-    ImprimirTodo();
+    Console::WriteLine("→ Modificando edad de p1 → 25");
+    sp->Modificar(1, "edad", "25");
+    PrintPacientes(sp);
 
-    Console::WriteLine("\nEliminar paciente 102");
-    sp->Eliminar(102);
-    ImprimirTodo();
+    Console::WriteLine("→ Eliminando p2");
+    sp->Eliminar(2);
+    PrintPacientes(sp);
 
-    // =========================
+    // ==============================
     // MEDICAMENTOS
-    // =========================
+    // ==============================
+    PrintLine("MEDICAMENTOS");
 
-    Console::WriteLine("\nAgregar medicamentos");
+    Medicamento^ m1 = gcnew Medicamento(1, "Paracetamol", "Acetaminofen", 5, 50);
+    Medicamento^ m2 = gcnew Medicamento(2, "Ibuprofeno", "Ibuprofeno", 8, 30);
 
-    Dictionary<int, Medicamento^>^ meds = gcnew Dictionary<int, Medicamento^>();
+    Console::WriteLine("→ Registrando m1");
+    sm->RegistrarMedicamento(m1);
+    PrintMedicamentos(sm);
 
-    Medicamento^ m1 = gcnew Medicamento(1, "Paracetamol", "A", 10, 50);
-    Medicamento^ m2 = gcnew Medicamento(2, "Ibuprofeno", "B", 20, 30);
+    Console::WriteLine("→ Registrando m2");
+    sm->RegistrarMedicamento(m2);
+    PrintMedicamentos(sm);
 
-    meds->Add(1, m1);
-    meds->Add(2, m2);
+    Console::WriteLine("→ Actualizando m1 (precio=6.5, stock=40)");
+    sm->ActualizarMedicamento(1, 6.5, 40);
+    PrintMedicamentos(sm);
 
-    repo.GuardarMedicamentos("Medicamentos.txt", meds);
-    ImprimirTodo();
-
-    Console::WriteLine("\nModificar medicamento 1 (precio 12, stock 60)");
-    sm->ActualizarMedicamento(1, 12, 60);
-    ImprimirTodo();
-
-    // =========================
+    // ==============================
     // VENTAS
-    // =========================
+    // ==============================
+    PrintLine("VENTAS");
 
-    Console::WriteLine("\nRegistrar ventas");
+    Venta^ v1 = gcnew Venta(100, 1, 5, m1, DateTime::Now);
+    v1->idMedicamento = 1;
 
-    sv->RegistrarVenta(1, 101, 1, 5);
-    ImprimirTodo();
+    Console::WriteLine("→ Registrando v1");
+    sv->RegistrarVenta(v1);
+    PrintVentas(sv);
+    PrintMedicamentos(sm); // ver impacto en stock
 
-    sv->RegistrarVenta(2, 101, 2, 3);
-    ImprimirTodo();
+    Venta^ v2 = gcnew Venta(101, 1, 3, m2, DateTime::Now);
+    v2->idMedicamento = 2;
 
-    Console::WriteLine("\nModificar venta 1 (5 -> 8)");
-    sv->ModificarVenta(1, 8);
-    ImprimirTodo();
+    Console::WriteLine("→ Registrando v2");
+    sv->RegistrarVenta(v2);
+    PrintVentas(sv);
+    PrintMedicamentos(sm);
 
-    Console::WriteLine("\nEliminar venta 2");
-    sv->EliminarVenta(2);
-    ImprimirTodo();
+    Console::WriteLine("→ Intentando venta inválida (stock excesivo)");
+    Venta^ vError = gcnew Venta(102, 1, 999, m2, DateTime::Now);
+    vError->idMedicamento = 2;
+    sv->RegistrarVenta(vError);
+    PrintVentas(sv);
+    PrintMedicamentos(sm);
 
-    Console::WriteLine("\nEliminar venta 1");
-    sv->EliminarVenta(1);
-    ImprimirTodo();
+    Console::WriteLine("→ Modificando venta 100 → cantidad 8");
+    sv->ModificarVenta(100, 8);
+    PrintVentas(sv);
+    PrintMedicamentos(sm);
 
-    Console::WriteLine("\nFIN TEST COMPLETO");
+    Console::WriteLine("→ Eliminando venta 101");
+    sv->EliminarVenta(101);
+    PrintVentas(sv);
+    PrintMedicamentos(sm);
+
+    Console::WriteLine("→ Mostrar boleta venta 100");
+    Console::WriteLine(sv->MostrarBoletaVenta(100));
+
+    Console::WriteLine("→ Intentando leer venta inexistente");
+    sv->LeerVenta(999);
+
+    PrintLine("FIN");
 
     return 0;
 }

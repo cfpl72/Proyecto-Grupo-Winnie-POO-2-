@@ -1,2 +1,2 @@
-MEDICAMENTO|1|Paracetamol|12|60|A
-MEDICAMENTO|2|Ibuprofeno|20|30|B
+MEDICAMENTO|1|Paracetamol|6.5|32|Acetaminofen
+MEDICAMENTO|2|Ibuprofeno|8|30|Ibuprofeno

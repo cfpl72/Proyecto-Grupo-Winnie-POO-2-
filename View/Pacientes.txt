@@ -1,1 +1,1 @@
-PACIENTE|101|tok1|Claudio|A|30||
+PACIENTE|1|t1|Claudio|Rios|25|Ninguna|Dolor

@@ -38,6 +38,7 @@ namespace Controller {
             filePath = "Medicamentos.txt";
         }
 
+        bool RegistrarMedicamento(Medicamento^ m);
         List<Medicamento^>^ ObtenerInventarioCompleto();
         Dictionary<int, Medicamento^>^ Controller::ServicioMedicamentos::ObtenerDiccionarioCompleto();
         bool ActualizarMedicamento(int id, double nuevoPrecio, int nuevoStock);
@@ -54,7 +55,7 @@ namespace Controller {
             filePath = "Ventas.txt";
         }
 
-        bool RegistrarVenta(int idVenta, int idPaciente, int idMedicamento, int cantidad);
+        bool RegistrarVenta(Venta^ venta);
         Venta^ Controller::ServicioVentas::LeerVenta(int idVenta);
         List<Venta^>^ ObtenerTodasLasVentas();
         bool ModificarVenta(int idVenta, int nuevaCantidadVendida);

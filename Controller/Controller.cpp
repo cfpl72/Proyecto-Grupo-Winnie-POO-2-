@@ -113,6 +113,52 @@ bool Controller::ServicioPacientes::ValidarPaciente(Paciente^ p, String^% error)
 
 
 //=========================Requerimientos Servicio de Medicamentos===========================================================//
+bool Controller::ServicioMedicamentos::RegistrarMedicamento(Medicamento^ m) {
+
+    if (m == nullptr) {
+        Console::WriteLine("ERROR: Medicamento nulo");
+        return false;
+    }
+
+    // Leer estado actual
+    Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos(filePath);
+
+    // Validaciones
+    if (m->id <= 0) {
+        Console::WriteLine("ERROR: ID inválido");
+        return false;
+    }
+
+    if (String::IsNullOrWhiteSpace(m->nombre)) {
+        Console::WriteLine("ERROR: Nombre vacío");
+        return false;
+    }
+
+    if (m->precio < 0) {
+        Console::WriteLine("ERROR: Precio inválido");
+        return false;
+    }
+
+    if (m->stock < 0) {
+        Console::WriteLine("ERROR: Stock inválido");
+        return false;
+    }
+
+    if (dic->ContainsKey(m->id)) {
+        Console::WriteLine("ERROR: Ya existe un medicamento con ese ID");
+        return false;
+    }
+
+    // Agregar
+    dic->Add(m->id, m);
+
+    // Persistir
+    repo->GuardarMedicamentos(filePath, dic);
+
+    Console::WriteLine("Medicamento registrado correctamente.");
+    return true;
+}
+
 List<Medicamento^>^ Controller::ServicioMedicamentos::ObtenerInventarioCompleto() {
     Dictionary<int, Medicamento^>^ dic = ObtenerDiccionarioCompleto();
     List<Medicamento^>^ lista = gcnew List<Medicamento^>();
@@ -144,7 +190,12 @@ bool Controller::ServicioMedicamentos::ActualizarMedicamento(int id, double nuev
 
 
 //=========================Requerimientos Servicio de Ventas===========================================================//
-bool Controller::ServicioVentas::RegistrarVenta(int idVenta, int idPaciente, int idMedicamento, int cantidad) {
+bool Controller::ServicioVentas::RegistrarVenta(Venta^ venta) {
+
+    if (venta == nullptr) {
+        Console::WriteLine("ERROR: Venta nula");
+        return false;
+    }
 
     Controller::ServicioMedicamentos^ sm = gcnew Controller::ServicioMedicamentos();
 
@@ -155,24 +206,24 @@ bool Controller::ServicioVentas::RegistrarVenta(int idVenta, int idPaciente, int
     // VALIDACIONES
     // =========================
 
-    if (dicVentas->ContainsKey(idVenta)) {
+    if (dicVentas->ContainsKey(venta->id)) {
         Console::WriteLine("ERROR: Ya existe una venta con ese ID");
         return false;
     }
 
-    if (!dicMed->ContainsKey(idMedicamento)) {
+    if (!dicMed->ContainsKey(venta->idMedicamento)) {
         Console::WriteLine("ERROR: Medicamento no encontrado");
         return false;
     }
 
-    if (cantidad <= 0) {
+    if (venta->cantidadVendida <= 0) {
         Console::WriteLine("ERROR: Cantidad inválida");
         return false;
     }
 
-    Medicamento^ med = dicMed[idMedicamento];
+    Medicamento^ med = dicMed[venta->idMedicamento];
 
-    if (med->stock < cantidad) {
+    if (med->stock < venta->cantidadVendida) {
         Console::WriteLine("ERROR: Stock insuficiente");
         return false;
     }
@@ -180,13 +231,12 @@ bool Controller::ServicioVentas::RegistrarVenta(int idVenta, int idPaciente, int
     // =========================
     // ACTUALIZAR STOCK
     // =========================
-    med->stock -= cantidad;
+    med->stock -= venta->cantidadVendida;
 
     // =========================
-    // CREAR VENTA
+    // SNAPSHOT DEL MEDICAMENTO
     // =========================
 
-    // 🔥 snapshot del medicamento
     Medicamento^ medSnapshot = gcnew Medicamento(
         med->id,
         med->nombre,
@@ -195,19 +245,19 @@ bool Controller::ServicioVentas::RegistrarVenta(int idVenta, int idPaciente, int
         0
     );
 
-    Venta^ nuevaVenta = gcnew Venta(
-        idVenta,
-        idPaciente,
-        cantidad,
-        medSnapshot,
-        DateTime::Now
-    );
+    // Reemplazamos datos dentro de la venta
+    venta->precioMedicamento = med->precio;
+    venta->nombreMedicamento = med->nombre;
+    venta->idMedicamento = med->id;
+
+    // 🔥 importante: recalcular total
+    venta->totalVenta = venta->precioMedicamento * venta->cantidadVendida;
 
     // =========================
     // GUARDAR
     // =========================
 
-    dicVentas->Add(idVenta, nuevaVenta);
+    dicVentas->Add(venta->id, venta);
 
     repo->GuardarVentas(filePath, dicVentas);
     sm->ActualizarMedicamento(med->id, med->precio, med->stock);
