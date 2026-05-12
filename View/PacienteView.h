@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "MyForm.h"
+//#include "MyForm.h"
 
 namespace View {
 

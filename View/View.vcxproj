@@ -139,6 +139,12 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="RecoverPasswordForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="RegisterForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +160,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RecoverPasswordForm.cpp" />
+    <ClCompile Include="RegisterForm.cpp" />
     <ClCompile Include="View.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +194,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PacienteView.resx">
       <DependentUpon>PacienteView.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RecoverPasswordForm.resx">
+      <DependentUpon>RecoverPasswordForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RegisterForm.resx">
+      <DependentUpon>RegisterForm.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
