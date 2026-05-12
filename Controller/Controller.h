@@ -14,9 +14,9 @@ namespace Controller {
         String^ filePath;
 
     public:
-        ServicioPacientes(String^ path) {
+        ServicioPacientes() {
             repo = gcnew Persistance::persistance();
-            filePath = path;
+            filePath = "Pacientes.txt";
         }
 
         Dictionary<int, Paciente^>^ LeerTodos();
@@ -33,9 +33,9 @@ namespace Controller {
         String^ filePath;
 
     public:
-        ServicioMedicamentos(String^ path) {
+        ServicioMedicamentos() {
             repo = gcnew Persistance::persistance();
-            filePath = path;
+            filePath = "Medicamentos.txt";
         }
 
         List<Medicamento^>^ ObtenerInventarioCompleto();
@@ -49,9 +49,9 @@ namespace Controller {
         String^ filePath;
 
     public:
-        ServicioVentas(String^ path) {
+        ServicioVentas() {
             repo = gcnew Persistance::persistance();
-            filePath = path;
+            filePath = "Ventas.txt";
         }
 
         bool RegistrarVenta(int idVenta, int idPaciente, int idMedicamento, int cantidad);

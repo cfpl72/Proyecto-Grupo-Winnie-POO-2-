@@ -146,7 +146,7 @@ bool Controller::ServicioMedicamentos::ActualizarMedicamento(int id, double nuev
 //=========================Requerimientos Servicio de Ventas===========================================================//
 bool Controller::ServicioVentas::RegistrarVenta(int idVenta, int idPaciente, int idMedicamento, int cantidad) {
 
-    Controller::ServicioMedicamentos^ sm = gcnew Controller::ServicioMedicamentos("Medicamentos.txt");
+    Controller::ServicioMedicamentos^ sm = gcnew Controller::ServicioMedicamentos();
 
     Dictionary<int, Venta^>^ dicVentas = repo->LeerVentas(filePath);
     Dictionary<int, Medicamento^>^ dicMed = sm->ObtenerDiccionarioCompleto();
@@ -228,7 +228,7 @@ List<Venta^>^ Controller::ServicioVentas::ObtenerTodasLasVentas() {
 
 //Elimina la venta y actualiza el stock del medicamento previamente vendido
 bool Controller::ServicioVentas::EliminarVenta(int idVenta) {
-    Controller::ServicioMedicamentos^ sm = gcnew Controller::ServicioMedicamentos("Medicamentos.txt");
+    Controller::ServicioMedicamentos^ sm = gcnew Controller::ServicioMedicamentos();
     Dictionary<int, Venta^>^ diccionarioVen = repo->LeerVentas(filePath);
     Dictionary<int, Medicamento^>^ diccionarioMed = sm->ObtenerDiccionarioCompleto();
 
@@ -255,7 +255,7 @@ bool Controller::ServicioVentas::EliminarVenta(int idVenta) {
 }
 
 bool Controller::ServicioVentas::ModificarVenta(int idVenta, int nuevaCantidadVendida) {
-    Controller::ServicioMedicamentos^ sm = gcnew Controller::ServicioMedicamentos("Medicamentos.txt");
+    Controller::ServicioMedicamentos^ sm = gcnew Controller::ServicioMedicamentos();
     Dictionary<int, Venta^>^ diccionarioVen = repo->LeerVentas(filePath);
     Dictionary<int, Medicamento^>^ diccionarioMed = sm->ObtenerDiccionarioCompleto();
     
