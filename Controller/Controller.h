@@ -21,9 +21,11 @@ namespace Controller {
 
         Dictionary<int, Paciente^>^ LeerTodos();
         Paciente^ ObtenerPorId(int id);
-        void Registrar(Paciente^ p);
-        void Modificar(int id, String^ atributo, String^ nuevoValor);
-        void Eliminar(int id);
+        bool RegistrarPaciente(
+            int id, String^ token, String^ nombre, String^ apellido,
+            int edad, String^ alergias, String^ sintomas);
+        void ModificarPaciente(int id, String^ atributo, String^ nuevoValor);
+        void EliminarPaciente(int id);
         bool ValidarPaciente(Paciente^ p, String^% error);
     };
 
@@ -38,7 +40,9 @@ namespace Controller {
             filePath = "Medicamentos.txt";
         }
 
-        bool RegistrarMedicamento(Medicamento^ m);
+        bool RegistrarMedicamento(
+            int id, String^ nombre, String^ principioActivo,
+            double precio, int stock);
         List<Medicamento^>^ ObtenerInventarioCompleto();
         Dictionary<int, Medicamento^>^ Controller::ServicioMedicamentos::ObtenerDiccionarioCompleto();
         bool ActualizarMedicamento(int id, double nuevoPrecio, int nuevoStock);
@@ -55,7 +59,8 @@ namespace Controller {
             filePath = "Ventas.txt";
         }
 
-        bool RegistrarVenta(Venta^ venta);
+        bool RegistrarVenta(
+            int idVenta, int idPaciente, int idMedicamento, int cantidad);
         Venta^ Controller::ServicioVentas::LeerVenta(int idVenta);
         List<Venta^>^ ObtenerTodasLasVentas();
         bool ModificarVenta(int idVenta, int nuevaCantidadVendida);
