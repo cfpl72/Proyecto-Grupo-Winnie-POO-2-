@@ -844,7 +844,7 @@ namespace ViewFarmaceutico {
 		_frecuenciasTotales = gcnew System::Collections::Generic::Dictionary<String^, int>();
 		// 2. Construir nombre del archivo
 		String^ paciente = this->cmbPaciente->SelectedItem->ToString();
-		String^ nombreArchivo = L"historial_" + paciente->Replace(L" ", L"_") + L".txt";
+		String^ nombreArchivo = L"historialReceta_" + paciente->Replace(L" ", L"_") + L".txt";
 		String^ ruta = System::IO::Path::Combine(
 			System::IO::Directory::GetCurrentDirectory(),
 			nombreArchivo);
@@ -921,7 +921,6 @@ namespace ViewFarmaceutico {
 		DibujarPieChart();
 	}
 
-		
 
 		   // Vista 3: Alertar Paciente
 	private: System::Void btnEnviarAlerta_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -936,7 +935,7 @@ namespace ViewFarmaceutico {
 		// TODO: Farmaceutico::AlertarPaciente() via Controller
 		this->labelResultado->Text = L"Alerta enviada a: " + this->cmbPacAlerta->SelectedItem->ToString();
 	}
-
+		   //===================METODO CARGAR HISTORIAL==========================
 		   // Vista 4: Historial Recetas
 	private: System::Void btnCargarHist_Click(System::Object^ sender, System::EventArgs^ e) {
 		if (this->cmbPacHist->SelectedIndex < 0) {
@@ -948,8 +947,8 @@ namespace ViewFarmaceutico {
 		this->dataGridView2->Rows->Add(L"REC-001", L"Aspirina 500mg", L"2 c/8h", L"01/04/2026", false);
 		this->dataGridView2->Rows->Add(L"REC-002", L"Ibuprofeno 400mg", L"1 c/12h", L"15/04/2026", true);
 	}
-
-		   // Eventos vacios requeridos por el diseñador
+		   //=============================================================
+		  
 	private: System::Void panel1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 	}
 	private: System::Void label3_Click(System::Object^ sender, System::EventArgs^ e) {
