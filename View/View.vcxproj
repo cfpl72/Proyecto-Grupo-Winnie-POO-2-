@@ -23,7 +23,7 @@
     <ProjectGuid>{13A3E606-CEC7-8279-14A3-1B32473E3C76}</ProjectGuid>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>View</RootNamespace>
+    <RootNamespace>WinniePOOview</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -189,9 +189,9 @@
     <EmbeddedResource Include="FarmaceuticoView.resx">
       <DependentUpon>FarmaceuticoView.h</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoginForm.resx">
-      <DependentUpon>LoginForm.h</DependentUpon>
-    </EmbeddedResource>
+	  <EmbeddedResource Include="LoginForm.resx">
+		  <DependentUpon>LoginForm.h</DependentUpon>
+	  </EmbeddedResource>
     <EmbeddedResource Include="OperadorVentas.resx">
       <DependentUpon>OperadorVentas.h</DependentUpon>
     </EmbeddedResource>

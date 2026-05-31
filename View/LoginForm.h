@@ -185,7 +185,7 @@ namespace WinniePOOview {
 			   this->btnIngresar->Location = System::Drawing::Point(67, 535);
 			   this->btnIngresar->Margin = System::Windows::Forms::Padding(4);
 			   this->btnIngresar->Name = L"btnIngresar";
-			   this->btnIngresar->Size = System::Drawing::Size(400, 49);
+			   this->btnIngresar->Size = System::Drawing::Size(398, 51);
 			   this->btnIngresar->TabIndex = 9;
 			   this->btnIngresar->Text = L"Ingresar";
 			   this->btnIngresar->UseVisualStyleBackColor = false;

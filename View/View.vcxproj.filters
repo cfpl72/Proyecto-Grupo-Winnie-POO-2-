@@ -96,4 +96,9 @@
       <Filter>Archivos de texto</Filter>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="LoginForm.resx">
+      <Filter>Archivos de recursos</Filter>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>
