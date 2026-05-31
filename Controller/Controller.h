@@ -21,12 +21,46 @@ namespace Controller {
             filePath = "Pacientes.txt";
         }
 
+
+        // Sección Pacientes
         Dictionary<int, Paciente^>^ LeerTodos();
         Paciente^ ObtenerPorId(int id);
         bool RegistrarPaciente(int id, String^ token, String^ nombre, String^ apellido,
             int edad, String^ alergias, String^ sintomas);
         void ModificarPaciente(int id, String^ atributo, String^ nuevoValor);
         void EliminarPaciente(int id);
+
+        //Sección Recetas
+
+    private:
+        String^ GetHistorialPath(int idPaciente);
+
+    public:
+        void RegistrarReceta(
+            int idPaciente,
+            int idReceta,
+            int dosis,
+            DateTime fecha,
+            String^ nombreMedicamento,
+            bool entregado
+        );
+
+        List<Receta^>^ ObtenerHistorial(int idPaciente);
+
+        void ModificarReceta(
+            int idPaciente,
+            int idReceta,
+            int nuevaDosis,
+            bool nuevoEstado
+        );
+
+        void EliminarReceta(
+            int idPaciente,
+            int idReceta
+        );
+
+        List<String^>^ ServicioPacientes::ExaminarHistorialReceta(int idPaciente);
+        List<String^>^ ServicioPacientes::ObtenerNombresPacientes();
     };
 
     // =========================

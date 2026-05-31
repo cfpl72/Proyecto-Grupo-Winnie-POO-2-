@@ -27,6 +27,24 @@ namespace Persistance {
         // =========================
         void SaveVentas(String^ filePath, Dictionary<int, Venta^>^ dic);
         Dictionary<int, Venta^>^ LoadVentas(String^ filePath);
+
+        // =========================
+        // HISTORIAL RECETAS
+        // =========================
+        void CrearHistorialSiNoExiste(String^ filePath);
+
+        void SaveHistorialRecetas(String^ filePath, List<Receta^>^ lista);
+
+        void AppendReceta(
+            String^ filePath,
+            int idReceta,
+            int dosis,
+            DateTime fecha,
+            String^ nombreMedicamento,
+            bool entregado
+        );
+
+        List<Receta^>^ LoadHistorialRecetas(String^ filePath);
     };
 
 }

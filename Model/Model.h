@@ -81,7 +81,7 @@ namespace WinniePOO_Modelos {
 		List<Receta^>^ historialRecetas;
 
 		Paciente(int idBus, String^ token)
-			: Usuario(idBus, token)  // 🔥 llamada al constructor base
+			: Usuario(idBus, token)
 		{
 			historialRecetas = gcnew List<Receta^>();
 		}

@@ -10,57 +10,86 @@ void Reset() {
     File::WriteAllText("Pacientes.txt", "");
     File::WriteAllText("Medicamentos.txt", "");
     File::WriteAllText("Ventas.txt", "");
+
+    for (int i = 1; i <= 3; i++) {
+        String^ path = "Repositorio_Historial_Recetas\\Historial_Recetas_" + i + ".txt";
+        if (File::Exists(path)) File::Delete(path);
+    }
+}
+
+void MostrarLista(List<String^>^ lista) {
+    for each (String ^ linea in lista) {
+        Console::WriteLine(linea);
+    }
+}
+
+void Pausa() {
+    Console::WriteLine("\n(ENTER para continuar)");
+    Console::ReadLine();
 }
 
 int main(array<System::String^>^ args)
 {
-    Console::WriteLine("=== GENERANDO BASE DE DATOS FICTICIA ===");
-
     Reset();
 
     ServicioPacientes^ sp = gcnew ServicioPacientes();
-    ServicioMedicamentos^ sm = gcnew ServicioMedicamentos();
-    ServicioVentas^ sv = gcnew ServicioVentas();
 
-    // ==============================
-    // PACIENTES
-    // ==============================
-    Console::WriteLine("\n→ Generando pacientes...");
+    Console::WriteLine("=== ESCENARIO: VISUALIZACIÓN DE HISTORIAL ===");
 
-    sp->RegistrarPaciente(1, "t1", "Claudio", "Rios", 21, "Ninguna", "Dolor de cabeza");
+    // =========================
+    // CREAR PACIENTE
+    // =========================
+    Console::WriteLine("\n→ Creando paciente...");
+    sp->RegistrarPaciente(1, "t1", "Claudio", "Rios", 21, "Ninguna", "Dolor cabeza");
+    Pausa();
+
+    // =========================
+    // GENERAR RECETAS
+    // =========================
+    Console::WriteLine("\n→ Generando recetas...");
+
+    sp->RegistrarReceta(1, 1, 1, DateTime(2026, 4, 3), "Ibuprofeno 400mg", true);
+    sp->RegistrarReceta(1, 2, 2, DateTime(2026, 4, 4), "Paracetamol 500mg", false);
+    sp->RegistrarReceta(1, 3, 1, DateTime(2026, 4, 5), "Amoxicilina 500mg", true);
+
+    Console::WriteLine("\nHistorial inicial:");
+    MostrarLista(sp->ExaminarHistorialReceta(1));
+    Pausa();
+
+    // =========================
+    // MODIFICACIÓN
+    // =========================
+    Console::WriteLine("\n→ Corrigiendo receta 2...");
+    sp->ModificarReceta(1, 2, 1, true);
+
+    Console::WriteLine("\nHistorial tras corrección:");
+    MostrarLista(sp->ExaminarHistorialReceta(1));
+    Pausa();
+
+    // =========================
+    // ELIMINACIÓN
+    // =========================
+    Console::WriteLine("\n→ Eliminando receta 1...");
+    sp->EliminarReceta(1, 1);
+
+    Console::WriteLine("\nHistorial final:");
+    MostrarLista(sp->ExaminarHistorialReceta(1));
+    Pausa();
+
+    // =========================
+    // SEGUNDO PACIENTE
+    // =========================
+    Console::WriteLine("\n→ Segundo paciente...");
+
     sp->RegistrarPaciente(2, "t2", "Ana", "Lopez", 30, "Penicilina", "Fiebre");
-    sp->RegistrarPaciente(3, "t3", "Luis", "Torres", 45, "Aspirina", "Dolor muscular");
-    sp->RegistrarPaciente(4, "t4", "Maria", "Perez", 60, "Ninguna", "Presión alta");
-    sp->RegistrarPaciente(5, "t5", "Carlos", "Vega", 28, "Polen", "Alergia");
 
-    // ==============================
-    // MEDICAMENTOS
-    // ==============================
-    Console::WriteLine("\n→ Generando medicamentos...");
+    sp->RegistrarReceta(2, 10, 1, DateTime(2026, 4, 6), "Loratadina 10mg", true);
 
-    sm->RegistrarMedicamento(1, "Paracetamol", "Acetaminofen", 5.0, 100);
-    sm->RegistrarMedicamento(2, "Ibuprofeno", "Ibuprofeno", 8.0, 80);
-    sm->RegistrarMedicamento(3, "Amoxicilina", "Antibiótico", 12.0, 50);
-    sm->RegistrarMedicamento(4, "Loratadina", "Antialérgico", 6.5, 70);
-    sm->RegistrarMedicamento(5, "Omeprazol", "Protector gástrico", 10.0, 60);
+    Console::WriteLine("\nHistorial paciente 2:");
+    MostrarLista(sp->ExaminarHistorialReceta(2));
+    Pausa();
 
-    // ==============================
-    // VENTAS
-    // ==============================
-    Console::WriteLine("\n→ Generando ventas...");
-
-    sv->RegistrarVenta(100, 1, 1, 2);
-    sv->RegistrarVenta(101, 2, 2, 1);
-    sv->RegistrarVenta(102, 3, 3, 3);
-    sv->RegistrarVenta(103, 4, 4, 2);
-    sv->RegistrarVenta(104, 5, 5, 1);
-    sv->RegistrarVenta(105, 1, 2, 4);
-    sv->RegistrarVenta(106, 2, 1, 2);
-    sv->RegistrarVenta(107, 3, 4, 1);
-
-    Console::WriteLine("\n=== BASE DE DATOS LISTA ===");
-    Console::WriteLine("Pacientes, medicamentos y ventas cargados.");
-    Console::WriteLine("Tus forms ahora tienen un mundo real donde moverse.");
+    Console::WriteLine("\n=== FIN ===");
 
     return 0;
 }

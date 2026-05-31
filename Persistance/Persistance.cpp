@@ -218,4 +218,129 @@ namespace Persistance {
         return dic;
     }
 
+    // =========================
+    // HISTORIAL RECETAS
+    // =========================
+
+    void PersistanceManager::CrearHistorialSiNoExiste(String^ filePath) {
+        try {
+            if (!File::Exists(filePath)) {
+                FileStream^ fs = File::Create(filePath);
+                fs->Close();
+            }
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR (CrearHistorial): " + ex->Message);
+        }
+    }
+
+    void PersistanceManager::SaveHistorialRecetas(String^ filePath, List<Receta^>^ lista) {
+        StreamWriter^ writer = nullptr;
+
+        try {
+            writer = gcnew StreamWriter(filePath); // overwrite
+
+            for each(Receta ^ r in lista) {
+                writer->WriteLine(String::Format("{0}|{1}|{2}|{3}|{4}",
+                    r->idReceta,
+                    r->medicamento->nombre,
+                    r->dosis,
+                    r->fechaEmision.ToString("dd/MM/yyyy"),
+                    r->entregado ? 1 : 0
+                ));
+            }
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR (SaveHistorialRecetas): " + ex->Message);
+        }
+        finally {
+            if (writer != nullptr) writer->Close();
+        }
+    }
+
+    void PersistanceManager::AppendReceta(
+        String^ filePath,
+        int idReceta,
+        int dosis,
+        DateTime fecha,
+        String^ nombreMedicamento,
+        bool entregado
+    ) {
+        StreamWriter^ writer = nullptr;
+
+        try {
+            writer = gcnew StreamWriter(filePath, true); // append
+
+            writer->WriteLine(String::Format("{0}|{1}|{2}|{3}|{4}",
+                idReceta,
+                nombreMedicamento,
+                dosis,
+                fecha.ToString("dd/MM/yyyy"),
+                entregado ? 1 : 0
+            ));
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR (AppendReceta): " + ex->Message);
+        }
+        finally {
+            if (writer != nullptr) writer->Close();
+        }
+    }
+
+
+    List<Receta^>^ PersistanceManager::LoadHistorialRecetas(String^ filePath) {
+        List<Receta^>^ lista = gcnew List<Receta^>();
+        StreamReader^ reader = nullptr;
+
+        try {
+            if (!File::Exists(filePath)) return lista;
+
+            reader = gcnew StreamReader(filePath);
+
+            while (!reader->EndOfStream) {
+                String^ linea = reader->ReadLine();
+                auto campos = linea->Split('|');
+
+                if (campos->Length < 5) continue;
+
+                Receta^ r = gcnew Receta();
+
+                // ID
+                r->idReceta = Convert::ToInt32(campos[0]);
+
+                // Medicamento (dummy, igual que en ventas)
+                Medicamento^ m = gcnew Medicamento(
+                    0,                      // id no persistido aquí
+                    campos[1],              // nombre
+                    "",                     // principio activo
+                    0,                      // precio
+                    0                       // stock
+                );
+                r->medicamento = m;
+
+                // Dosis
+                r->dosis = Convert::ToInt32(campos[2]);
+
+                // Fecha
+                r->fechaEmision = DateTime::ParseExact(
+                    campos[3],
+                    "dd/MM/yyyy",
+                    nullptr
+                );
+
+                // Entregado
+                r->entregado = (campos[4] == "1");
+
+                lista->Add(r);
+            }
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR (LoadHistorialRecetas): " + ex->Message);
+        }
+        finally {
+            if (reader != nullptr) reader->Close();
+        }
+
+        return lista;
+    }
 }

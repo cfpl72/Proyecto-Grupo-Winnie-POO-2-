@@ -5,6 +5,7 @@ using namespace System;
 using namespace System::Collections::Generic;
 using namespace WinniePOO_Modelos;
 using namespace Persistance;
+using namespace System::IO;
 
 namespace Controller {
 
@@ -182,99 +183,130 @@ namespace Controller {
             "\nTotal: " + v->totalVenta;
     }
 
+
+    // =========================
+    // HISTORIAL RECETAS
+    // =========================
+
+    // Helper para ruta
+    String^ ServicioPacientes::GetHistorialPath(int idPaciente) {
+
+        String^ basePath = Environment::CurrentDirectory;
+
+        String^ folder = basePath + "\\Repositorio_Historial_Recetas";
+
+        // Crear carpeta si no existe
+        if (!Directory::Exists(folder)) {
+            Directory::CreateDirectory(folder);
+        }
+
+        return folder + "\\Historial_Recetas_" + idPaciente + ".txt";
+    } 
+
+    // CREATE
+    void ServicioPacientes::RegistrarReceta(int idPaciente, int idReceta, int dosis,
+        DateTime fecha, String^ nombreMedicamento, bool entregado) {
+
+        String^ path = GetHistorialPath(idPaciente);
+
+        repo->CrearHistorialSiNoExiste(path);
+        repo->AppendReceta(path, idReceta, dosis, fecha, nombreMedicamento, entregado);
+    }
+
+    // READ
+    List<Receta^>^ ServicioPacientes::ObtenerHistorial(int idPaciente) {
+        String^ path = GetHistorialPath(idPaciente);
+        return repo->LoadHistorialRecetas(path);
+    }
+
+    // UPDATE
+    void ServicioPacientes::ModificarReceta(int idPaciente, int idReceta,
+        int nuevaDosis, bool nuevoEstado) {
+
+        String^ path = GetHistorialPath(idPaciente);
+        auto lista = repo->LoadHistorialRecetas(path);
+
+        for each(Receta ^ r in lista) {
+            if (r->idReceta == idReceta) {
+                r->dosis = nuevaDosis;
+                r->entregado = nuevoEstado;
+            }
+        }
+
+        repo->SaveHistorialRecetas(path, lista);
+    }
+
+    // DELETE
+    void ServicioPacientes::EliminarReceta(int idPaciente, int idReceta) {
+
+        String^ path = GetHistorialPath(idPaciente);
+        auto lista = repo->LoadHistorialRecetas(path);
+
+        List<Receta^>^ nueva = gcnew List<Receta^>();
+
+        for each(Receta ^ r in lista) {
+            if (r->idReceta != idReceta) {
+                nueva->Add(r);
+            }
+        }
+
+        repo->SaveHistorialRecetas(path, nueva);
+    }
+
+    // Funciones Personalizadas
+
+    List<String^>^ ServicioPacientes::ExaminarHistorialReceta(int idPaciente) {
+
+        List<String^>^ resultado = gcnew List<String^>();
+
+        String^ path = GetHistorialPath(idPaciente);
+
+        auto lista = repo->LoadHistorialRecetas(path);
+
+        for each(Receta ^ r in lista) {
+
+            // Formato ID tipo REC-001
+            String^ idFormateado = "REC-" + r->idReceta.ToString("D3");
+
+            // Medicamento
+            String^ medicamento = r->medicamento->nombre;
+
+            // Dosis (simplificada)
+            String^ dosis = r->dosis + " c/12h";
+
+            // Fecha
+            String^ fecha = r->fechaEmision.ToString("dd/MM/yyyy");
+
+            // Estado
+            String^ estado = r->entregado ? "Entregado" : "Pendiente";
+
+            // Línea final
+            String^ linea = idFormateado + ", " +
+                medicamento + ", " +
+                dosis + ", " +
+                fecha + ", " +
+                estado;
+
+            resultado->Add(linea);
+        }
+
+        return resultado;
+    }
+    List<String^>^ ServicioPacientes::ObtenerNombresPacientes() {
+
+        List<String^>^ lista = gcnew List<String^>();
+
+        auto dic = repo->LoadPacientes(filePath);
+
+        for each (auto kv in dic) {
+            Paciente^ p = kv.Value;
+
+            // Puedes cambiar esto si quieres nombre completo
+            String^ nombre = p->nombre;
+
+            lista->Add(nombre);
+        }
+
+        return lista;
+    }
 }
-/*bool Controller::OperadorDeVentasController::Modificar(int id, String^ atributo, String^ nuevoValor) {
-    Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
-
-    if (!dic->ContainsKey(id)) return false;
-
-    Medicamento^ m = dic[id];
-
-    if (atributo == "nombre") m->nombre = nuevoValor;
-    else if (atributo == "precio") m->precio = Convert::ToDouble(nuevoValor);
-    else if (atributo == "principio activo") m->principioActivo = nuevoValor;
-    else if (atributo == "alergias") m->stock = Convert::ToInt32(nuevoValor);
-
-    repo->GuardarMedicamentos("Medicamentos.txt", dic);
-    return true;
-};*/
-//Función modificar provisional 
-
-
-
-/*bool Controller::OperadorDeVentasController::Modificar(int id, String^ atributo, String^ nuevoValor) {
-    Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
-
-    if (!dic->ContainsKey(id)) return false;
-
-    Medicamento^ m = dic[id];
-
-    if (atributo == "nombre") m->nombre = nuevoValor;
-    else if (atributo == "precio") m->precio = Convert::ToDouble(nuevoValor);
-    else if (atributo == "principio activo") m->principioActivo = nuevoValor;
-    else if (atributo == "alergias") m->stock = Convert::ToInt32(nuevoValor);
-
-    repo->GuardarMedicamentos("Medicamentos.txt", dic);
-    return true;
-};*/
-//Función modificar provisional 
-
-
-
-/*bool Controller::OperadorDeVentasController::Modificar(int id, String^ atributo, String^ nuevoValor) {
-    Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
-
-    if (!dic->ContainsKey(id)) return false;
-
-    Medicamento^ m = dic[id];
-
-    if (atributo == "nombre") m->nombre = nuevoValor;
-    else if (atributo == "precio") m->precio = Convert::ToDouble(nuevoValor);
-    else if (atributo == "principio activo") m->principioActivo = nuevoValor;
-    else if (atributo == "alergias") m->stock = Convert::ToInt32(nuevoValor);
-
-    repo->GuardarMedicamentos("Medicamentos.txt", dic);
-    return true;
-};*/
-//Función modificar provisional 
-
-
-
-/*bool Controller::OperadorDeVentasController::Modificar(int id, String^ atributo, String^ nuevoValor) {
-    Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
-
-    if (!dic->ContainsKey(id)) return false;
-
-    Medicamento^ m = dic[id];
-
-    if (atributo == "nombre") m->nombre = nuevoValor;
-    else if (atributo == "precio") m->precio = Convert::ToDouble(nuevoValor);
-    else if (atributo == "principio activo") m->principioActivo = nuevoValor;
-    else if (atributo == "alergias") m->stock = Convert::ToInt32(nuevoValor);
-
-    repo->GuardarMedicamentos("Medicamentos.txt", dic);
-    return true;
-};*/
-//Función modificar provisional 
-
-
-
-/*bool Controller::OperadorDeVentasController::Modificar(int id, String^ atributo, String^ nuevoValor) {
-    Dictionary<int, Medicamento^>^ dic = repo->LeerMedicamentos("Medicamentos.txt");
-
-    if (!dic->ContainsKey(id)) return false;
-
-    Medicamento^ m = dic[id];
-
-    if (atributo == "nombre") m->nombre = nuevoValor;
-    else if (atributo == "precio") m->precio = Convert::ToDouble(nuevoValor);
-    else if (atributo == "principio activo") m->principioActivo = nuevoValor;
-    else if (atributo == "alergias") m->stock = Convert::ToInt32(nuevoValor);
-
-    repo->GuardarMedicamentos("Medicamentos.txt", dic);
-    return true;
-};*/
-//Función modificar provisional 
-
-
-
