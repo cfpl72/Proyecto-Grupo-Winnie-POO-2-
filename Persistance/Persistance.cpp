@@ -1,242 +1,221 @@
 #include "pch.h"
 #include "Persistance.h"
 
+namespace Persistance {
 
-bool Persistance::persistance::exists(String^ filePath) {
-	return File::Exists(filePath);
-}
+    // =========================
+    // PACIENTES
+    // =========================
+    void PersistanceManager::SavePacientes(String^ filePath, Dictionary<int, Paciente^>^ dic) {
+        StreamWriter^ writer = nullptr;
 
+        try {
+            writer = gcnew StreamWriter(filePath);
 
-//=======================Métodos del registro de Pacientes================================
-void Persistance::persistance::RegistrarPaciente(String^ filePath, Paciente^ p) {
+            for each (auto kv in dic) {
+                Paciente^ p = kv.Value;
 
-    FileStream^ fileStream = nullptr;
-    StreamWriter^ writer = nullptr;
-
-    try {
-        fileStream = gcnew FileStream(filePath, FileMode::Append, FileAccess::Write);
-        writer = gcnew StreamWriter(fileStream);
-
-        writer->WriteLine("PACIENTE|{0}|{1}|{2}|{3}|{4}|{5}|{6}",
-            p->id,
-            p->verificationToken,
-            p->nombre,
-            p->apellido,
-            p->edad,
-            p->alergias,
-            p->sintomas
-        );
-    }
-    catch (Exception^ ex) {
-        Console::WriteLine("Error saving paciente: " + ex->Message);
-    }
-    finally {
-        if (writer != nullptr) writer->Close();
-        if (fileStream != nullptr) fileStream->Close();
-    }
-}
-void Persistance::persistance::GuardarPacientes(String^ filePath, Dictionary<int, Paciente^>^ diccionario) {
-
-    List<String^>^ lineas = gcnew List<String^>();
-
-    for each (KeyValuePair<int, Paciente^> kvp in diccionario) {
-
-        Paciente^ p = kvp.Value;
-
-        lineas->Add(String::Format("PACIENTE|{0}|{1}|{2}|{3}|{4}|{5}|{6}",
-            p->id,
-            p->verificationToken,
-            p->nombre,
-            p->apellido,
-            p->edad,
-            p->alergias,
-            p->sintomas
-        ));
-    }
-
-    File::WriteAllLines(filePath, lineas->ToArray());
-}
-Paciente^ Persistance::persistance::LeerPaciente(String^ filePath, int idPaciente) {
-    array<String^>^ lineas = File::ReadAllLines(filePath);
-
-    for each(String ^ linea in lineas) {
-        array<String^>^ campos = linea->Split('|');
-
-        for (int i = 0; i < campos->Length; i++)
-            campos[i] = campos[i]->Trim();
-
-        if (campos[0] == "PACIENTE" && Int32::Parse(campos[1]) == idPaciente) {
-
-            Paciente^ p = gcnew Paciente(Int32::Parse(campos[1]), campos[2]);
-
-            p->nombre = campos[3];
-            p->apellido = campos[4];
-            p->edad = Int32::Parse(campos[5]);
-            p->alergias = campos[6];
-            p->sintomas = campos[7];
-
-            return p;
-        }
-    }
-
-    return nullptr;
-}
-void Persistance::persistance::EliminarPaciente(String^ filePath, int idPaciente) {
-
-    try {
-        array<String^>^ lineas = File::ReadAllLines(filePath);
-
-        List<String^>^ nuevasLineas = gcnew List<String^>();
-
-        for (int i = 0; i < lineas->Length; i++) {
-
-            array<String^>^ campos = lineas[i]->Split('|');
-
-            // Limpiar espacios
-            for (int j = 0; j < campos->Length; j++) {
-                campos[j] = campos[j]->Trim();
-            }
-
-            // Si NO es el paciente, lo conservamos
-            if (Int32::Parse(campos[1]) != idPaciente) {
-                nuevasLineas->Add(lineas[i]);
+                writer->WriteLine(String::Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}",
+                    p->id,
+                    p->verificationToken,
+                    p->nombre,
+                    p->apellido,
+                    p->edad,
+                    p->alergias,
+                    p->sintomas
+                ));
             }
         }
-
-        // Sobrescribir archivo sin el paciente eliminado
-        File::WriteAllLines(filePath, nuevasLineas->ToArray());
-    }
-    catch (Exception^ ex) {
-        Console::WriteLine("Error al eliminar paciente: " + ex->Message);
-    }
-}
-
-// ================= MEDICAMENTOS =================
-void Persistance::persistance::GuardarMedicamentos(String^ filePath, Dictionary<int, Medicamento^>^ diccionario) {
-
-    List<String^>^ lineas = gcnew List<String^>();
-
-    for each (KeyValuePair<int, Medicamento^> kvp in diccionario) {
-
-        Medicamento^ m = kvp.Value;
-
-        lineas->Add(String::Format("MEDICAMENTO|{0}|{1}|{2}|{3}|{4}",
-            m->id,
-            m->nombre,
-            m->precio,
-            m->stock,
-            m->principioActivo
-        ));
-    }
-
-    File::WriteAllLines(filePath, lineas->ToArray());
-}
-Dictionary<int, Medicamento^>^ Persistance::persistance::LeerMedicamentos(String^ filePath) {
-
-    Dictionary<int, Medicamento^>^ dic = gcnew Dictionary<int, Medicamento^>();
-
-    if (!File::Exists(filePath)) return dic;
-
-    array<String^>^ lineas = File::ReadAllLines(filePath);
-
-    for each (String ^ linea in lineas) {
-
-        array<String^>^ campos = linea->Split('|');
-
-        for (int i = 0; i < campos->Length; i++)
-            campos[i] = campos[i]->Trim();
-
-        if (campos[0] == "MEDICAMENTO") {
-
-            int id = Int32::Parse(campos[1]);
-            String^ nombre = campos[2];
-            double precio = Double::Parse(campos[3]);
-            int stock = Int32::Parse(campos[4]);
-            String^ principio = campos[5];
-
-            Medicamento^ m = gcnew Medicamento(id, nombre, principio, precio, stock);
-
-            dic->Add(id, m);
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR (SavePacientes): " + ex->Message);
+        }
+        finally {
+            if (writer != nullptr) writer->Close();
         }
     }
 
-    return dic;
-}
+    Dictionary<int, Paciente^>^ PersistanceManager::LoadPacientes(String^ filePath) {
+        Dictionary<int, Paciente^>^ dic = gcnew Dictionary<int, Paciente^>();
+        StreamReader^ reader = nullptr;
 
-// ================= VENTAS =================
-void Persistance::persistance::GuardarVentas(String^ filePath, Dictionary<int, Venta^>^ diccionario)
-{
-    List<String^>^ lineas = gcnew List<String^>();
+        try {
+            if (!File::Exists(filePath)) return dic;
 
-    for each (KeyValuePair<int, Venta^> kvp in diccionario)
-    {
-        Venta^ v = kvp.Value;
+            reader = gcnew StreamReader(filePath);
 
-        lineas->Add(String::Format("VENTA|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}",
-            v->id,
-            v->idPaciente,
-            v->idMedicamento,
-            v->cantidadVendida,
-            v->precioMedicamento,
-            v->totalVenta,
-            v->fecha->ToString("yyyy-MM-dd"),
-            v->nombreMedicamento
-        ));
+            while (!reader->EndOfStream) {
+                String^ linea = reader->ReadLine();
+                auto campos = linea->Split('|');
+
+                if (campos->Length < 7) continue;
+
+                Paciente^ p = gcnew Paciente(
+                    Convert::ToInt32(campos[0]),
+                    campos[1]
+                );
+
+                // Asignaciones manuales (clave por tu modelo)
+                p->nombre = campos[2];
+                p->apellido = campos[3];
+                p->edad = Convert::ToInt32(campos[4]);
+                p->alergias = campos[5];
+                p->sintomas = campos[6];
+
+                if (!dic->ContainsKey(p->id))
+                    dic->Add(p->id, p);
+            }
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR (LoadPacientes): " + ex->Message);
+        }
+        finally {
+            if (reader != nullptr) reader->Close();
+        }
+
+        return dic;
     }
 
-    File::WriteAllLines(filePath, lineas->ToArray());
-}
+    // =========================
+    // MEDICAMENTOS
+    // =========================
+    void PersistanceManager::SaveMedicamentos(String^ filePath, Dictionary<int, Medicamento^>^ dic) {
+        StreamWriter^ writer = nullptr;
 
-Dictionary<int, Venta^>^ Persistance::persistance::LeerVentas(String^ filePath)
-{
-    Dictionary<int, Venta^>^ dic = gcnew Dictionary<int, Venta^>();
+        try {
+            writer = gcnew StreamWriter(filePath);
 
-    if (!File::Exists(filePath)) return dic;
+            for each (auto kv in dic) {
+                Medicamento^ m = kv.Value;
 
-    array<String^>^ lineas = File::ReadAllLines(filePath);
-
-    for each (String ^ linea in lineas)
-    {
-        array<String^>^ campos = linea->Split('|');
-
-        for (int i = 0; i < campos->Length; i++)
-            campos[i] = campos[i]->Trim();
-
-        if (campos[0] == "VENTA")
-        {
-            int id = Int32::Parse(campos[1]);
-            int idPaciente = Int32::Parse(campos[2]);
-            int idMedicamento = Int32::Parse(campos[3]);
-            int cantidad = Int32::Parse(campos[4]);
-            double precio = Double::Parse(campos[5]);
-            double total = Double::Parse(campos[6]);
-            DateTime fecha = DateTime::Parse(campos[7]);
-            String^ nombre = campos[8];
-
-            // 🔥 Creamos medicamento "snapshot"
-            Medicamento^ med = gcnew Medicamento(
-                idMedicamento,
-                nombre,
-                "N/A",
-                precio,
-                0
-            );
-
-            // 🔥 Usamos tu constructor real
-            Venta^ v = gcnew Venta(
-                id,
-                idPaciente,
-                cantidad,
-                med,
-                fecha
-            );
-
-            // 🔥 Sobrescribimos total (por seguridad)
-            v->totalVenta = total;
-
-            dic->Add(id, v);
+                writer->WriteLine(String::Format("{0}|{1}|{2}|{3}|{4}",
+                    m->id,
+                    m->nombre,
+                    m->principioActivo,
+                    m->precio,
+                    m->stock
+                ));
+            }
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR (SaveMedicamentos): " + ex->Message);
+        }
+        finally {
+            if (writer != nullptr) writer->Close();
         }
     }
 
-    return dic;
+    Dictionary<int, Medicamento^>^ PersistanceManager::LoadMedicamentos(String^ filePath) {
+        Dictionary<int, Medicamento^>^ dic = gcnew Dictionary<int, Medicamento^>();
+        StreamReader^ reader = nullptr;
+
+        try {
+            if (!File::Exists(filePath)) return dic;
+
+            reader = gcnew StreamReader(filePath);
+
+            while (!reader->EndOfStream) {
+                String^ linea = reader->ReadLine();
+                auto campos = linea->Split('|');
+
+                if (campos->Length < 5) continue;
+
+                Medicamento^ m = gcnew Medicamento(
+                    Convert::ToInt32(campos[0]),
+                    campos[1],
+                    campos[2],
+                    Convert::ToDouble(campos[3]),
+                    Convert::ToInt32(campos[4])
+                );
+
+                if (!dic->ContainsKey(m->id))
+                    dic->Add(m->id, m);
+            }
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR (LoadMedicamentos): " + ex->Message);
+        }
+        finally {
+            if (reader != nullptr) reader->Close();
+        }
+
+        return dic;
+    }
+
+    // =========================
+    // VENTAS
+    // =========================
+    void PersistanceManager::SaveVentas(String^ filePath, Dictionary<int, Venta^>^ dic) {
+        StreamWriter^ writer = nullptr;
+
+        try {
+            writer = gcnew StreamWriter(filePath);
+
+            for each (auto kv in dic) {
+                Venta^ v = kv.Value;
+
+                writer->WriteLine(String::Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}",
+                    v->id,
+                    v->idPaciente,
+                    v->idMedicamento,
+                    v->cantidadVendida,
+                    v->precioMedicamento,
+                    v->totalVenta,
+                    v->nombreMedicamento
+                ));
+            }
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR (SaveVentas): " + ex->Message);
+        }
+        finally {
+            if (writer != nullptr) writer->Close();
+        }
+    }
+
+    Dictionary<int, Venta^>^ PersistanceManager::LoadVentas(String^ filePath) {
+        Dictionary<int, Venta^>^ dic = gcnew Dictionary<int, Venta^>();
+        StreamReader^ reader = nullptr;
+
+        try {
+            if (!File::Exists(filePath)) return dic;
+
+            reader = gcnew StreamReader(filePath);
+
+            while (!reader->EndOfStream) {
+                String^ linea = reader->ReadLine();
+                auto campos = linea->Split('|');
+
+                if (campos->Length < 7) continue;
+
+                // ⚠️ Venta necesita un Medicamento para construirse
+                Medicamento^ dummy = gcnew Medicamento(
+                    Convert::ToInt32(campos[2]),
+                    campos[6],      // nombreMedicamento
+                    "",             // principioActivo (no persistido)
+                    Convert::ToDouble(campos[4]),
+                    0               // stock irrelevante aquí
+                );
+
+                Venta^ v = gcnew Venta(
+                    Convert::ToInt32(campos[0]),
+                    Convert::ToInt32(campos[1]),
+                    Convert::ToInt32(campos[3]),
+                    dummy,
+                    DateTime::Now   // no estás persistiendo fecha aún
+                );
+
+                if (!dic->ContainsKey(v->id))
+                    dic->Add(v->id, v);
+            }
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR (LoadVentas): " + ex->Message);
+        }
+        finally {
+            if (reader != nullptr) reader->Close();
+        }
+
+        return dic;
+    }
+
 }

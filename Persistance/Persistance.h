@@ -2,31 +2,31 @@
 
 using namespace System;
 using namespace System::Collections::Generic;
-using namespace WinniePOO_Modelos;
 using namespace System::IO;
+using namespace WinniePOO_Modelos;
 
 namespace Persistance {
 
-    public ref class persistance {
+    public ref class PersistanceManager {
     public:
 
-        static bool exists(String^ filePath);
+        // =========================
+        // PACIENTES
+        // =========================
+        void SavePacientes(String^ filePath, Dictionary<int, Paciente^>^ dic);
+        Dictionary<int, Paciente^>^ LoadPacientes(String^ filePath);
 
-        // ================= PACIENTE =================
-        static void RegistrarPaciente(String^ filePath, Paciente^ p);
-        static void GuardarPacientes(String^ filePath, Dictionary<int, Paciente^>^ diccionario);
-        static Paciente^ LeerPaciente(String^ filePath, int idPaciente);
-        static void EliminarPaciente(String^ filePath, int idPaciente);
+        // =========================
+        // MEDICAMENTOS
+        // =========================
+        void SaveMedicamentos(String^ filePath, Dictionary<int, Medicamento^>^ dic);
+        Dictionary<int, Medicamento^>^ LoadMedicamentos(String^ filePath);
 
-        // ================= MEDICAMENTO =================
-        //static void RegistrarMedicamento(String^ filePath, Medicamento^ med);
-        static void GuardarMedicamentos(String^ filePath, Dictionary<int, Medicamento^>^ diccionario);
-        static Dictionary<int, Medicamento^>^ LeerMedicamentos(String^ filePath);
-
-        // ================= VENTA =================
-        //static void RegistrarVenta(String^ filePath, Venta^ v);
-        static void GuardarVentas(String^ filePath, Dictionary<int, Venta^>^ diccionario);
-        static Dictionary<int, Venta^>^ LeerVentas(String^ filePath);
-
+        // =========================
+        // VENTAS
+        // =========================
+        void SaveVentas(String^ filePath, Dictionary<int, Venta^>^ dic);
+        Dictionary<int, Venta^>^ LoadVentas(String^ filePath);
     };
+
 }
