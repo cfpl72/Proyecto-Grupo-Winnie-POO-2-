@@ -309,4 +309,38 @@ namespace Controller {
 
         return lista;
     }
+
+    // =========================
+    // AUTENTICACIÓN (LOGIN)
+    // =========================
+    bool ServicioAutenticacion::ValidarAcceso(String^ rol, String^ usuarioDNI, String^ password) {
+        try {
+            // Convertimos el DNI de String a entero
+            int dni = Convert::ToInt32(usuarioDNI);
+
+            if (rol == "Paciente") {
+                // Buscamos al paciente por su DNI
+                Paciente^ p = pacientesService->ObtenerPorId(dni);
+
+                // Si existe y la contraseña (token) coincide, damos luz verde
+                if (p != nullptr && p->verificationToken == password) {
+                    return true;
+                }
+            }
+            else if (rol == "Operador de Ventas" || rol == "Farmacéutico") {
+                // Como no hay .txt para Operador y Farmacéutico,
+                // he creado un usuario para que puedas hacer pruebas.
+                // Podrás entrar a estos roles con DNI: 12345678 y Contraseña: admin
+                if (usuarioDNI == "12345678" && password == "admin") {
+                    return true;
+                }
+            }
+        }
+        catch (FormatException^) {
+            // Si el usuario escribe letras en lugar de números en el DNI, falla limpiamente
+            return false;
+        }
+
+        return false; // Si nada coincide, acceso denegado
+    }
 }

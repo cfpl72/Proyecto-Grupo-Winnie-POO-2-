@@ -104,4 +104,20 @@ namespace Controller {
         bool EliminarVenta(int idVenta);
         String^ MostrarBoletaVenta(int idVenta);
     };
+
+    // =========================
+    // AUTENTICACIÓN (LOGIN)
+    // =========================
+    public ref class ServicioAutenticacion {
+    private:
+        ServicioPacientes^ pacientesService;
+
+    public:
+        ServicioAutenticacion() {
+            pacientesService = gcnew ServicioPacientes();
+        }
+
+        // Para validar el acceso
+        bool ValidarAcceso(String^ rol, String^ usuarioDNI, String^ password);
+    };
 }

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "RegisterForm.h"
+//#include "../Controller/Controller.h"
 //#include "OperadorVentas.h"
 
 namespace WinniePOOview {
@@ -10,6 +11,7 @@ namespace WinniePOOview {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace Controller;
 
 	public ref class LoginForm : public System::Windows::Forms::Form
 	{
@@ -235,10 +237,21 @@ namespace WinniePOOview {
 			return;
 		}
 
-		// Mensaje amigable simulando el ingreso
-		MessageBox::Show("¡Hola " + usuario + "!\nIngresando al sistema como: " + rol, "¡Bienvenido a WinniePOO!", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		// --- NUEVA LÓGICA DE CONEXIÓN ---
+		// 1. Creamos una "instancia" del servicio que acabamos de hacer
+		Controller::ServicioAutenticacion^ authService = gcnew Controller::ServicioAutenticacion();
 
+		// 2. Le preguntamos al controlador si las credenciales son válidas
+		bool accesoConcedido = authService->ValidarAcceso(rol, usuario, password);
 
+		// 3. Reaccionamos a la respuesta
+		if (accesoConcedido) {
+			MessageBox::Show("¡Hola " + usuario + "!\nIngresando al sistema como: " + rol, "¡Bienvenido a WinniePOO!", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			// (Aquí en el futuro pondrán el código para abrir la pantalla principal)
+		}
+		else {
+			MessageBox::Show("DNI o contraseña incorrectos, o el usuario no existe.", "Credenciales incorrectas", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		}
 	}
 
 
