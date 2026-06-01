@@ -8,6 +8,7 @@ namespace ViewFarmaceutico {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace Controller;
 
 	public ref class Farmaceutico : public System::Windows::Forms::Form
 	{
@@ -15,6 +16,10 @@ namespace ViewFarmaceutico {
 		Farmaceutico(void)
 		{
 			InitializeComponent();
+
+			// Instanciar servicios del Controller
+			svcPacientes = gcnew Controller::ServicioPacientes();
+			svcFarmaceutico = gcnew Controller::ServicioPacientes(); // no se usa instancia, método estático
 		}
 
 	protected:
@@ -25,7 +30,10 @@ namespace ViewFarmaceutico {
 				delete components;
 			}
 		}
-
+		//CONTROLES-METODOS DEL CONTROLLER
+	private:
+		Controller::ServicioPacientes^ svcPacientes;
+		Controller::ServicioFarmaceutico^ svcFarmaceutico;
 
 		// CONTROLES - Panel superior 
 	private: System::Windows::Forms::Panel^ panel1;

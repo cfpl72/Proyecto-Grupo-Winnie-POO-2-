@@ -301,8 +301,8 @@ namespace Controller {
         for each (auto kv in dic) {
             Paciente^ p = kv.Value;
 
-            // Puedes cambiar esto si quieres nombre completo
-            String^ nombre = p->nombre;
+           
+            String^ nombre = p->nombre + " " + p->apellido;
 
             lista->Add(nombre);
         }
