@@ -1,5 +1,6 @@
 ﻿#pragma once
-#include "OperadorVentas.h"
+#include "RegisterForm.h"
+//#include "OperadorVentas.h"
 
 
 namespace WinniePOOview {
@@ -10,8 +11,8 @@ namespace WinniePOOview {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-	using namespace ViewFarmaceutico;
-	using namespace ViewPaciente;
+	//using namespace ViewFarmaceutico;
+	//using namespace ViewPaciente;
 
 	public ref class LoginForm : public System::Windows::Forms::Form
 	{
@@ -88,55 +89,44 @@ namespace WinniePOOview {
 			   // 
 			   // lblRol
 			   // 
-			   this->lblSubtitulo->AutoSize = true;
-			   this->lblSubtitulo->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 10.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			   this->lblRol->AutoSize = true;
+			   this->lblRol->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+
 				   static_cast<System::Byte>(0)));
-			   this->lblSubtitulo->ForeColor = System::Drawing::Color::CadetBlue;
-			   this->lblSubtitulo->Location = System::Drawing::Point(55, 80);
-			   this->lblSubtitulo->Name = L"lblSubtitulo";
-			   this->lblSubtitulo->Size = System::Drawing::Size(284, 20);
-			   this->lblSubtitulo->TabIndex = 1;
-			   this->lblSubtitulo->Text = L"Sistema de Gestión Farmacéutica";
+			   this->lblRol->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(32)), static_cast<System::Int32>(static_cast<System::Byte>(166)),
+				   static_cast<System::Int32>(static_cast<System::Byte>(160)));
+			   this->lblRol->Location = System::Drawing::Point(67, 258);
+			   this->lblRol->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+			   this->lblRol->Name = L"lblRol";
+			   this->lblRol->Size = System::Drawing::Size(151, 23);
+			   this->lblRol->TabIndex = 2;
+
+			   this->lblRol->Text = L"Seleccione su Rol:";
 			   // 
 			   // cmbRol
 			   // 
-			   this->grpLogin->Controls->Add(this->txtContrasenia);
-			   this->grpLogin->Controls->Add(this->lblContrasenia);
-			   this->grpLogin->Controls->Add(this->txtUsuario);
-			   this->grpLogin->Controls->Add(this->lblUsuario);
-			   this->grpLogin->Controls->Add(this->cmbRol);
-			   this->grpLogin->Controls->Add(this->lblRol);
-			   this->grpLogin->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 10.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				   static_cast<System::Byte>(0)));
-			   this->grpLogin->ForeColor = System::Drawing::Color::DarkSlateGray;
-			   this->grpLogin->Location = System::Drawing::Point(35, 121);
-			   this->grpLogin->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
-			   this->grpLogin->Name = L"grpLogin";
-			   this->grpLogin->Padding = System::Windows::Forms::Padding(3, 2, 3, 2);
-			   this->grpLogin->Size = System::Drawing::Size(315, 260);
-			   this->grpLogin->TabIndex = 2;
-			   this->grpLogin->TabStop = false;
-			   this->grpLogin->Text = L"Inicio de Sesión";
+			   this->cmbRol->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			   this->cmbRol->Font = (gcnew System::Drawing::Font(L"Segoe UI", 11));
+			   this->cmbRol->FormattingEnabled = true;
+			   this->cmbRol->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"Paciente", L"Operador de Ventas", L"Farmacéutico" });
+			   this->cmbRol->Location = System::Drawing::Point(67, 283);
+			   this->cmbRol->Margin = System::Windows::Forms::Padding(4);
+			   this->cmbRol->Name = L"cmbRol";
+			   this->cmbRol->Size = System::Drawing::Size(399, 33);
+			   this->cmbRol->TabIndex = 3;
 			   // 
 			   // lblUsuario
 			   // 
-			   this->txtContrasenia->Location = System::Drawing::Point(29, 206);
-			   this->txtContrasenia->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
-			   this->txtContrasenia->Name = L"txtContrasenia";
-			   this->txtContrasenia->PasswordChar = '*';
-			   this->txtContrasenia->Size = System::Drawing::Size(249, 27);
-			   this->txtContrasenia->TabIndex = 5;
-			   // 
-			   // lblContrasenia
-			   // 
-			   this->lblContrasenia->AutoSize = true;
-			   this->lblContrasenia->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				   static_cast<System::Byte>(0)));
-			   this->lblContrasenia->Location = System::Drawing::Point(25, 180);
-			   this->lblContrasenia->Name = L"lblContrasenia";
-			   this->lblContrasenia->Size = System::Drawing::Size(98, 17);
-			   this->lblContrasenia->TabIndex = 4;
-			   this->lblContrasenia->Text = L"Contraseña:";
+			   this->lblUsuario->AutoSize = true;
+			   this->lblUsuario->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Bold));
+			   this->lblUsuario->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(32)), static_cast<System::Int32>(static_cast<System::Byte>(166)),
+				   static_cast<System::Int32>(static_cast<System::Byte>(160)));
+			   this->lblUsuario->Location = System::Drawing::Point(67, 338);
+			   this->lblUsuario->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+			   this->lblUsuario->Name = L"lblUsuario";
+			   this->lblUsuario->Size = System::Drawing::Size(123, 23);
+			   this->lblUsuario->TabIndex = 4;
+			   this->lblUsuario->Text = L"Usuario (DNI):";
 			   // 
 			   // txtUsuario
 			   // 
@@ -144,41 +134,31 @@ namespace WinniePOOview {
 			   this->txtUsuario->Location = System::Drawing::Point(67, 363);
 			   this->txtUsuario->Margin = System::Windows::Forms::Padding(4);
 			   this->txtUsuario->Name = L"txtUsuario";
-			   this->txtUsuario->Size = System::Drawing::Size(249, 27);
-			   this->txtUsuario->TabIndex = 3;
+			   this->txtUsuario->Size = System::Drawing::Size(399, 32);
+			   this->txtUsuario->TabIndex = 5;
 			   // 
 			   // lblPassword
 			   // 
-			   this->lblUsuario->AutoSize = true;
-			   this->lblUsuario->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				   static_cast<System::Byte>(0)));
-			   this->lblUsuario->Location = System::Drawing::Point(25, 110);
-			   this->lblUsuario->Name = L"lblUsuario";
-			   this->lblUsuario->Size = System::Drawing::Size(112, 17);
-			   this->lblUsuario->TabIndex = 2;
-			   this->lblUsuario->Text = L"ID de Usuario:";
-			   // 
-			   // cmbRol
-			   // 
-			   this->cmbRol->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			   this->cmbRol->FormattingEnabled = true;
-			   this->cmbRol->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"Paciente", L"Farmacéutico", L"Operador de Ventas" });
-			   this->cmbRol->Location = System::Drawing::Point(29, 65);
-			   this->cmbRol->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
-			   this->cmbRol->Name = L"cmbRol";
-			   this->cmbRol->Size = System::Drawing::Size(249, 28);
-			   this->cmbRol->TabIndex = 1;
+			   this->lblPassword->AutoSize = true;
+			   this->lblPassword->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Bold));
+			   this->lblPassword->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(32)), static_cast<System::Int32>(static_cast<System::Byte>(166)),
+				   static_cast<System::Int32>(static_cast<System::Byte>(160)));
+			   this->lblPassword->Location = System::Drawing::Point(67, 412);
+			   this->lblPassword->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+			   this->lblPassword->Name = L"lblPassword";
+			   this->lblPassword->Size = System::Drawing::Size(104, 23);
+			   this->lblPassword->TabIndex = 6;
+			   this->lblPassword->Text = L"Contraseña:";
 			   // 
 			   // txtPassword
 			   // 
-			   this->lblRol->AutoSize = true;
-			   this->lblRol->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				   static_cast<System::Byte>(0)));
-			   this->lblRol->Location = System::Drawing::Point(25, 39);
-			   this->lblRol->Name = L"lblRol";
-			   this->lblRol->Size = System::Drawing::Size(143, 17);
-			   this->lblRol->TabIndex = 0;
-			   this->lblRol->Text = L"Seleccione su Rol:";
+			   this->txtPassword->Font = (gcnew System::Drawing::Font(L"Segoe UI", 11));
+			   this->txtPassword->Location = System::Drawing::Point(67, 437);
+			   this->txtPassword->Margin = System::Windows::Forms::Padding(4);
+			   this->txtPassword->Name = L"txtPassword";
+			   this->txtPassword->Size = System::Drawing::Size(399, 32);
+			   this->txtPassword->TabIndex = 7;
+			   this->txtPassword->UseSystemPasswordChar = true;
 			   // 
 			   // btnIngresar
 			   // 
@@ -186,8 +166,8 @@ namespace WinniePOOview {
 				   static_cast<System::Int32>(static_cast<System::Byte>(160)));
 			   this->btnIngresar->FlatAppearance->BorderSize = 0;
 			   this->btnIngresar->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			   this->btnIngresar->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 10.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				   static_cast<System::Byte>(0)));
+			   this->btnIngresar->Font = (gcnew System::Drawing::Font(L"Segoe UI", 11, System::Drawing::FontStyle::Bold));
+
 			   this->btnIngresar->ForeColor = System::Drawing::Color::White;
 			   this->btnIngresar->Location = System::Drawing::Point(67, 535);
 			   this->btnIngresar->Margin = System::Windows::Forms::Padding(4);
@@ -200,20 +180,20 @@ namespace WinniePOOview {
 			   // 
 			   // lnkCrearCuenta
 			   // 
-			   this->btnSalir->BackColor = System::Drawing::Color::IndianRed;
-			   this->btnSalir->Cursor = System::Windows::Forms::Cursors::Hand;
-			   this->btnSalir->FlatAppearance->BorderSize = 0;
-			   this->btnSalir->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			   this->btnSalir->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 10.2F));
-			   this->btnSalir->ForeColor = System::Drawing::Color::White;
-			   this->btnSalir->Location = System::Drawing::Point(35, 455);
-			   this->btnSalir->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
-			   this->btnSalir->Name = L"btnSalir";
-			   this->btnSalir->Size = System::Drawing::Size(315, 43);
-			   this->btnSalir->TabIndex = 4;
-			   this->btnSalir->Text = L"Salir";
-			   this->btnSalir->UseVisualStyleBackColor = false;
-			   this->btnSalir->Click += gcnew System::EventHandler(this, &LoginForm::btnSalir_Click);
+			   this->lnkCrearCuenta->AutoSize = true;
+			   this->lnkCrearCuenta->Font = (gcnew System::Drawing::Font(L"Segoe UI", 10, System::Drawing::FontStyle::Bold));
+			   this->lnkCrearCuenta->LinkBehavior = System::Windows::Forms::LinkBehavior::HoverUnderline;
+			   this->lnkCrearCuenta->LinkColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(100)),
+				   static_cast<System::Int32>(static_cast<System::Byte>(100)));
+			   this->lnkCrearCuenta->Location = System::Drawing::Point(180, 609);
+			   this->lnkCrearCuenta->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+			   this->lnkCrearCuenta->Name = L"lnkCrearCuenta";
+			   this->lnkCrearCuenta->Size = System::Drawing::Size(163, 23);
+			   this->lnkCrearCuenta->TabIndex = 10;
+			   this->lnkCrearCuenta->TabStop = true;
+			   this->lnkCrearCuenta->Text = L"Crear cuenta nueva";
+			   this->lnkCrearCuenta->Click += gcnew System::EventHandler(this, &LoginForm::lnkCrearCuenta_Click);
+
 			   // 
 			   // LoginForm
 			   // 
@@ -260,19 +240,14 @@ namespace WinniePOOview {
 		if (usuario == "" || password == "") {
 			MessageBox::Show("Por favor, ingresa tu DNI y contraseña.", "Campos vacíos", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			return;
+
 		}
 
 		// Mensaje amigable simulando el ingreso
 		MessageBox::Show("¡Hola " + usuario + "!\nIngresando al sistema como: " + rol, "¡Bienvenido a WinniePOO!", MessageBoxButtons::OK, MessageBoxIcon::Information);
 
 
-			// Cuando se cierre la ventana de Operador (Cerrar Sesión), volvemos a mostrar el Login
-			this->Show();
-		}
-		else {
-			// Mensaje temporal para los otros roles que aún no tienen interfaz lista
-			MessageBox::Show("La interfaz para " + rolSeleccionado + " todavía está en desarrollo.", "Próximamente");
-		}
+	}
 
 
 	private: System::Void lnkCrearCuenta_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -282,5 +257,11 @@ namespace WinniePOOview {
 
 	private: System::Void lblBienvenida_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
-};
+
+	private: System::Void LoginForm_Load(System::Object^ sender, System::EventArgs^ e) {
+	}
+
+	
+
+	};
 }
