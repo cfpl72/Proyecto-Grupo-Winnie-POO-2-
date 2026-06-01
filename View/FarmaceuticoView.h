@@ -205,7 +205,7 @@ namespace View {
 			this->label1->ForeColor = System::Drawing::Color::Cornsilk;
 			this->label1->Location = System::Drawing::Point(12, 24);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(181, 29);
+			this->label1->Size = System::Drawing::Size(148, 24);
 			this->label1->TabIndex = 8;
 			this->label1->Text = L"FARMACEUTICO";
 			// 
@@ -217,7 +217,7 @@ namespace View {
 			this->lblBienvenida->ForeColor = System::Drawing::SystemColors::Control;
 			this->lblBienvenida->Location = System::Drawing::Point(884, 9);
 			this->lblBienvenida->Name = L"lblBienvenida";
-			this->lblBienvenida->Size = System::Drawing::Size(56, 38);
+			this->lblBienvenida->Size = System::Drawing::Size(44, 30);
 			this->lblBienvenida->TabIndex = 7;
 			this->lblBienvenida->Text = L"🐻";
 			this->lblBienvenida->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
@@ -230,7 +230,7 @@ namespace View {
 			this->lblTituloPpal->ForeColor = System::Drawing::Color::Teal;
 			this->lblTituloPpal->Location = System::Drawing::Point(12, 9);
 			this->lblTituloPpal->Name = L"lblTituloPpal";
-			this->lblTituloPpal->Size = System::Drawing::Size(115, 16);
+			this->lblTituloPpal->Size = System::Drawing::Size(100, 14);
 			this->lblTituloPpal->TabIndex = 3;
 			this->lblTituloPpal->Text = L"Portal de Control";
 			this->lblTituloPpal->Click += gcnew System::EventHandler(this, &MyForm::lblTituloPpal_Click);
@@ -249,6 +249,7 @@ namespace View {
 			this->panel2->Name = L"panel2";
 			this->panel2->Size = System::Drawing::Size(184, 433);
 			this->panel2->TabIndex = 0;
+			this->panel2->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MyForm::panel2_Paint);
 			// 
 			// button4
 			// 
@@ -343,7 +344,7 @@ namespace View {
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->label2->Location = System::Drawing::Point(62, 12);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(52, 17);
+			this->label2->Size = System::Drawing::Size(43, 14);
 			this->label2->TabIndex = 0;
 			this->label2->Text = L"MENU";
 			// 
@@ -384,7 +385,7 @@ namespace View {
 				static_cast<System::Int32>(static_cast<System::Byte>(45)));
 			this->label4->Location = System::Drawing::Point(20, 18);
 			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(123, 27);
+			this->label4->Size = System::Drawing::Size(100, 22);
 			this->label4->TabIndex = 0;
 			this->label4->Text = L"Pacientes";
 			// 
@@ -397,7 +398,7 @@ namespace View {
 				static_cast<System::Int32>(static_cast<System::Byte>(45)));
 			this->labelBuscar->Location = System::Drawing::Point(20, 62);
 			this->labelBuscar->Name = L"labelBuscar";
-			this->labelBuscar->Size = System::Drawing::Size(133, 17);
+			this->labelBuscar->Size = System::Drawing::Size(106, 14);
 			this->labelBuscar->TabIndex = 1;
 			this->labelBuscar->Text = L"Buscar paciente:";
 			// 
@@ -407,7 +408,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->txtBuscar->Location = System::Drawing::Point(155, 58);
 			this->txtBuscar->Name = L"txtBuscar";
-			this->txtBuscar->Size = System::Drawing::Size(200, 25);
+			this->txtBuscar->Size = System::Drawing::Size(200, 21);
 			this->txtBuscar->TabIndex = 2;
 			this->txtBuscar->TextChanged += gcnew System::EventHandler(this, &MyForm::txtBuscar_TextChanged);
 			// 
@@ -468,6 +469,7 @@ namespace View {
 			this->dataGridView1->ShowCellErrors = false;
 			this->dataGridView1->Size = System::Drawing::Size(726, 99);
 			this->dataGridView1->TabIndex = 4;
+			this->dataGridView1->CellContentClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MyForm::dataGridView1_CellContentClick);
 			// 
 			// ColNombre
 			// 
@@ -529,7 +531,7 @@ namespace View {
 				static_cast<System::Int32>(static_cast<System::Byte>(45)));
 			this->label5->Location = System::Drawing::Point(20, 18);
 			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(204, 27);
+			this->label5->Size = System::Drawing::Size(166, 22);
 			this->label5->TabIndex = 0;
 			this->label5->Text = L"Examinar Receta";
 			// 
@@ -540,7 +542,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->labelPac2->Location = System::Drawing::Point(20, 62);
 			this->labelPac2->Name = L"labelPac2";
-			this->labelPac2->Size = System::Drawing::Size(77, 17);
+			this->labelPac2->Size = System::Drawing::Size(61, 14);
 			this->labelPac2->TabIndex = 1;
 			this->labelPac2->Text = L"Paciente:";
 			// 
@@ -551,7 +553,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->cmbPaciente->Location = System::Drawing::Point(100, 59);
 			this->cmbPaciente->Name = L"cmbPaciente";
-			this->cmbPaciente->Size = System::Drawing::Size(200, 25);
+			this->cmbPaciente->Size = System::Drawing::Size(200, 22);
 			this->cmbPaciente->TabIndex = 2;
 			// 
 			// btnCargarReceta
@@ -598,7 +600,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->lblIdL->Location = System::Drawing::Point(15, 32);
 			this->lblIdL->Name = L"lblIdL";
-			this->lblIdL->Size = System::Drawing::Size(85, 17);
+			this->lblIdL->Size = System::Drawing::Size(68, 14);
 			this->lblIdL->TabIndex = 0;
 			this->lblIdL->Text = L"ID Receta:";
 			// 
@@ -610,7 +612,7 @@ namespace View {
 			this->lblIdV->ForeColor = System::Drawing::Color::DimGray;
 			this->lblIdV->Location = System::Drawing::Point(130, 32);
 			this->lblIdV->Name = L"lblIdV";
-			this->lblIdV->Size = System::Drawing::Size(13, 17);
+			this->lblIdV->Size = System::Drawing::Size(11, 14);
 			this->lblIdV->TabIndex = 1;
 			this->lblIdV->Text = L"-";
 			// 
@@ -621,7 +623,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->lblMedL->Location = System::Drawing::Point(15, 67);
 			this->lblMedL->Name = L"lblMedL";
-			this->lblMedL->Size = System::Drawing::Size(110, 17);
+			this->lblMedL->Size = System::Drawing::Size(89, 14);
 			this->lblMedL->TabIndex = 2;
 			this->lblMedL->Text = L"Medicamento:";
 			// 
@@ -633,7 +635,7 @@ namespace View {
 			this->lblMedV->ForeColor = System::Drawing::Color::DimGray;
 			this->lblMedV->Location = System::Drawing::Point(130, 67);
 			this->lblMedV->Name = L"lblMedV";
-			this->lblMedV->Size = System::Drawing::Size(13, 17);
+			this->lblMedV->Size = System::Drawing::Size(11, 14);
 			this->lblMedV->TabIndex = 3;
 			this->lblMedV->Text = L"-";
 			// 
@@ -644,7 +646,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->lblDosL->Location = System::Drawing::Point(15, 102);
 			this->lblDosL->Name = L"lblDosL";
-			this->lblDosL->Size = System::Drawing::Size(53, 17);
+			this->lblDosL->Size = System::Drawing::Size(44, 14);
 			this->lblDosL->TabIndex = 4;
 			this->lblDosL->Text = L"Dosis:";
 			// 
@@ -656,7 +658,7 @@ namespace View {
 			this->lblDosV->ForeColor = System::Drawing::Color::DimGray;
 			this->lblDosV->Location = System::Drawing::Point(130, 102);
 			this->lblDosV->Name = L"lblDosV";
-			this->lblDosV->Size = System::Drawing::Size(13, 17);
+			this->lblDosV->Size = System::Drawing::Size(11, 14);
 			this->lblDosV->TabIndex = 5;
 			this->lblDosV->Text = L"-";
 			// 
@@ -667,7 +669,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->lblFecL->Location = System::Drawing::Point(15, 137);
 			this->lblFecL->Name = L"lblFecL";
-			this->lblFecL->Size = System::Drawing::Size(119, 17);
+			this->lblFecL->Size = System::Drawing::Size(95, 14);
 			this->lblFecL->TabIndex = 6;
 			this->lblFecL->Text = L"Fecha Emision:";
 			// 
@@ -679,7 +681,7 @@ namespace View {
 			this->lblFecV->ForeColor = System::Drawing::Color::DimGray;
 			this->lblFecV->Location = System::Drawing::Point(130, 137);
 			this->lblFecV->Name = L"lblFecV";
-			this->lblFecV->Size = System::Drawing::Size(13, 17);
+			this->lblFecV->Size = System::Drawing::Size(11, 14);
 			this->lblFecV->TabIndex = 7;
 			this->lblFecV->Text = L"-";
 			// 
@@ -690,7 +692,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->lblEntL->Location = System::Drawing::Point(15, 172);
 			this->lblEntL->Name = L"lblEntL";
-			this->lblEntL->Size = System::Drawing::Size(89, 17);
+			this->lblEntL->Size = System::Drawing::Size(72, 14);
 			this->lblEntL->TabIndex = 8;
 			this->lblEntL->Text = L"Entregado:";
 			// 
@@ -702,7 +704,7 @@ namespace View {
 			this->lblEntV->ForeColor = System::Drawing::Color::Red;
 			this->lblEntV->Location = System::Drawing::Point(130, 172);
 			this->lblEntV->Name = L"lblEntV";
-			this->lblEntV->Size = System::Drawing::Size(13, 17);
+			this->lblEntV->Size = System::Drawing::Size(11, 14);
 			this->lblEntV->TabIndex = 9;
 			this->lblEntV->Text = L"-";
 			// 
@@ -765,7 +767,7 @@ namespace View {
 				static_cast<System::Int32>(static_cast<System::Byte>(45)));
 			this->label6->Location = System::Drawing::Point(20, 18);
 			this->label6->Name = L"label6";
-			this->label6->Size = System::Drawing::Size(196, 27);
+			this->label6->Size = System::Drawing::Size(159, 22);
 			this->label6->TabIndex = 0;
 			this->label6->Text = L"Alertar Paciente";
 			// 
@@ -776,7 +778,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->labelPac3->Location = System::Drawing::Point(20, 62);
 			this->labelPac3->Name = L"labelPac3";
-			this->labelPac3->Size = System::Drawing::Size(77, 17);
+			this->labelPac3->Size = System::Drawing::Size(61, 14);
 			this->labelPac3->TabIndex = 1;
 			this->labelPac3->Text = L"Paciente:";
 			// 
@@ -787,7 +789,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->cmbPacAlerta->Location = System::Drawing::Point(100, 59);
 			this->cmbPacAlerta->Name = L"cmbPacAlerta";
-			this->cmbPacAlerta->Size = System::Drawing::Size(200, 25);
+			this->cmbPacAlerta->Size = System::Drawing::Size(200, 22);
 			this->cmbPacAlerta->TabIndex = 2;
 			// 
 			// labelMensaje
@@ -797,7 +799,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->labelMensaje->Location = System::Drawing::Point(20, 102);
 			this->labelMensaje->Name = L"labelMensaje";
-			this->labelMensaje->Size = System::Drawing::Size(142, 17);
+			this->labelMensaje->Size = System::Drawing::Size(113, 14);
 			this->labelMensaje->TabIndex = 3;
 			this->labelMensaje->Text = L"Mensaje de alerta:";
 			// 
@@ -863,7 +865,7 @@ namespace View {
 				static_cast<System::Int32>(static_cast<System::Byte>(45)));
 			this->label7->Location = System::Drawing::Point(20, 18);
 			this->label7->Name = L"label7";
-			this->label7->Size = System::Drawing::Size(238, 27);
+			this->label7->Size = System::Drawing::Size(194, 22);
 			this->label7->TabIndex = 0;
 			this->label7->Text = L"Historial de Recetas";
 			// 
@@ -874,7 +876,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->labelPac4->Location = System::Drawing::Point(20, 62);
 			this->labelPac4->Name = L"labelPac4";
-			this->labelPac4->Size = System::Drawing::Size(77, 17);
+			this->labelPac4->Size = System::Drawing::Size(61, 14);
 			this->labelPac4->TabIndex = 1;
 			this->labelPac4->Text = L"Paciente:";
 			// 
@@ -885,7 +887,7 @@ namespace View {
 				static_cast<System::Byte>(0)));
 			this->cmbPacHist->Location = System::Drawing::Point(100, 59);
 			this->cmbPacHist->Name = L"cmbPacHist";
-			this->cmbPacHist->Size = System::Drawing::Size(200, 25);
+			this->cmbPacHist->Size = System::Drawing::Size(200, 22);
 			this->cmbPacHist->TabIndex = 2;
 			// 
 			// btnCargarHist
@@ -981,7 +983,7 @@ namespace View {
 			// 
 			// MyForm
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(8, 15);
+			this->AutoScaleDimensions = System::Drawing::SizeF(6, 11);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(245)), static_cast<System::Int32>(static_cast<System::Byte>(245)),
 				static_cast<System::Int32>(static_cast<System::Byte>(250)));
@@ -1140,6 +1142,10 @@ namespace View {
 	private: System::Void lblTituloPpal_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
 private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void panel2_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+}
+private: System::Void dataGridView1_CellContentClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
 }
 };
 }
