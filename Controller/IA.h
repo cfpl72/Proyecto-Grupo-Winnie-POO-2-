@@ -1,4 +1,4 @@
-/*#pragma once
+#pragma once
 #using <System.dll>
 #using <System.Net.Http.dll>
 // Asegúrate de haber agregado la referencia a Newtonsoft.Json.dll como hicimos antes
@@ -13,7 +13,7 @@ namespace IA_CLASS {
     // IA.h
     public ref class IA {
     private:
-        String^ apiKey = "AIzaSyBEUPOmEdMBDE9a9P13rUGuhhgkol0O438";
+		//String^ apiKey = "AIzaSyBEUPOmEdMBDE9a9P13rUGuhhgkol0O438"; //Cambiar cuando se suba a GitHub, por seguridad
         String^ apiUrl = "https://api.openai.com/v1/chat/completions";
 
     public:
@@ -47,6 +47,6 @@ namespace IA_CLASS {
         }
     };
 
-}*/
+}
 
 

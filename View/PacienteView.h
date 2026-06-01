@@ -9,6 +9,7 @@ namespace ViewPaciente {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace IA_CLASS;
 
 	public ref class PacienteForm : public System::Windows::Forms::Form
 	{
@@ -302,6 +303,8 @@ namespace ViewPaciente {
 		}
 
 		MessageBox::Show("Analizando sintomas...", "Evaluacion en curso", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
+
 
 		dgvMedicamentos->Rows->Clear();
 
