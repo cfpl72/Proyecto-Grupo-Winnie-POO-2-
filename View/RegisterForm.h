@@ -23,19 +23,20 @@ namespace WinniePOOview {
 	private: System::Windows::Forms::Label^ lblNombres;
 	private: System::Windows::Forms::Label^ lblApellidos;
 	private: System::Windows::Forms::Label^ lblEdad;
-	private: System::Windows::Forms::Label^ lblCorreo; // NUEVO
+		   // NUEVO
 	private: System::Windows::Forms::Label^ lblPassword;
 	private: System::Windows::Forms::Label^ lblConfirmPassword;
-	private: System::Windows::Forms::Label^ lblHint;
+
 
 	private: System::Windows::Forms::TextBox^ txtDNI;
 	private: System::Windows::Forms::TextBox^ txtNombres;
 	private: System::Windows::Forms::TextBox^ txtApellidos;
 	private: System::Windows::Forms::TextBox^ txtEdad;
-	private: System::Windows::Forms::TextBox^ txtCorreo; // NUEVO
+		   // NUEVO
 	private: System::Windows::Forms::TextBox^ txtPassword;
 	private: System::Windows::Forms::TextBox^ txtConfirmPassword;
 	private: System::Windows::Forms::Button^ btnRegistrar;
+	private: System::Windows::Forms::Label^ label1;
 	private: System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
@@ -50,14 +51,12 @@ namespace WinniePOOview {
 			   this->txtApellidos = (gcnew System::Windows::Forms::TextBox());
 			   this->lblEdad = (gcnew System::Windows::Forms::Label());
 			   this->txtEdad = (gcnew System::Windows::Forms::TextBox());
-			   this->lblCorreo = (gcnew System::Windows::Forms::Label());
-			   this->txtCorreo = (gcnew System::Windows::Forms::TextBox());
 			   this->lblPassword = (gcnew System::Windows::Forms::Label());
 			   this->txtPassword = (gcnew System::Windows::Forms::TextBox());
 			   this->lblConfirmPassword = (gcnew System::Windows::Forms::Label());
 			   this->txtConfirmPassword = (gcnew System::Windows::Forms::TextBox());
-			   this->lblHint = (gcnew System::Windows::Forms::Label());
 			   this->btnRegistrar = (gcnew System::Windows::Forms::Button());
+			   this->label1 = (gcnew System::Windows::Forms::Label());
 			   this->SuspendLayout();
 			   // 
 			   // lblTitulo
@@ -152,33 +151,13 @@ namespace WinniePOOview {
 			   this->txtEdad->Size = System::Drawing::Size(300, 30);
 			   this->txtEdad->TabIndex = 8;
 			   // 
-			   // lblCorreo
-			   // 
-			   this->lblCorreo->AutoSize = true;
-			   this->lblCorreo->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9, System::Drawing::FontStyle::Bold));
-			   this->lblCorreo->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(32)), static_cast<System::Int32>(static_cast<System::Byte>(166)),
-				   static_cast<System::Int32>(static_cast<System::Byte>(160)));
-			   this->lblCorreo->Location = System::Drawing::Point(50, 345);
-			   this->lblCorreo->Name = L"lblCorreo";
-			   this->lblCorreo->Size = System::Drawing::Size(141, 20);
-			   this->lblCorreo->TabIndex = 7;
-			   this->lblCorreo->Text = L"Correo Electrónico:";
-			   // 
-			   // txtCorreo
-			   // 
-			   this->txtCorreo->Font = (gcnew System::Drawing::Font(L"Segoe UI", 10));
-			   this->txtCorreo->Location = System::Drawing::Point(50, 365);
-			   this->txtCorreo->Name = L"txtCorreo";
-			   this->txtCorreo->Size = System::Drawing::Size(300, 30);
-			   this->txtCorreo->TabIndex = 6;
-			   // 
 			   // lblPassword
 			   // 
 			   this->lblPassword->AutoSize = true;
 			   this->lblPassword->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9, System::Drawing::FontStyle::Bold));
 			   this->lblPassword->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(32)), static_cast<System::Int32>(static_cast<System::Byte>(166)),
 				   static_cast<System::Int32>(static_cast<System::Byte>(160)));
-			   this->lblPassword->Location = System::Drawing::Point(50, 400);
+			   this->lblPassword->Location = System::Drawing::Point(46, 343);
 			   this->lblPassword->Name = L"lblPassword";
 			   this->lblPassword->Size = System::Drawing::Size(92, 20);
 			   this->lblPassword->TabIndex = 5;
@@ -187,7 +166,7 @@ namespace WinniePOOview {
 			   // txtPassword
 			   // 
 			   this->txtPassword->Font = (gcnew System::Drawing::Font(L"Segoe UI", 10));
-			   this->txtPassword->Location = System::Drawing::Point(50, 420);
+			   this->txtPassword->Location = System::Drawing::Point(50, 366);
 			   this->txtPassword->Name = L"txtPassword";
 			   this->txtPassword->Size = System::Drawing::Size(300, 30);
 			   this->txtPassword->TabIndex = 4;
@@ -199,7 +178,7 @@ namespace WinniePOOview {
 			   this->lblConfirmPassword->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9, System::Drawing::FontStyle::Bold));
 			   this->lblConfirmPassword->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(32)),
 				   static_cast<System::Int32>(static_cast<System::Byte>(166)), static_cast<System::Int32>(static_cast<System::Byte>(160)));
-			   this->lblConfirmPassword->Location = System::Drawing::Point(50, 455);
+			   this->lblConfirmPassword->Location = System::Drawing::Point(46, 399);
 			   this->lblConfirmPassword->Name = L"lblConfirmPassword";
 			   this->lblConfirmPassword->Size = System::Drawing::Size(167, 20);
 			   this->lblConfirmPassword->TabIndex = 3;
@@ -208,21 +187,12 @@ namespace WinniePOOview {
 			   // txtConfirmPassword
 			   // 
 			   this->txtConfirmPassword->Font = (gcnew System::Drawing::Font(L"Segoe UI", 10));
-			   this->txtConfirmPassword->Location = System::Drawing::Point(50, 475);
+			   this->txtConfirmPassword->Location = System::Drawing::Point(50, 422);
 			   this->txtConfirmPassword->Name = L"txtConfirmPassword";
 			   this->txtConfirmPassword->Size = System::Drawing::Size(300, 30);
 			   this->txtConfirmPassword->TabIndex = 2;
 			   this->txtConfirmPassword->UseSystemPasswordChar = true;
-			   // 
-			   // lblHint
-			   // 
-			   this->lblHint->Font = (gcnew System::Drawing::Font(L"Segoe UI", 7.5F, System::Drawing::FontStyle::Italic));
-			   this->lblHint->ForeColor = System::Drawing::Color::DimGray;
-			   this->lblHint->Location = System::Drawing::Point(50, 503);
-			   this->lblHint->Name = L"lblHint";
-			   this->lblHint->Size = System::Drawing::Size(300, 20);
-			   this->lblHint->TabIndex = 1;
-			   this->lblHint->Text = L"* Mínimo 8 caracteres.";
+			   this->txtConfirmPassword->TextChanged += gcnew System::EventHandler(this, &RegisterForm::txtConfirmPassword_TextChanged);
 			   // 
 			   // btnRegistrar
 			   // 
@@ -231,27 +201,36 @@ namespace WinniePOOview {
 			   this->btnRegistrar->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			   this->btnRegistrar->Font = (gcnew System::Drawing::Font(L"Segoe UI", 11, System::Drawing::FontStyle::Bold));
 			   this->btnRegistrar->ForeColor = System::Drawing::Color::White;
-			   this->btnRegistrar->Location = System::Drawing::Point(50, 540);
+			   this->btnRegistrar->Location = System::Drawing::Point(50, 508);
 			   this->btnRegistrar->Name = L"btnRegistrar";
 			   this->btnRegistrar->Size = System::Drawing::Size(300, 40);
 			   this->btnRegistrar->TabIndex = 0;
-			   this->btnRegistrar->Text = L"Registrarse ahora";
+			   this->btnRegistrar->Text = L"Registrarme";
 			   this->btnRegistrar->UseVisualStyleBackColor = false;
 			   this->btnRegistrar->Click += gcnew System::EventHandler(this, &RegisterForm::btnRegistrar_Click);
+			   // 
+			   // label1
+			   // 
+			   this->label1->AutoSize = true;
+			   this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
+				   static_cast<System::Byte>(0)));
+			   this->label1->Location = System::Drawing::Point(50, 459);
+			   this->label1->Name = L"label1";
+			   this->label1->Size = System::Drawing::Size(132, 16);
+			   this->label1->TabIndex = 17;
+			   this->label1->Text = L"*Mínimo 8 caracteres";
 			   // 
 			   // RegisterForm
 			   // 
 			   this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(240)), static_cast<System::Int32>(static_cast<System::Byte>(255)),
 				   static_cast<System::Int32>(static_cast<System::Byte>(250)));
-			   this->ClientSize = System::Drawing::Size(400, 610);
+			   this->ClientSize = System::Drawing::Size(400, 572);
+			   this->Controls->Add(this->label1);
 			   this->Controls->Add(this->btnRegistrar);
-			   this->Controls->Add(this->lblHint);
 			   this->Controls->Add(this->txtConfirmPassword);
 			   this->Controls->Add(this->lblConfirmPassword);
 			   this->Controls->Add(this->txtPassword);
 			   this->Controls->Add(this->lblPassword);
-			   this->Controls->Add(this->txtCorreo);
-			   this->Controls->Add(this->lblCorreo);
 			   this->Controls->Add(this->txtEdad);
 			   this->Controls->Add(this->lblEdad);
 			   this->Controls->Add(this->txtApellidos);
@@ -274,32 +253,35 @@ namespace WinniePOOview {
 
 	private: System::Void btnRegistrar_Click(System::Object^ sender, System::EventArgs^ e) {
 
+		// 1. Validar campos vacíos 
 		if (txtDNI->Text == "" || txtNombres->Text == "" || txtApellidos->Text == "" ||
-			txtEdad->Text == "" || txtCorreo->Text == "" || txtPassword->Text == "" || txtConfirmPassword->Text == "") {
+			txtEdad->Text == "" || txtPassword->Text == "" || txtConfirmPassword->Text == "") {
 			MessageBox::Show("Por favor, completa todos los campos antes de continuar.", "Campos incompletos", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			return;
 		}
 
-		// Validar que el correo tenga un '@'
-		if (!txtCorreo->Text->Contains("@")) {
-			MessageBox::Show("Por favor, ingresa un correo electrónico válido.", "Correo inválido", MessageBoxButtons::OK, MessageBoxIcon::Warning);
-			return;
-		}
-
+		// 2. Validar que las contraseñas coincidan
 		if (txtPassword->Text != txtConfirmPassword->Text) {
 			MessageBox::Show("¡Las contraseñas no coinciden!", "Error de Validación", MessageBoxButtons::OK, MessageBoxIcon::Error);
 			return;
 		}
 
+		// 3. Validar seguridad mínima de la contraseña (¡Excelente detalle tuyo!)
 		if (txtPassword->Text->Length < 8) {
 			MessageBox::Show("La contraseña debe tener al menos 8 caracteres.", "Seguridad", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			return;
 		}
 
+		
 		MessageBox::Show("¡Bienvenido a WinniePOO, " + txtNombres->Text + "!\nTu cuenta ha sido creada exitosamente.", "Registro Completado", MessageBoxButtons::OK, MessageBoxIcon::Information);
-		this->Close();
+		this->Close(); // Cierra el formulario de registro y probablemente regrese al Login
 	}
+
 	private: System::Void RegisterForm_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
-	};
+
+	private: System::Void txtConfirmPassword_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+	}
+};
+
 }

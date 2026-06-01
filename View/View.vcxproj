@@ -139,9 +139,6 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="RecoverPasswordForm.h">
-      <FileType>CppForm</FileType>
-    </ClInclude>
     <ClInclude Include="RegisterForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -160,7 +157,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="RecoverPasswordForm.cpp" />
     <ClCompile Include="RegisterForm.cpp" />
     <ClCompile Include="View.cpp" />
   </ItemGroup>
@@ -189,17 +185,14 @@
     <EmbeddedResource Include="FarmaceuticoView.resx">
       <DependentUpon>FarmaceuticoView.h</DependentUpon>
     </EmbeddedResource>
-	  <EmbeddedResource Include="LoginForm.resx">
-		  <DependentUpon>LoginForm.h</DependentUpon>
-	  </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OperadorVentas.resx">
       <DependentUpon>OperadorVentas.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PacienteView.resx">
       <DependentUpon>PacienteView.h</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RecoverPasswordForm.resx">
-      <DependentUpon>RecoverPasswordForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RegisterForm.resx">
       <DependentUpon>RegisterForm.h</DependentUpon>
