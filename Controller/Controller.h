@@ -61,15 +61,6 @@ namespace Controller {
 
         List<String^>^ ServicioPacientes::ExaminarHistorialReceta(int idPaciente);
         List<String^>^ ServicioPacientes::ObtenerNombresPacientes();
-
-        ref class ServicioFarmaceutico {
-        public:
-            static void AlertarPaciente(String^ nombre, String^ mensaje) {
-                String^ archivo = "alertas_" + nombre->Replace(" ", "_") + ".txt";
-                System::IO::File::AppendAllText(archivo,
-                    "[" + DateTime::Now.ToString("dd/MM/yyyy HH:mm") + "] " + mensaje + "\n");
-            }
-        };
     };
 
     // =========================
@@ -114,5 +105,12 @@ namespace Controller {
         String^ MostrarBoletaVenta(int idVenta);
     };
 
-   
+    public ref class ServicioFarmaceutico {
+    public:
+        static void AlertarPaciente(String^ nombre, String^ mensaje) {
+            String^ archivo = "alertas_" + nombre->Replace(" ", "_") + ".txt";
+            System::IO::File::AppendAllText(archivo,
+                "[" + DateTime::Now.ToString("dd/MM/yyyy HH:mm") + "] " + mensaje + "\n");
+        }
+    };
 }
