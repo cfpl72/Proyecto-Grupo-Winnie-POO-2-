@@ -1,4 +1,5 @@
 #pragma once
+//#include "../Controller/Controller.h"
 
 namespace WinniePOOview {
 
@@ -8,6 +9,7 @@ namespace WinniePOOview {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace Controller;
 
 	public ref class RegisterForm : public System::Windows::Forms::Form
 	{
@@ -266,15 +268,36 @@ namespace WinniePOOview {
 			return;
 		}
 
-		// 3. Validar seguridad mínima de la contraseña (¡Excelente detalle tuyo!)
+		// 3. Validar seguridad mínima
 		if (txtPassword->Text->Length < 8) {
 			MessageBox::Show("La contraseña debe tener al menos 8 caracteres.", "Seguridad", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			return;
 		}
 
-		
-		MessageBox::Show("¡Bienvenido a WinniePOO, " + txtNombres->Text + "!\nTu cuenta ha sido creada exitosamente.", "Registro Completado", MessageBoxButtons::OK, MessageBoxIcon::Information);
-		this->Close(); // Cierra el formulario de registro y probablemente regrese al Login
+		// --- NUEVA LÓGICA DE CONEXIÓN ---
+		try {
+			// Convertimos los textos a números donde corresponde
+			int dni = Convert::ToInt32(txtDNI->Text);
+			int edad = Convert::ToInt32(txtEdad->Text);
+
+			// Preparamos el servicio
+			Controller::ServicioPacientes^ pacientesService = gcnew Controller::ServicioPacientes();
+
+			// Intentamos registrar. Mandamos "" (vacío) a alergias y síntomas
+			bool exito = pacientesService->RegistrarPaciente(dni, txtPassword->Text, txtNombres->Text, txtApellidos->Text, edad, "", "");
+
+			if (exito) {
+				MessageBox::Show("¡Bienvenido a WinniePOO, " + txtNombres->Text + "!\nTu cuenta ha sido creada exitosamente.", "Registro Completado", MessageBoxButtons::OK, MessageBoxIcon::Information);
+				this->Close(); // Cierra la ventana y vuelve al Login
+			}
+			else {
+				MessageBox::Show("El usuario con este DNI ya se encuentra registrado en el sistema.", "Usuario Existente", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			}
+		}
+		catch (FormatException^) {
+			// Si el usuario escribió letras en el DNI o Edad, la conversión a Int32 fallará y lo atrapamos aquí
+			MessageBox::Show("Por favor, ingresa solo números en los campos de DNI y Edad.", "Error de formato", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		}
 	}
 
 	private: System::Void RegisterForm_Load(System::Object^ sender, System::EventArgs^ e) {
