@@ -3,6 +3,7 @@
 //#include "../Controller/Controller.h"
 //#include "OperadorVentas.h"
 
+#include "FarmaceuticoView.h"
 
 namespace WinniePOOview {
 
@@ -252,8 +253,16 @@ namespace WinniePOOview {
 		// 1. Creamos una "instancia" del servicio que acabamos de hacer
 		Controller::ServicioAutenticacion^ authService = gcnew Controller::ServicioAutenticacion();
 
+
 		// 2. Le preguntamos al controlador si las credenciales son válidas
 		bool accesoConcedido = authService->ValidarAcceso(rol, usuario, password);
+
+		if (rol == "Farmacéutico") {   // ajusta según tu condición actual
+			ViewFarmaceutico::Farmaceutico^ form = gcnew ViewFarmaceutico::Farmaceutico();
+			form->Show();
+			this->Hide();   // oculta el login, o usa this->Close() si prefieres cerrarlo
+		}
+
 
 		// 3. Reaccionamos a la respuesta
 		if (accesoConcedido) {

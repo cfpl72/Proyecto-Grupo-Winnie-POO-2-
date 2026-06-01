@@ -74,8 +74,13 @@ namespace Controller {
                 "[" + DateTime::Now.ToString("dd/MM/yyyy HH:mm") + "] " + mensaje + "\n");
         }
 
-     
-
+        // ── NUEVO: Lee y devuelve todas las alertas de un paciente ─────────────
+        static String^ LeerAlertas(String^ nombre) {
+            String^ archivo = "alertas_" + nombre->Replace(" ", "_") + ".txt";
+            if (!System::IO::File::Exists(archivo))
+                return nullptr;   // sin alertas
+            return System::IO::File::ReadAllText(archivo);
+        }
     };
 
     // =========================
@@ -137,14 +142,4 @@ namespace Controller {
         bool ValidarAcceso(String^ rol, String^ usuarioDNI, String^ password);
     };
 
-
-    public ref class ServicioFarmaceutico {
-    public:
-        static void AlertarPaciente(String^ nombre, String^ mensaje) {
-            String^ archivo = "alertas_" + nombre->Replace(" ", "_") + ".txt";
-            System::IO::File::AppendAllText(archivo,
-                "[" + DateTime::Now.ToString("dd/MM/yyyy HH:mm") + "] " + mensaje + "\n");
-        }
-    };
-
-}
+} // FIN DEL NAMESPACE CONTROLLER
