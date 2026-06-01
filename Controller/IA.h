@@ -13,7 +13,7 @@ namespace IA_CLASS {
     // IA.h
     public ref class IA {
     private:
-        String^ apiKey = "apikey";
+		String^ apiKey = "apikey"; //Reemplaza con tu clave real
         String^ apiUrl = "https://api.openai.com/v1/responses";
 
     public:
