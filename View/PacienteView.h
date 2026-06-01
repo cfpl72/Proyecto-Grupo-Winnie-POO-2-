@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "PacienteView.h"
 
-namespace View {
+namespace ViewPaciente {
 
 	using namespace System;
 	using namespace System::ComponentModel;
