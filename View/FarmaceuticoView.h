@@ -19,7 +19,7 @@ namespace ViewFarmaceutico {
 
 			// Instanciar servicios del Controller
 			svcPacientes = gcnew Controller::ServicioPacientes();
-			svcFarmaceutico = gcnew Controller::ServicioPacientes(); // no se usa instancia, método estático
+			//svcFarmaceutico = gcnew Controller::ServicioFarmaceutico(); // no se usa instancia, método estático
 		}
 
 	protected:

@@ -1,5 +1,4 @@
 #pragma once
-
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace WinniePOO_Modelos;
@@ -30,8 +29,7 @@ namespace Controller {
         void ModificarPaciente(int id, String^ atributo, String^ nuevoValor);
         void EliminarPaciente(int id);
 
-        //Sección Recetas
-
+        // Sección Recetas
     private:
         String^ GetHistorialPath(int idPaciente);
 
@@ -59,17 +57,21 @@ namespace Controller {
             int idReceta
         );
 
-        List<String^>^ ServicioPacientes::ExaminarHistorialReceta(int idPaciente);
-        List<String^>^ ServicioPacientes::ObtenerNombresPacientes();
+        List<String^>^ ExaminarHistorialReceta(int idPaciente);
+        List<String^>^ ObtenerNombresPacientes();
 
-        ref class ServicioFarmaceutico {
-        public:
-            static void AlertarPaciente(String^ nombre, String^ mensaje) {
-                String^ archivo = "alertas_" + nombre->Replace(" ", "_") + ".txt";
-                System::IO::File::AppendAllText(archivo,
-                    "[" + DateTime::Now.ToString("dd/MM/yyyy HH:mm") + "] " + mensaje + "\n");
-            }
-        };
+    }; // FIN DE LA CLASE SERVICIO PACIENTES
+
+    // =========================
+    // FARMACÉUTICO
+    // =========================
+    public ref class ServicioFarmaceutico {
+    public:
+        static void AlertarPaciente(String^ nombre, String^ mensaje) {
+            String^ archivo = "alertas_" + nombre->Replace(" ", "_") + ".txt";
+            System::IO::File::AppendAllText(archivo,
+                "[" + DateTime::Now.ToString("dd/MM/yyyy HH:mm") + "] " + mensaje + "\n");
+        }
     };
 
     // =========================
@@ -113,9 +115,6 @@ namespace Controller {
         bool EliminarVenta(int idVenta);
         String^ MostrarBoletaVenta(int idVenta);
     };
-
-
-   
 
     // =========================
     // AUTENTICACIÓN (LOGIN)
