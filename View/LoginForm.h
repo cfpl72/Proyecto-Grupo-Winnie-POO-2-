@@ -2,6 +2,7 @@
 #include "RegisterForm.h"
 //#include "OperadorVentas.h"
 
+#include "FarmaceuticoView.h"
 
 namespace WinniePOOview {
 
@@ -246,6 +247,11 @@ namespace WinniePOOview {
 		// Mensaje amigable simulando el ingreso
 		MessageBox::Show("¡Hola " + usuario + "!\nIngresando al sistema como: " + rol, "¡Bienvenido a WinniePOO!", MessageBoxButtons::OK, MessageBoxIcon::Information);
 
+		if (rol == "Farmacéutico") {   // ajusta según tu condición actual
+			ViewFarmaceutico::Farmaceutico^ form = gcnew ViewFarmaceutico::Farmaceutico();
+			form->Show();
+			this->Hide();   // oculta el login, o usa this->Close() si prefieres cerrarlo
+		}
 
 	}
 

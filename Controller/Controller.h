@@ -112,5 +112,12 @@ namespace Controller {
             System::IO::File::AppendAllText(archivo,
                 "[" + DateTime::Now.ToString("dd/MM/yyyy HH:mm") + "] " + mensaje + "\n");
         }
+        // ── NUEVO: Lee y devuelve todas las alertas de un paciente ─────────────
+        static String^ LeerAlertas(String^ nombre) {
+            String^ archivo = "alertas_" + nombre->Replace(" ", "_") + ".txt";
+            if (!System::IO::File::Exists(archivo))
+                return nullptr;   // sin alertas
+            return System::IO::File::ReadAllText(archivo);
+        }
     };
 }
