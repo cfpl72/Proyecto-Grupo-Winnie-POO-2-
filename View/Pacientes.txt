@@ -1,3 +1,4 @@
 1|t1|Claudio|Rios|21|Ninguna|Dolor cabeza
 2|t2|Ana|Lopez|30|Penicilina|Fiebre
 12340000|lolamento|Lola|Mento|31||
+72506524|12345678|Claudio Francesco|Paucar Leyva|23||

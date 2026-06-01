@@ -4,6 +4,7 @@
 //#include "OperadorVentas.h"
 
 #include "FarmaceuticoView.h"
+#include "PacienteView.h"
 
 namespace WinniePOOview {
 
@@ -267,7 +268,9 @@ namespace WinniePOOview {
 		// 3. Reaccionamos a la respuesta
 		if (accesoConcedido) {
 			MessageBox::Show("¡Hola " + usuario + "!\nIngresando al sistema como: " + rol, "¡Bienvenido a WinniePOO!", MessageBoxButtons::OK, MessageBoxIcon::Information);
-			// (Aquí en el futuro pondrán el código para abrir la pantalla principal)
+			ViewPaciente::PacienteForm^ form = gcnew ViewPaciente::PacienteForm(); //INVOCACIÓN DEL FORMS DE PACIENTES
+			form->Show();
+			this->Hide();
 		}
 		else {
 			MessageBox::Show("DNI o contraseña incorrectos, o el usuario no existe.", "Credenciales incorrectas", MessageBoxButtons::OK, MessageBoxIcon::Error);
