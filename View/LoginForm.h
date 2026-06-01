@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "RegisterForm.h"
-#include "RecoverPasswordForm.h"
 //#include "OperadorVentas.h"
 
 namespace WinniePOOview {
@@ -37,7 +36,7 @@ namespace WinniePOOview {
 	private: System::Windows::Forms::TextBox^ txtUsuario;
 	private: System::Windows::Forms::Label^ lblPassword;
 	private: System::Windows::Forms::TextBox^ txtPassword;
-	private: System::Windows::Forms::LinkLabel^ lnkOlvidaste;
+
 	private: System::Windows::Forms::Button^ btnIngresar;
 	private: System::Windows::Forms::LinkLabel^ lnkCrearCuenta;
 	private: System::ComponentModel::Container^ components;
@@ -54,7 +53,6 @@ namespace WinniePOOview {
 			   this->txtUsuario = (gcnew System::Windows::Forms::TextBox());
 			   this->lblPassword = (gcnew System::Windows::Forms::Label());
 			   this->txtPassword = (gcnew System::Windows::Forms::TextBox());
-			   this->lnkOlvidaste = (gcnew System::Windows::Forms::LinkLabel());
 			   this->btnIngresar = (gcnew System::Windows::Forms::Button());
 			   this->lnkCrearCuenta = (gcnew System::Windows::Forms::LinkLabel());
 			   (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBoxOso))->BeginInit();
@@ -157,23 +155,6 @@ namespace WinniePOOview {
 			   this->txtPassword->TabIndex = 7;
 			   this->txtPassword->UseSystemPasswordChar = true;
 			   // 
-			   // lnkOlvidaste
-			   // 
-			   this->lnkOlvidaste->AutoSize = true;
-			   this->lnkOlvidaste->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				   static_cast<System::Byte>(0)));
-			   this->lnkOlvidaste->LinkBehavior = System::Windows::Forms::LinkBehavior::HoverUnderline;
-			   this->lnkOlvidaste->LinkColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(100)),
-				   static_cast<System::Int32>(static_cast<System::Byte>(100)));
-			   this->lnkOlvidaste->Location = System::Drawing::Point(287, 474);
-			   this->lnkOlvidaste->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
-			   this->lnkOlvidaste->Name = L"lnkOlvidaste";
-			   this->lnkOlvidaste->Size = System::Drawing::Size(178, 20);
-			   this->lnkOlvidaste->TabIndex = 8;
-			   this->lnkOlvidaste->TabStop = true;
-			   this->lnkOlvidaste->Text = L"¿Olvidaste tu contraseña\?";
-			   this->lnkOlvidaste->Click += gcnew System::EventHandler(this, &LoginForm::lnkOlvidaste_Click);
-			   // 
 			   // btnIngresar
 			   // 
 			   this->btnIngresar->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(32)), static_cast<System::Int32>(static_cast<System::Byte>(166)),
@@ -216,7 +197,6 @@ namespace WinniePOOview {
 			   this->ClientSize = System::Drawing::Size(543, 685);
 			   this->Controls->Add(this->lnkCrearCuenta);
 			   this->Controls->Add(this->btnIngresar);
-			   this->Controls->Add(this->lnkOlvidaste);
 			   this->Controls->Add(this->txtPassword);
 			   this->Controls->Add(this->lblPassword);
 			   this->Controls->Add(this->txtUsuario);
@@ -261,13 +241,6 @@ namespace WinniePOOview {
 
 	}
 
-		   
-
-		   // Evento para "Olvidaste tu contraseña"
-	private: System::Void lnkOlvidaste_Click(System::Object^ sender, System::EventArgs^ e) {
-		RecoverPasswordForm^ ventanaRecuperar = gcnew RecoverPasswordForm();
-		ventanaRecuperar->ShowDialog();
-	}
 
 	private: System::Void lnkCrearCuenta_Click(System::Object^ sender, System::EventArgs^ e) {
 		RegisterForm^ ventanaRegistro = gcnew RegisterForm();

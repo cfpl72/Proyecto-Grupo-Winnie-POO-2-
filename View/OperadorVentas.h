@@ -74,9 +74,9 @@ namespace WinniePOOview {
 			this->tablaVentas = (gcnew System::Windows::Forms::DataGridView());
 			this->btnCerrarSesion = (gcnew System::Windows::Forms::Button());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->lblBienvenida = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->lblBienvenida = (gcnew System::Windows::Forms::Label());
 			this->tabControlPrincipal->SuspendLayout();
 			this->tabInventario->SuspendLayout();
 			this->groupBoxEdicion->SuspendLayout();
@@ -272,6 +272,19 @@ namespace WinniePOOview {
 			this->panel1->Size = System::Drawing::Size(600, 64);
 			this->panel1->TabIndex = 3;
 			// 
+			// lblBienvenida
+			// 
+			this->lblBienvenida->AutoSize = true;
+			this->lblBienvenida->Font = (gcnew System::Drawing::Font(L"Segoe UI", 16.2F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->lblBienvenida->ForeColor = System::Drawing::SystemColors::Control;
+			this->lblBienvenida->Location = System::Drawing::Point(541, 10);
+			this->lblBienvenida->Name = L"lblBienvenida";
+			this->lblBienvenida->Size = System::Drawing::Size(56, 38);
+			this->lblBienvenida->TabIndex = 9;
+			this->lblBienvenida->Text = L"🐻";
+			this->lblBienvenida->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
@@ -296,19 +309,6 @@ namespace WinniePOOview {
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"Panel Operador de Ventas";
 			this->label1->Click += gcnew System::EventHandler(this, &OperadorVentas::label1_Click);
-			// 
-			// lblBienvenida
-			// 
-			this->lblBienvenida->AutoSize = true;
-			this->lblBienvenida->Font = (gcnew System::Drawing::Font(L"Segoe UI", 16.2F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lblBienvenida->ForeColor = System::Drawing::SystemColors::Control;
-			this->lblBienvenida->Location = System::Drawing::Point(541, 10);
-			this->lblBienvenida->Name = L"lblBienvenida";
-			this->lblBienvenida->Size = System::Drawing::Size(56, 38);
-			this->lblBienvenida->TabIndex = 9;
-			this->lblBienvenida->Text = L"🐻";
-			this->lblBienvenida->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// OperadorVentas
 			// 
