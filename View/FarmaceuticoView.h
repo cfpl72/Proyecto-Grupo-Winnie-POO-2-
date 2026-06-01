@@ -19,7 +19,6 @@ namespace ViewFarmaceutico {
 
 			// Instanciar servicios del Controller
 			svcPacientes = gcnew Controller::ServicioPacientes();
-			svcFarmaceutico = gcnew Controller::ServicioPacientes(); // no se usa instancia, método estático
 		}
 
 	protected:
@@ -33,7 +32,6 @@ namespace ViewFarmaceutico {
 		//CONTROLES-METODOS DEL CONTROLLER
 	private:
 		Controller::ServicioPacientes^ svcPacientes;
-		Controller::ServicioFarmaceutico^ svcFarmaceutico;
 
 		// CONTROLES - Panel superior 
 	private: System::Windows::Forms::Panel^ panel1;
@@ -806,20 +804,31 @@ namespace ViewFarmaceutico {
 		this->panel7->Visible = false;
 		panelActivo->Visible = true;
 	}
+		   //METODO HELPER: Busca el ID del paciente a partir de su nombre completo (nombre + apellido)
+		private: int BuscarIdPaciente(String^ nombreCompleto) {
+			auto dic = svcPacientes->LeerTodos();
+			for each (auto kv in dic) {
+				String^ nombre = kv.Value->nombre + " " + kv.Value->apellido;
+				if (nombre == nombreCompleto)
+					return kv.Key;
+			}
+			return -1;
+		}
 
 		   // Filtra filas del dataGridView1 por nombre o apellido
 	private: void FiltrarPacientes(String^ texto) {
 		String^ busqueda = texto->ToLower()->Trim();
 		
 	}
-		   // MyForm_Load - datos de prueba
+		   // MyForm_Load — llena los tres combos con los pacientes reales del sistema
 	private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
-		// TODO: reemplazar con datos reales del Controller/ServicioUsuarios
-		
-		array<String^>^ pacientes = { L"Jenna Quezada", L"Luis Lopez", L"Carlos Ramos" };
-		this->cmbPaciente->Items->AddRange(pacientes);
-		this->cmbPacAlerta->Items->AddRange(pacientes);
-		this->cmbPacHist->Items->AddRange(pacientes);
+
+		System::Collections::Generic::List<String^>^ pacientes = svcPacientes->ObtenerNombresPacientes();
+		for each (String ^ nombre in pacientes) {
+			this->cmbPaciente->Items->Add(nombre);
+			this->cmbPacAlerta->Items->Add(nombre);
+			this->cmbPacHist->Items->Add(nombre);
+		}
 	}
 
 		   // Sidebar - navegacion entre paneles
@@ -837,8 +846,6 @@ namespace ViewFarmaceutico {
 		   // Vista 2: Examinar Receta
 		   //=========================================
 	private: System::Void btnCargarReceta_Click(System::Object^ sender, System::EventArgs^ e) {
-		//PARA VER LA UBIACCION DE DONDE VA A LEER EL ARCHIVO HISTORIAL DEL PACIENTE
-		//MessageBox::Show(System::IO::Directory::GetCurrentDirectory(), L"Ruta actual");
 
 		if (this->cmbPaciente->SelectedIndex < 0) {
 			MessageBox::Show(L"Seleccione un paciente.", L"Aviso",
@@ -850,114 +857,228 @@ namespace ViewFarmaceutico {
 		this->cmbMedicamento->Items->Clear();
 		this->chart1->Series["Series1"]->Points->Clear();
 		this->chart2->Series["Series1"]->Points->Clear();
-		//_frecuencias = gcnew System::Collections::Generic::Dictionary<String^, int>();
 		_datosSemanales = gcnew System::Collections::Generic::Dictionary<String^, array<int>^>();
 		_frecuenciasTotales = gcnew System::Collections::Generic::Dictionary<String^, int>();
-		// 2. Construir nombre del archivo
-		String^ paciente = this->cmbPaciente->SelectedItem->ToString();
-		String^ nombreArchivo = L"historialReceta_" + paciente->Replace(L" ", L"_") + L".txt";
-		String^ ruta = System::IO::Path::Combine(
-			System::IO::Directory::GetCurrentDirectory(),
-			nombreArchivo);
-		//===============================================================verifica si el arhivo existe
-		if (!System::IO::File::Exists(ruta)) {
-			MessageBox::Show(L"No se encontró el archivo:\n" + ruta,
+
+		// 2. Obtener idPaciente desde el nombre seleccionado
+		String^ nombreSeleccionado = this->cmbPaciente->SelectedItem->ToString();
+		int idPaciente = BuscarIdPaciente(nombreSeleccionado);
+
+		if (idPaciente == -1) {
+			MessageBox::Show(L"No se encontró el paciente en el sistema.",
 				L"Aviso", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			return;
 		}
-		//=============================================================== LEE LAS LINEAS DEL ARCHIVO Y CUENTA LAS FRECUENCIAS DE CADA MEDICAMENTO
-		// 4. Leer líneas y contar frecuencias por medicamento (columna [1])
-		array<String^>^ lineas = System::IO::File::ReadAllLines(ruta);
 
+		// 3. Obtener historial desde el Controller
+		//    ExaminarHistorialReceta devuelve líneas con formato:
+		//    "REC-001, Aspirina 500mg, 2 c/12h, 01/04/2026, Entregado"
+		System::Collections::Generic::List<String^>^ lineas = svcPacientes->ExaminarHistorialReceta(idPaciente);
+		if (lineas->Count == 0) {
+			MessageBox::Show(L"No hay recetas registradas para este paciente.",
+				L"Aviso", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			return;
+		}
+
+		// 4. Parsear líneas y acumular datos para las gráficas
 		for each (String ^ linea in lineas) {
-			if (String::IsNullOrWhiteSpace(linea) || linea->StartsWith(L"#"))
-				continue;
+			if (String::IsNullOrWhiteSpace(linea)) continue;
 
-			array<String^>^ partes = linea->Split(L',');
+			array<String^>^ partes = linea->Split(',');
 			if (partes->Length < 5) continue;
 
-			String^ med = partes[1]->Trim(); // columna [1] = Medicamento
-			String^ fechaStr = partes[3]->Trim(); // columna [3] = Fecha
-			String^ entregado = partes[4]->Trim(); // columna [4] = Entregado
-			// Solo contar si fue entregado
-			if (entregado != "1" && entregado != "true") continue;
+			String^ med = partes[1]->Trim(); // Medicamento
+			String^ fechaStr = partes[3]->Trim(); // Fecha
+			String^ estado = partes[4]->Trim(); // "Entregado" | "Pendiente"
 
-			// ── Extraer el día usando DateTime::TryParseExact ─────────────────
+			// Solo graficar los entregados
+			if (estado != "Entregado") continue;
+
+			// Parsear fecha
 			DateTime fecha;
 			array<String^>^ formatos = { L"dd/MM/yyyy", L"dd-MM-yyyy" };
-
 			if (!DateTime::TryParseExact(
-				fechaStr,
-				formatos,
+				fechaStr, formatos,
 				System::Globalization::CultureInfo::InvariantCulture,
-				System::Globalization::DateTimeStyles::None,fecha))
+				System::Globalization::DateTimeStyles::None, fecha))
 				continue;
 
-			int dia = fecha.Day;
-			// ── Determinar semana e incrementar contador ───────────────────────
-			int semana = GetSemana(dia);  // 0-4
+			// Acumular por semana
+			int semana = GetSemana(fecha.Day);
 
 			if (!_datosSemanales->ContainsKey(med))
 				_datosSemanales->Add(med, gcnew array<int>(5) { 0, 0, 0, 0, 0 });
+			array<int>^ conteo = _datosSemanales[med];
+			conteo[semana]++;
 
-			array<int>^ conteo = _datosSemanales[med];  // extraer referencia al array
-			conteo[semana]++;                           // modificar a través de la referencia
-
-
-/*
-
-			if (!_frecuencias->ContainsKey(med))
-				_frecuencias->Add(med, 0);
-				_frecuencias[med]++;
-*/
-			// Sumar al total por medicamento
+			// Acumular total por medicamento (para el pie chart)
 			if (!_frecuenciasTotales->ContainsKey(med))
 				_frecuenciasTotales->Add(med, 0);
-			_frecuenciasTotales[med]++;   
+			_frecuenciasTotales[med]++;
 		}
 
-		// ── Validar que haya datos ────────────────────────────────────────────
 		if (_datosSemanales->Count == 0) {
 			MessageBox::Show(L"No hay entregas registradas en el historial.",
 				L"Aviso", MessageBoxButtons::OK, MessageBoxIcon::Information);
 			return;
 		}
 
-		// ── Poblar combo con los medicamentos encontrados ─────────────────────
+		// 5. Poblar combo de medicamentos y disparar el bar chart
 		for each (String ^ med in _datosSemanales->Keys)
 			this->cmbMedicamento->Items->Add(med);
 
-		// Seleccionar el primero → dispara automáticamente el evento del combo
-		this->cmbMedicamento->SelectedIndex = 0;
+		this->cmbMedicamento->SelectedIndex = 0; // dispara cmbMedicamento_SelectedIndexChanged
 		DibujarPieChart();
+	}
+
+		   // Redibuja el bar chart cada vez que cambia el medicamento seleccionado
+	private: System::Void cmbMedicamento_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+
+		if (this->cmbMedicamento->SelectedIndex < 0 || _datosSemanales == nullptr)
+			return;
+
+		String^ med = this->cmbMedicamento->SelectedItem->ToString();
+		if (!_datosSemanales->ContainsKey(med)) return;
+
+		array<int>^ conteo = _datosSemanales[med];
+		array<String^>^ nombres = { "Sem 1", "Sem 2", "Sem 3", "Sem 4", "Sem 5" };
+
+		this->chart1->Series["Series1"]->Points->Clear();
+		this->chart1->Series["Series1"]->ChartType =
+			System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Column;
+
+		for (int i = 0; i < 5; i++) {
+
+			int idx = this->chart1->Series["Series1"]->Points->AddXY(nombres[i], conteo[i]);
+
+			if (i == 0) {
+				this->chart1->Series["Series1"]->Points[idx]->Color =
+					System::Drawing::Color::CadetBlue;
+			}
+			else {
+				int anterior = conteo[i - 1];
+				int actual = conteo[i];
+
+				if (anterior == 0) {
+					this->chart1->Series["Series1"]->Points[idx]->Color =
+						System::Drawing::Color::CadetBlue;
+				}
+				else {
+					double incremento = ((double)(actual - anterior) / anterior) * 100.0;
+
+					if (incremento >= 100.0)
+						this->chart1->Series["Series1"]->Points[idx]->Color =
+						System::Drawing::Color::Red;
+					else if (incremento >= 50.0)
+						this->chart1->Series["Series1"]->Points[idx]->Color =
+						System::Drawing::Color::DarkOrange;
+					else
+						this->chart1->Series["Series1"]->Points[idx]->Color =
+						System::Drawing::Color::CadetBlue;
+				}
+			}
+		}
+	}
+
+		   // Dibuja el pie chart con el total de entregas por medicamento
+	private: void DibujarPieChart() {
+
+		this->chart2->Series["Series1"]->Points->Clear();
+		this->chart2->Series["Series1"]->ChartType =
+			System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Pie;
+
+		int totalGeneral = 0;
+		for each (int cantidad in _frecuenciasTotales->Values)
+			totalGeneral += cantidad;
+
+		if (totalGeneral == 0) return;
+
+		for each (System::Collections::Generic::KeyValuePair<String^, int> par in _frecuenciasTotales) {
+
+			String^ med = par.Key;
+			int     cantidad = par.Value;
+			double  pct = ((double)cantidad / totalGeneral) * 100.0;
+
+			int idx = this->chart2->Series["Series1"]->Points->AddXY(med, cantidad);
+
+			this->chart2->Series["Series1"]->Points[idx]->Label =
+				med + "\n" + pct.ToString("F0") + "%";
+
+			this->chart2->Series["Series1"]->Points[idx]->LegendText =
+				med + " (" + cantidad.ToString() + " entregas)";
+		}
 	}
 
 
 		   // Vista 3: Alertar Paciente
 	private: System::Void btnEnviarAlerta_Click(System::Object^ sender, System::EventArgs^ e) {
-		if (this->cmbPacAlerta->SelectedIndex < 0) {
-			MessageBox::Show(L"Seleccione un paciente.", L"Aviso", MessageBoxButtons::OK, MessageBoxIcon::Warning);
-			return;
-		}
-		if (this->txtMensaje->Text->Trim() == String::Empty) {
-			MessageBox::Show(L"Ingrese un mensaje.", L"Aviso", MessageBoxButtons::OK, MessageBoxIcon::Warning);
-			return;
-		}
-		// TODO: Farmaceutico::AlertarPaciente() via Controller
-		this->labelResultado->Text = L"Alerta enviada a: " + this->cmbPacAlerta->SelectedItem->ToString();
+
+	if (this->cmbPacAlerta->SelectedIndex < 0) {
+		MessageBox::Show(L"Seleccione un paciente.", L"Aviso",
+			MessageBoxButtons::OK, MessageBoxIcon::Warning);
+		return;
 	}
+	if (this->txtMensaje->Text->Trim() == String::Empty) {
+		MessageBox::Show(L"Ingrese un mensaje.", L"Aviso",
+			MessageBoxButtons::OK, MessageBoxIcon::Warning);
+		return;
+	}
+
+	String^ nombre = this->cmbPacAlerta->SelectedItem->ToString();
+	String^ mensaje = this->txtMensaje->Text->Trim();
+
+	// Llamar al Controller (método estático)
+	Controller::ServicioFarmaceutico::AlertarPaciente(nombre, mensaje);
+
+	this->labelResultado->Text = L"✅ Alerta enviada a: " + nombre;
+	this->txtMensaje->Clear();
+	}
+
 		   //===================METODO CARGAR HISTORIAL==========================
 		   // Vista 4: Historial Recetas
-	private: System::Void btnCargarHist_Click(System::Object^ sender, System::EventArgs^ e) {
-		if (this->cmbPacHist->SelectedIndex < 0) {
-			MessageBox::Show(L"Seleccione un paciente.", L"Aviso", MessageBoxButtons::OK, MessageBoxIcon::Warning);
-			return;
-		}
-		// TODO: ServicioVenta::VerHistorialPaciente(id) via Controller
-		this->dataGridView2->Rows->Clear();
-		this->dataGridView2->Rows->Add(L"REC-001", L"Aspirina 500mg", L"2 c/8h", L"01/04/2026", false);
-		this->dataGridView2->Rows->Add(L"REC-002", L"Ibuprofeno 400mg", L"1 c/12h", L"15/04/2026", true);
+private: System::Void btnCargarHist_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	if (this->cmbPacHist->SelectedIndex < 0) {
+		MessageBox::Show(L"Seleccione un paciente.", L"Aviso",
+			MessageBoxButtons::OK, MessageBoxIcon::Warning);
+		return;
 	}
+
+	// Buscar idPaciente por nombre
+	String^ nombreSeleccionado = this->cmbPacHist->SelectedItem->ToString();
+	int idPaciente = -1;
+
+	auto dicPac = svcPacientes->LeerTodos();
+	for each (auto kv in dicPac) {
+		String^ nombreCompleto = kv.Value->nombre + " " + kv.Value->apellido;
+		if (nombreCompleto == nombreSeleccionado) {
+			idPaciente = kv.Key;
+			break;
+		}
+	}
+
+	if (idPaciente == -1) {
+		MessageBox::Show(L"Paciente no encontrado.", L"Aviso",
+			MessageBoxButtons::OK, MessageBoxIcon::Warning);
+		return;
+	}
+
+	// Obtener historial desde Controller
+
+	System::Collections::Generic::List<WinniePOO_Modelos::Receta^>^ historial = svcPacientes->ObtenerHistorial(idPaciente);
+
+	this->dataGridView2->Rows->Clear();
+
+	for each (WinniePOO_Modelos::Receta ^ r in historial) {
+		String^ idFormateado = "REC-" + r->idReceta.ToString("D3");
+		String^ medicamento = r->medicamento->nombre;
+		String^ dosis = r->dosis.ToString() + " c/12h";
+		String^ fecha = r->fechaEmision.ToString("dd/MM/yyyy");
+		bool    entregado = r->entregado;
+
+		this->dataGridView2->Rows->Add(idFormateado, medicamento, dosis, fecha, entregado);
+	}
+}
 		   //=============================================================
 		  
 	private: System::Void panel1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
