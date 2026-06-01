@@ -12,14 +12,14 @@ namespace ViewPaciente {
 
 	public ref class PacienteForm : public System::Windows::Forms::Form
 	{
-	private: String^ _nombrePaciente;
+	private: int idPaciente; //Cambio de nombre a id para evitar confusión con el nombre del paciente
 
 	public:
 		// Constructor que recibe el nombre
-		PacienteForm(String^ nombrePaciente)
+		PacienteForm(int idBus)
 		{
 			InitializeComponent();
-			_nombrePaciente = nombrePaciente;
+			idPaciente = idBus;
 		}
 
 	protected:
@@ -337,6 +337,7 @@ private: System::Void panelDashboard_Paint(System::Object^ sender, System::Windo
 		   // ... tu código existente de carga ...
 
 		   // ── Verificar alertas pendientes del farmacéutico ─────────────────────
+			String^ _nombrePaciente = "A"; // Obtener nombre usando el ID
 		   String^ alertas = Controller::ServicioFarmaceutico::LeerAlertas(_nombrePaciente);
 
 		   if (alertas != nullptr && alertas->Trim() != String::Empty) {

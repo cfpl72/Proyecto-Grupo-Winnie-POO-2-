@@ -268,7 +268,7 @@ namespace WinniePOOview {
 		// 3. Reaccionamos a la respuesta
 		if (accesoConcedido) {
 			MessageBox::Show("¡Hola " + usuario + "!\nIngresando al sistema como: " + rol, "¡Bienvenido a WinniePOO!", MessageBoxButtons::OK, MessageBoxIcon::Information);
-			ViewPaciente::PacienteForm^ form = gcnew ViewPaciente::PacienteForm(); //INVOCACIÓN DEL FORMS DE PACIENTES
+			ViewPaciente::PacienteForm^ form = gcnew ViewPaciente::PacienteForm(Convert::ToInt32(usuario)); //INVOCACIÓN DEL FORMS DE PACIENTES
 			form->Show();
 			this->Hide();
 		}
