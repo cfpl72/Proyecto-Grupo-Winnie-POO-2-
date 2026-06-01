@@ -13,8 +13,8 @@ namespace IA_CLASS {
     // IA.h
     public ref class IA {
     private:
-		//String^ apiKey = "AIzaSyBEUPOmEdMBDE9a9P13rUGuhhgkol0O438"; //Cambiar cuando se suba a GitHub, por seguridad
-        String^ apiUrl = "https://api.openai.com/v1/chat/completions";
+        String^ apiKey = "apikey";
+        String^ apiUrl = "https://api.openai.com/v1/responses";
 
     public:
         // Ahora recibe la lista de medicamentos del sistema
@@ -31,15 +31,35 @@ namespace IA_CLASS {
                     "Responde de forma breve y profesional.";
 
                 // Construcción del JSON
-                String^ cuerpoJson = "{\"model\": \"gpt-3.5-turbo\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
+                String^ cuerpoJson = "{\"model\": \"gpt-4.1\", \"input\": \"" + prompt + "\"}";
                 StringContent^ contenido = gcnew StringContent(cuerpoJson, Encoding::UTF8, "application/json");
 
                 auto tarea = cliente->PostAsync(apiUrl, contenido);
                 tarea->Wait();
 
                 String^ respuestaRaw = tarea->Result->Content->ReadAsStringAsync()->Result;
+
+                Console::WriteLine("Respuesta RAW:");
+                Console::WriteLine(respuestaRaw);
+
+
                 JObject^ datos = JObject::Parse(respuestaRaw);
-                return datos["choices"]["message"]["content"]->ToString();
+                if (datos["output"] != nullptr &&
+                    datos["output"]->HasValues &&
+                    datos["output"][0]["content"] != nullptr &&
+                    datos["output"][0]["content"]->HasValues &&
+                    datos["output"][0]["content"][0]["text"] != nullptr)
+                {
+                    return datos["output"][0]["content"][0]["text"]->ToString();
+                }
+                else if (datos["error"] != nullptr)
+                {
+                    return "Error API: " + datos["error"]["message"]->ToString();
+                }
+                else
+                {
+                    return "Respuesta inesperada: " + datos->ToString();
+                }
             }
             catch (Exception^ ex) {
                 return "Error: " + ex->Message;

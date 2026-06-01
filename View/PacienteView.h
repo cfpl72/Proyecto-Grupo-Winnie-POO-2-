@@ -9,11 +9,17 @@ namespace ViewPaciente {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Collections::Generic;
 	using namespace IA_CLASS;
 
 	public ref class PacienteForm : public System::Windows::Forms::Form
 	{
 	private: int idPaciente; //Cambio de nombre a id para evitar confusión con el nombre del paciente
+		   Controller::ServicioPacientes^ pacienteService = gcnew Controller::ServicioPacientes();
+		   Controller::ServicioMedicamentos^ medicamentoService = gcnew Controller::ServicioMedicamentos();
+		   Controller::ServicioVentas^ ventasService = gcnew Controller::ServicioVentas();
+
+		   IA_CLASS::IA^ ia = gcnew IA();
 
 	public:
 		// Constructor que recibe el nombre
@@ -297,22 +303,68 @@ namespace ViewPaciente {
 
 		// HU02 y HU03: Evaluar Sintomas y Mostrar Recomendacion
 	private: System::Void btnEvaluar_Click(System::Object^ sender, System::EventArgs^ e) {
+
 		if (String::IsNullOrWhiteSpace(txtSintomas->Text)) {
-			MessageBox::Show("Por favor, describa sus sintomas para poder evaluarlos.", "Datos incompletos", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			MessageBox::Show("Por favor, describa sus sintomas para poder evaluarlos.",
+				"Datos incompletos", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			return;
 		}
 
-		MessageBox::Show("Analizando sintomas...", "Evaluacion en curso", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		MessageBox::Show("Analizando sintomas...",
+			"Evaluacion en curso", MessageBoxButtons::OK, MessageBoxIcon::Information);
 
+		// =========================
+		// 1. Datos de entrada
+		// =========================
 
+		String^ sintomas = txtSintomas->Text;
+		int idPaciente = 1; // ⚠️ luego esto debería venir de la UI
+
+		// =========================
+		// 2. Historial desde servicio
+		// =========================
+
+		List<String^>^ historialLista = pacienteService->ExaminarHistorialReceta(idPaciente);
+
+		String^ historial = "";
+		if (historialLista != nullptr) {
+			for each (String ^ item in historialLista) {
+				historial += item + ", ";
+			}
+		}
+
+		// =========================
+		// 3. Lista de medicamentos
+		// =========================
+
+		// (por ahora mock, luego lo sacamos del servicio)
+		String^ listaMedicamentos = "Paracetamol, Ibuprofeno, Jarabe Antitusivo";
+
+		// =========================
+		// 4. Llamada a la IA
+		// =========================
+
+		String^ recomendacion = ia->GenerarRecomendacion(sintomas, historial, listaMedicamentos);
+
+		// =========================
+		// 5. Mostrar recomendación
+		// =========================
+
+		MessageBox::Show(recomendacion,
+			"Recomendación IA", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
+		// =========================
+		// 6. Tabla (se mantiene igual)
+		// =========================
 
 		dgvMedicamentos->Rows->Clear();
 
-		// HU04: Mostrar disponibilidad (Stock) y Precio
 		dgvMedicamentos->Rows->Add("Paracetamol 500mg", "1.50", "50");
 		dgvMedicamentos->Rows->Add("Ibuprofeno 400mg", "2.00", "30");
 		dgvMedicamentos->Rows->Add("Jarabe Antitusivo", "15.00", "12");
 	}
+
+
 
 		   // HU04 (Extension): Compra del medicamento
 	private: System::Void btnComprar_Click(System::Object^ sender, System::EventArgs^ e) {
