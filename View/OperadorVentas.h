@@ -8,6 +8,8 @@ namespace WinniePOOview {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Collections::Generic;
+	using namespace WinniePOO_Modelos;
 
 	/// <summary>
 	/// Resumen de OperadorVentas
@@ -15,6 +17,12 @@ namespace WinniePOOview {
 	public ref class OperadorVentas : public System::Windows::Forms::Form
 	{
 	public:
+
+		//Inicializar los servicios y componentes necesarios para el funcionamiento del panel de Operador de Ventas 
+		Controller::ServicioMedicamentos^ servicioMedicamentos = gcnew Controller::ServicioMedicamentos(); 
+		Controller::ServicioVentas^ servicioVentas = gcnew Controller::ServicioVentas();
+
+
 		OperadorVentas(void)
 		{
 			InitializeComponent();
@@ -343,18 +351,35 @@ namespace WinniePOOview {
 	}
 
 	private: System::Void OperadorVentas_Load(System::Object^ sender, System::EventArgs^ e) {
-		// 1. Llenar la Tabla de INVENTARIO (Concordante con la clase Medicamento del UML)
+
+		// 1. Columnas (se quedan igual)
 		tablaInventario->Columns->Add("ColID", "ID Med.");
 		tablaInventario->Columns->Add("ColNombre", "Nombre");
 		tablaInventario->Columns->Add("ColPrincipio", "Principio Activo");
 		tablaInventario->Columns->Add("ColPrecio", "Precio");
 		tablaInventario->Columns->Add("ColStock", "Stock");
 
-		tablaInventario->Rows->Add("101", "Aspirina", "Ácido Acetilsalicílico", "1.50", "200");
-		tablaInventario->Rows->Add("102", "Panadol", "Paracetamol", "2.00", "150");
-		tablaInventario->Rows->Add("103", "Amoxil", "Amoxicilina", "8.50", "50");
+		// 🔥 Limpiar por si acaso
+		tablaInventario->Rows->Clear();
 
-		// 2. Llenar la Tabla de VENTAS (Concordante con la clase Venta del UML)
+		// 🔥 Obtener datos reales del servicio
+		List<Medicamento^>^ inventario = servicioMedicamentos->ObtenerInventarioCompleto();
+
+		// 🔥 Llenar la tabla dinámicamente
+		for each (Medicamento ^ med in inventario) {
+			tablaInventario->Rows->Add(
+				med->id.ToString(),
+				med->nombre,
+				med->principioActivo,
+				med->precio.ToString("F2"), // formato bonito
+				med->stock.ToString()
+			);
+		}
+
+
+		// =========================
+		// TABLA VENTAS (la dejas igual por ahora)
+		// =========================
 		tablaVentas->Columns->Add("ColIdVenta", "ID Venta");
 		tablaVentas->Columns->Add("ColCant", "Cant. Vendida");
 		tablaVentas->Columns->Add("ColFecha", "Fecha de Venta");

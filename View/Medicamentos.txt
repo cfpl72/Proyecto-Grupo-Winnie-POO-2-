@@ -1,0 +1,20 @@
+101|Aspirina|Ácido Acetilsalicílico|1.50|200
+102|Paracetamol|Paracetamol|2.00|150
+103|Ibuprofeno|Ibuprofeno|2.80|120
+104|Amoxicilina|Amoxicilina|8.50|50
+105|Azitromicina|Azitromicina|12.00|30
+106|Loratadina|Loratadina|3.20|90
+107|Omeprazol|Omeprazol|4.50|80
+108|Salbutamol|Salbutamol|6.00|40
+109|Metformina|Metformina|5.00|70
+110|Enalapril|Enalapril|3.80|60
+111|Losartán|Losartán|4.20|65
+112|Diclofenaco|Diclofenaco|2.50|110
+113|Naproxeno|Naproxeno|3.00|95
+114|Clorfenamina|Clorfenamina|1.80|130
+115|Dexametasona|Dexametasona|7.00|45
+116|Insulina|Insulina Humana|25.00|20
+117|Vitamina C|Ácido Ascórbico|1.20|300
+118|Calcio D|Carbonato de Calcio + Vitamina D|4.00|75
+119|Ranitidina|Ranitidina|3.50|55
+120|Tramadol|Tramadol|9.00|35

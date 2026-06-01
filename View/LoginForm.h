@@ -5,6 +5,7 @@
 
 #include "FarmaceuticoView.h"
 #include "PacienteView.h"
+#include "OperadorVentas.h"
 
 namespace WinniePOOview {
 
@@ -262,6 +263,11 @@ namespace WinniePOOview {
 			ViewFarmaceutico::Farmaceutico^ form = gcnew ViewFarmaceutico::Farmaceutico();
 			form->Show();
 			this->Hide();   // oculta el login, o usa this->Close() si prefieres cerrarlo
+		}
+		else if (rol == "Operador de Ventas") {
+			OperadorVentas^ form = gcnew OperadorVentas();
+			form->Show();
+			this->Hide();
 		}
 
 
