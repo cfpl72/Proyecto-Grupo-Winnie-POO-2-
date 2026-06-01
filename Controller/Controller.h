@@ -57,7 +57,7 @@ namespace Controller {
             int idReceta
         );
 
-<<<<<<< HEAD
+
         List<String^>^ ExaminarHistorialReceta(int idPaciente);
         List<String^>^ ObtenerNombresPacientes();
 
@@ -73,10 +73,9 @@ namespace Controller {
             System::IO::File::AppendAllText(archivo,
                 "[" + DateTime::Now.ToString("dd/MM/yyyy HH:mm") + "] " + mensaje + "\n");
         }
-=======
-        List<String^>^ ServicioPacientes::ExaminarHistorialReceta(int idPaciente);
-        List<String^>^ ServicioPacientes::ObtenerNombresPacientes();
->>>>>>> 9e474a8ac0857676997a2391e677ad4db5302d79
+
+     
+
     };
 
     // =========================
@@ -121,7 +120,7 @@ namespace Controller {
         String^ MostrarBoletaVenta(int idVenta);
     };
 
-<<<<<<< HEAD
+
     // =========================
     // AUTENTICACIÓN (LOGIN)
     // =========================
@@ -138,7 +137,7 @@ namespace Controller {
         bool ValidarAcceso(String^ rol, String^ usuarioDNI, String^ password);
     };
 
-=======
+
     public ref class ServicioFarmaceutico {
     public:
         static void AlertarPaciente(String^ nombre, String^ mensaje) {
@@ -147,5 +146,5 @@ namespace Controller {
                 "[" + DateTime::Now.ToString("dd/MM/yyyy HH:mm") + "] " + mensaje + "\n");
         }
     };
->>>>>>> 9e474a8ac0857676997a2391e677ad4db5302d79
+
 }
