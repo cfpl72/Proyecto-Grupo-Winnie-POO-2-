@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "PacienteView.h"
+#include "stdlib.h"
 
 namespace ViewPaciente {
 
@@ -368,13 +369,64 @@ namespace ViewPaciente {
 
 		   // HU04 (Extension): Compra del medicamento
 	private: System::Void btnComprar_Click(System::Object^ sender, System::EventArgs^ e) {
-		if (dgvMedicamentos->SelectedRows->Count > 0 || dgvMedicamentos->CurrentCell != nullptr) {
-			MessageBox::Show("Compra procesada con exito!\nPor favor, retire su medicamento del dispensador.", "Operacion Exitosa", MessageBoxButtons::OK, MessageBoxIcon::Information);
-			txtSintomas->Text = "";
-			dgvMedicamentos->Rows->Clear();
+
+		if (dgvMedicamentos->SelectedRows->Count > 0) {
+
+			// =========================
+			// 1. Obtener fila seleccionada
+			// =========================
+			DataGridViewRow^ fila = dgvMedicamentos->SelectedRows[0];
+
+			String^ nombreMed = fila->Cells[0]->Value->ToString();
+			double precio = Convert::ToDouble(fila->Cells[1]->Value);
+			int stock = Convert::ToInt32(fila->Cells[2]->Value);
+
+			// =========================
+			// 2. Datos simulados (por ahora)
+			// =========================
+			int idVenta = rand() % 10000 + 1000;   // ID simple
+			int idPaciente = 1;                   // luego vendrá de sesión
+			int idMedicamento = dgvMedicamentos->SelectedRows[0]->Index + 101; // mock
+			int cantidad = 1;
+
+			// =========================
+			// 3. Registrar venta
+			// =========================
+			bool ok = ventasService->RegistrarVenta(idVenta, idPaciente, idMedicamento, cantidad);
+
+			// =========================
+			// 4. Resultado
+			// =========================
+			if (ok) {
+
+				MessageBox::Show(
+					"Compra procesada con éxito!\nPor favor, retire su medicamento del dispensador.",
+					"Operación Exitosa",
+					MessageBoxButtons::OK,
+					MessageBoxIcon::Information
+				);
+
+				// limpiar UI
+				txtSintomas->Text = "";
+				dgvMedicamentos->Rows->Clear();
+			}
+			else {
+				MessageBox::Show(
+					"No se pudo registrar la venta.",
+					"Error",
+					MessageBoxButtons::OK,
+					MessageBoxIcon::Error
+				);
+			}
+
 		}
 		else {
-			MessageBox::Show("Seleccione un medicamento de la tabla para realizar la compra.", "Aviso", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			MessageBox::Show(
+				"Seleccione un medicamento de la tabla para realizar la compra.",
+				"Aviso",
+				MessageBoxButtons::OK,
+				MessageBoxIcon::Warning
+			);
 		}
 	}
 	private: System::Void lblUsuarioActivo_Click(System::Object^ sender, System::EventArgs^ e) {
