@@ -20,6 +20,7 @@ namespace IA_CLASS {
 
     public:
 
+
         // Constructor de la clase que lee el apiKey desde un archivo local
         IA() {
             try {
@@ -96,12 +97,21 @@ namespace IA_CLASS {
 
                 // Validación antes de acceder
                 if (datos["choices"] != nullptr && datos["choices"]->HasValues) {
-                    String^ resultado = datos["choices"][0]["message"]["content"]->ToString();
+                    // Convertir a JArray para usar el indexador por entero y evitar boxing implícito
+                    JArray^ choices = (JArray^)datos["choices"];
 
-                    Console::WriteLine("Contenido extraído:");
-                    Console::WriteLine(resultado);
+                    if (choices != nullptr && choices->Count > 0 && choices[0]["message"] != nullptr && choices[0]["message"]["content"] != nullptr) {
+                        String^ resultado = choices[0]["message"]["content"]->ToString();
 
-                    return resultado;
+                        Console::WriteLine("Contenido extraído:");
+                        Console::WriteLine(resultado);
+
+                        return resultado;
+                    }
+                    else {
+                        Console::WriteLine("Estructura inesperada en 'choices'");
+                        return "Error en respuesta: estructura inesperada";
+                    }
                 }
                 else {
                     Console::WriteLine("No se encontró 'choices' en la respuesta");

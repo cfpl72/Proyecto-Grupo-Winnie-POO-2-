@@ -4,7 +4,7 @@
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace WinniePOO_Modelos;
-using namespace Persistance;
+using namespace Persistance1;
 using namespace System::IO;
 
 namespace Controller {
@@ -12,21 +12,21 @@ namespace Controller {
     // =========================
     // PACIENTES
     // =========================
+
     Dictionary<int, Paciente^>^ ServicioPacientes::LeerTodos() {
-        return repo->LoadPacientes(filePath);
+        return repo->GetAllPacientes();
     }
 
     Paciente^ ServicioPacientes::ObtenerPorId(int id) {
-        auto dic = LeerTodos();
-        return dic->ContainsKey(id) ? dic[id] : nullptr;
+        return repo->GetPacienteById(id);
     }
 
     bool ServicioPacientes::RegistrarPaciente(int id, String^ token, String^ nombre,
         String^ apellido, int edad, String^ alergias, String^ sintomas) {
 
-        auto dic = LeerTodos();
-
-        if (dic->ContainsKey(id)) return false;
+        // Verificación directa en BD
+        if (repo->GetPacienteById(id) != nullptr)
+            return false;
 
         Paciente^ p = gcnew Paciente(id, token);
         p->nombre = nombre;
@@ -35,18 +35,14 @@ namespace Controller {
         p->alergias = alergias;
         p->sintomas = sintomas;
 
-        dic->Add(id, p);
-        repo->SavePacientes(filePath, dic);
-
-        return true;
+        return repo->InsertPaciente(p);
     }
 
     void ServicioPacientes::ModificarPaciente(int id, String^ atributo, String^ nuevoValor) {
-        auto dic = LeerTodos();
 
-        if (!dic->ContainsKey(id)) return;
+        Paciente^ p = repo->GetPacienteById(id);
 
-        Paciente^ p = dic[id];
+        if (p == nullptr) return;
 
         if (atributo == "nombre") p->nombre = nuevoValor;
         else if (atributo == "apellido") p->apellido = nuevoValor;
@@ -54,27 +50,22 @@ namespace Controller {
         else if (atributo == "alergias") p->alergias = nuevoValor;
         else if (atributo == "sintomas") p->sintomas = nuevoValor;
 
-        repo->SavePacientes(filePath, dic);
+        repo->UpdatePaciente(p);
     }
 
     void ServicioPacientes::EliminarPaciente(int id) {
-        auto dic = LeerTodos();
-
-        if (dic->ContainsKey(id)) {
-            dic->Remove(id);
-            repo->SavePacientes(filePath, dic);
-        }
+        repo->DeletePaciente(id);
     }
 
     // =========================
     // MEDICAMENTOS
     // =========================
     Dictionary<int, Medicamento^>^ ServicioMedicamentos::ObtenerDiccionarioCompleto() {
-        return repo->LoadMedicamentos(filePath);
+        return repo->GetAllMedicamentos();
     }
 
     List<Medicamento^>^ ServicioMedicamentos::ObtenerInventarioCompleto() {
-        auto dic = ObtenerDiccionarioCompleto();
+        auto dic = repo->GetAllMedicamentos();
         List<Medicamento^>^ lista = gcnew List<Medicamento^>();
 
         for each (auto kv in dic)
@@ -86,29 +77,28 @@ namespace Controller {
     bool ServicioMedicamentos::RegistrarMedicamento(int id, String^ nombre,
         String^ principioActivo, double precio, int stock) {
 
-        auto dic = ObtenerDiccionarioCompleto();
-
-        if (dic->ContainsKey(id)) return false;
+        if (repo->GetMedicamentoById(id) != nullptr)
+            return false;
 
         Medicamento^ m = gcnew Medicamento(id, nombre, principioActivo, precio, stock);
 
-        dic->Add(id, m);
-        repo->SaveMedicamentos(filePath, dic);
-
-        return true;
+        return repo->InsertMedicamento(m);
     }
 
     bool ServicioMedicamentos::ActualizarMedicamento(int id, double nuevoPrecio, int nuevoStock) {
-        auto dic = ObtenerDiccionarioCompleto();
 
-        if (!dic->ContainsKey(id)) return false;
+        Medicamento^ m = repo->GetMedicamentoById(id);
 
-        Medicamento^ m = dic[id];
+        if (m == nullptr) return false;
+
         m->ActualizarPrecio(nuevoPrecio);
         m->ActualizarStock(nuevoStock);
 
-        repo->SaveMedicamentos(filePath, dic);
-        return true;
+        return repo->UpdateMedicamento(id, nuevoPrecio, nuevoStock);
+    }
+
+    bool ServicioMedicamentos::EliminarMedicamento(int id) {
+        return repo->DeleteMedicamento(id);
     }
 
     // =========================
@@ -298,7 +288,7 @@ namespace Controller {
 
         List<String^>^ lista = gcnew List<String^>();
 
-        auto dic = repo->LoadPacientes(filePath);
+        auto dic = repo->GetAllPacientes();
 
         for each (auto kv in dic) {
             Paciente^ p = kv.Value;

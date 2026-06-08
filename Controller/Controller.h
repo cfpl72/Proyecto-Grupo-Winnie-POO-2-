@@ -2,7 +2,7 @@
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace WinniePOO_Modelos;
-using namespace Persistance;
+using namespace Persistance1;
 
 namespace Controller {
 
@@ -101,6 +101,7 @@ namespace Controller {
         List<Medicamento^>^ ObtenerInventarioCompleto();
         Dictionary<int, Medicamento^>^ ObtenerDiccionarioCompleto();
         bool ActualizarMedicamento(int id, double nuevoPrecio, int nuevoStock);
+        bool EliminarMedicamento(int id);
     };
 
     // =========================
