@@ -4,6 +4,7 @@
 using namespace System;
 using namespace System::Windows::Forms;
 using namespace WinniePOOview;
+using namespace IA_CLASS;
 
 [STAThreadAttribute]
 int main(array<System::String^>^ args)

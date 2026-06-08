@@ -271,7 +271,7 @@ namespace WinniePOOview {
 		if (accesoConcedido) {
 			MessageBox::Show("¡Hola " + usuario + "!\nIngresando al sistema como: " + rol, "¡Bienvenido a WinniePOO!", MessageBoxButtons::OK, MessageBoxIcon::Information);
 			Paciente^ paciente = pacientesService->ObtenerPorId(Convert::ToInt32(usuario));
-			ViewPaciente::PacienteForm^ form = gcnew ViewPaciente::PacienteForm(paciente->nombre); //INVOCACIÓN DEL FORMS DE PACIENTES
+			ViewPaciente::PacienteForm^ form = gcnew ViewPaciente::PacienteForm(paciente->id); //INVOCACIÓN DEL FORMS DE PACIENTES
 			form->Show();
 			this->Hide();
 		}

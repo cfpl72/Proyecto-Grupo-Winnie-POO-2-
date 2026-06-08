@@ -6,20 +6,24 @@ namespace ViewPaciente {
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
+	using namespace System::Collections::Generic;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace IA_CLASS;
+	using namespace Controller;
+	using namespace WinniePOO_Modelos;
 
 	public ref class PacienteForm : public System::Windows::Forms::Form
 	{
-	private: String^ _nombrePaciente;
+	private: int idPaciente;
 
 	public:
 		// Constructor que recibe el nombre
-		PacienteForm(String^ nombrePaciente)
+		PacienteForm(int ID)
 		{
 			InitializeComponent();
-			_nombrePaciente = nombrePaciente;
+			idPaciente = ID;
 		}
 
 	protected:
@@ -300,8 +304,36 @@ namespace ViewPaciente {
 			MessageBox::Show("Por favor, describa sus sintomas para poder evaluarlos.", "Datos incompletos", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			return;
 		}
+		//Se inicializan los servicios para controlar la acción
+		Controller::ServicioPacientes^ servPacientes = gcnew Controller::ServicioPacientes();
+		Controller::ServicioMedicamentos^ servMedicamentos = gcnew Controller::ServicioMedicamentos();
+
+		// Se obtiene el string para el historial del paciente
+		List<String^>^ historialPacienteLista = servPacientes->ExaminarHistorialReceta(idPaciente);
+		String^ historialPaciente = String::Join("|", historialPacienteLista);
+
+		// Se obtiene el string para el stock de los medicamentos
+		List<Medicamento^>^ stockMedicamentosLista = servMedicamentos->ObtenerInventarioCompleto();
+		List<String^>^ medicamentosTexto = gcnew List<String^>();
+		for each (Medicamento ^ med in stockMedicamentosLista) {
+			String^ item = med->nombre + " (" + med->principioActivo + ") - Precio: "
+				+ med->precio.ToString() + " - Stock: " + med->stock.ToString();
+
+			medicamentosTexto->Add(item);
+		}
+		String^ stockMedicamentos = String::Join("|", medicamentosTexto);
+
+		//Se hacen las funciones de IA
+		IA_CLASS::IA^ iaManager = gcnew IA_CLASS::IA();
+		String^ respuesta = iaManager->GenerarRecomendacion(
+			txtSintomas->Text,
+			historialPaciente,
+			stockMedicamentos
+		);
 
 		MessageBox::Show("Analizando sintomas...", "Evaluacion en curso", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		MessageBox::Show(respuesta);
+
 
 		dgvMedicamentos->Rows->Clear();
 
@@ -335,13 +367,14 @@ private: System::Void panelDashboard_Paint(System::Object^ sender, System::Windo
  private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
 
 		   // ... tu código existente de carga ...
+	 Controller::ServicioPacientes^ servPacientes = gcnew ServicioPacientes();
 
 		   // ── Verificar alertas pendientes del farmacéutico ─────────────────────
-		   String^ alertas = Controller::ServicioFarmaceutico::LeerAlertas(_nombrePaciente);
+		   String^ alertas = Controller::ServicioFarmaceutico::LeerAlertas(servPacientes->ObtenerPorId(idPaciente)->nombre);
 
 		   if (alertas != nullptr && alertas->Trim() != String::Empty) {
 			   MessageBox::Show(
-				   "📢 Tienes mensajes de tu farmacéutico:\n\n" + alertas,
+				   "Tienes mensajes de tu farmacéutico:\n\n" + alertas,
 				   "Alerta del Farmacéutico",
 				   MessageBoxButtons::OK,
 				   MessageBoxIcon::Information
