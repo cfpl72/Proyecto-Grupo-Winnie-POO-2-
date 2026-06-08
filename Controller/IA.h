@@ -60,8 +60,8 @@ namespace IA_CLASS {
                     "[FIN_RECOMENDACION]" +
 
                     "[INICIO_RECETA]" +
-                    "nombre|principioActivo|dosis|frecuencia|duracion" +
-                    "(una línea por medicamento)" +
+                    "id|nombre|principioActivo|dosis (número entero)" +
+                    "(Al final de cada receta añade un [SEPARADOR]" +
                     "[FIN_RECETA]" +
 
                     "No agregues nada fuera de estas etiquetas.";
