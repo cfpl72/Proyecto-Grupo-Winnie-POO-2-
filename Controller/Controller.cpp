@@ -131,14 +131,16 @@ namespace Controller {
 
     bool ServicioVentas::RegistrarVenta(int idVenta, int idPaciente, int idMedicamento, int cantidad) {
 
+        Controller::ServicioMedicamentos^ servMedicamentos = gcnew ServicioMedicamentos();
+
         auto dic = repo->LoadVentas(filePath);
 
         if (dic->ContainsKey(idVenta)) return false;
 
         // Medicamento dummy (por dependencia del constructor)
-        Medicamento^ dummy = gcnew Medicamento(idMedicamento, "Temp", "", 0, 0);
+        Dictionary<int, Medicamento^>^ dummyDic = servMedicamentos->ObtenerDiccionarioCompleto();
 
-        Venta^ v = gcnew Venta(idVenta, idPaciente, cantidad, dummy, DateTime::Now);
+        Venta^ v = gcnew Venta(idVenta, idPaciente, cantidad, dummyDic[idMedicamento], DateTime::Now);
 
         dic->Add(idVenta, v);
         repo->SaveVentas(filePath, dic);

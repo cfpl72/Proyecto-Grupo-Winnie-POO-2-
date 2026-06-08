@@ -5,9 +5,12 @@ namespace WinniePOOview {
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
+	using namespace System::Collections::Generic;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace Controller;
+	using namespace WinniePOO_Modelos;
 
 	/// <summary>
 	/// Resumen de OperadorVentas
@@ -90,8 +93,8 @@ namespace WinniePOOview {
 			// 
 			this->tabControlPrincipal->Controls->Add(this->tabInventario);
 			this->tabControlPrincipal->Controls->Add(this->tabVentas);
-			this->tabControlPrincipal->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular,
-				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			this->tabControlPrincipal->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
 			this->tabControlPrincipal->Location = System::Drawing::Point(25, 83);
 			this->tabControlPrincipal->Name = L"tabControlPrincipal";
 			this->tabControlPrincipal->SelectedIndex = 0;
@@ -103,10 +106,10 @@ namespace WinniePOOview {
 			this->tabInventario->BackColor = System::Drawing::Color::White;
 			this->tabInventario->Controls->Add(this->groupBoxEdicion);
 			this->tabInventario->Controls->Add(this->tablaInventario);
-			this->tabInventario->Location = System::Drawing::Point(4, 26);
+			this->tabInventario->Location = System::Drawing::Point(4, 27);
 			this->tabInventario->Name = L"tabInventario";
 			this->tabInventario->Padding = System::Windows::Forms::Padding(3);
-			this->tabInventario->Size = System::Drawing::Size(542, 390);
+			this->tabInventario->Size = System::Drawing::Size(542, 389);
 			this->tabInventario->TabIndex = 0;
 			this->tabInventario->Text = L"📦 Gestión de Inventario";
 			// 
@@ -132,7 +135,7 @@ namespace WinniePOOview {
 			this->btnActualizarMed->Cursor = System::Windows::Forms::Cursors::Hand;
 			this->btnActualizarMed->FlatAppearance->BorderSize = 0;
 			this->btnActualizarMed->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->btnActualizarMed->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->btnActualizarMed->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->btnActualizarMed->ForeColor = System::Drawing::Color::White;
 			this->btnActualizarMed->Location = System::Drawing::Point(291, 90);
@@ -141,26 +144,27 @@ namespace WinniePOOview {
 			this->btnActualizarMed->TabIndex = 6;
 			this->btnActualizarMed->Text = L"Actualizar Medicamento";
 			this->btnActualizarMed->UseVisualStyleBackColor = false;
+			this->btnActualizarMed->Click += gcnew System::EventHandler(this, &OperadorVentas::btnActualizarMed_Click);
 			// 
 			// txtNuevoStock
 			// 
 			this->txtNuevoStock->Location = System::Drawing::Point(165, 105);
 			this->txtNuevoStock->Name = L"txtNuevoStock";
-			this->txtNuevoStock->Size = System::Drawing::Size(100, 25);
+			this->txtNuevoStock->Size = System::Drawing::Size(100, 24);
 			this->txtNuevoStock->TabIndex = 5;
 			// 
 			// txtNuevoPrecio
 			// 
 			this->txtNuevoPrecio->Location = System::Drawing::Point(165, 70);
 			this->txtNuevoPrecio->Name = L"txtNuevoPrecio";
-			this->txtNuevoPrecio->Size = System::Drawing::Size(100, 25);
+			this->txtNuevoPrecio->Size = System::Drawing::Size(100, 24);
 			this->txtNuevoPrecio->TabIndex = 4;
 			// 
 			// txtIdMed
 			// 
 			this->txtIdMed->Location = System::Drawing::Point(165, 35);
 			this->txtIdMed->Name = L"txtIdMed";
-			this->txtIdMed->Size = System::Drawing::Size(100, 25);
+			this->txtIdMed->Size = System::Drawing::Size(100, 24);
 			this->txtIdMed->TabIndex = 3;
 			// 
 			// lblNuevoStock
@@ -168,7 +172,7 @@ namespace WinniePOOview {
 			this->lblNuevoStock->AutoSize = true;
 			this->lblNuevoStock->Location = System::Drawing::Point(20, 108);
 			this->lblNuevoStock->Name = L"lblNuevoStock";
-			this->lblNuevoStock->Size = System::Drawing::Size(105, 17);
+			this->lblNuevoStock->Size = System::Drawing::Size(98, 18);
 			this->lblNuevoStock->TabIndex = 2;
 			this->lblNuevoStock->Text = L"Nuevo Stock:";
 			// 
@@ -177,7 +181,7 @@ namespace WinniePOOview {
 			this->lblNuevoPrecio->AutoSize = true;
 			this->lblNuevoPrecio->Location = System::Drawing::Point(20, 73);
 			this->lblNuevoPrecio->Name = L"lblNuevoPrecio";
-			this->lblNuevoPrecio->Size = System::Drawing::Size(139, 17);
+			this->lblNuevoPrecio->Size = System::Drawing::Size(130, 18);
 			this->lblNuevoPrecio->TabIndex = 1;
 			this->lblNuevoPrecio->Text = L"Nuevo Precio (S/):";
 			// 
@@ -186,7 +190,7 @@ namespace WinniePOOview {
 			this->lblIdMed->AutoSize = true;
 			this->lblIdMed->Location = System::Drawing::Point(20, 38);
 			this->lblIdMed->Name = L"lblIdMed";
-			this->lblIdMed->Size = System::Drawing::Size(130, 17);
+			this->lblIdMed->Size = System::Drawing::Size(120, 18);
 			this->lblIdMed->TabIndex = 0;
 			this->lblIdMed->Text = L"ID Medicamento:";
 			// 
@@ -208,10 +212,10 @@ namespace WinniePOOview {
 			this->tabVentas->BackColor = System::Drawing::Color::White;
 			this->tabVentas->Controls->Add(this->btnGestionarVentas);
 			this->tabVentas->Controls->Add(this->tablaVentas);
-			this->tabVentas->Location = System::Drawing::Point(4, 26);
+			this->tabVentas->Location = System::Drawing::Point(4, 27);
 			this->tabVentas->Name = L"tabVentas";
 			this->tabVentas->Padding = System::Windows::Forms::Padding(3);
-			this->tabVentas->Size = System::Drawing::Size(542, 390);
+			this->tabVentas->Size = System::Drawing::Size(542, 389);
 			this->tabVentas->TabIndex = 1;
 			this->tabVentas->Text = L"📊 Historial de Ventas";
 			// 
@@ -250,7 +254,7 @@ namespace WinniePOOview {
 			this->btnCerrarSesion->Cursor = System::Windows::Forms::Cursors::Hand;
 			this->btnCerrarSesion->FlatAppearance->BorderSize = 0;
 			this->btnCerrarSesion->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->btnCerrarSesion->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->btnCerrarSesion->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->btnCerrarSesion->ForeColor = System::Drawing::Color::White;
 			this->btnCerrarSesion->Location = System::Drawing::Point(417, 519);
@@ -289,23 +293,23 @@ namespace WinniePOOview {
 			// 
 			this->label3->AutoSize = true;
 			this->label3->BackColor = System::Drawing::Color::Transparent;
-			this->label3->Font = (gcnew System::Drawing::Font(L"Franklin Gothic Heavy", 13.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 13.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->label3->ForeColor = System::Drawing::Color::Cornsilk;
 			this->label3->Location = System::Drawing::Point(10, 24);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(261, 29);
+			this->label3->Size = System::Drawing::Size(290, 29);
 			this->label3->TabIndex = 8;
 			this->label3->Text = L"OPERADOR DE VENTAS";
 			// 
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 7.8F));
+			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F));
 			this->label1->ForeColor = System::Drawing::Color::Teal;
 			this->label1->Location = System::Drawing::Point(13, 10);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(176, 15);
+			this->label1->Size = System::Drawing::Size(167, 16);
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"Panel Operador de Ventas";
 			this->label1->Click += gcnew System::EventHandler(this, &OperadorVentas::label1_Click);
@@ -343,29 +347,152 @@ namespace WinniePOOview {
 	}
 
 	private: System::Void OperadorVentas_Load(System::Object^ sender, System::EventArgs^ e) {
-		// 1. Llenar la Tabla de INVENTARIO (Concordante con la clase Medicamento del UML)
+
+		Console::WriteLine("=== CARGANDO OPERADOR VENTAS ===");
+
+		// =========================
+		// 📦 INVENTARIO REAL
+		// =========================
+		tablaInventario->Columns->Clear();
+		tablaInventario->Rows->Clear();
+
 		tablaInventario->Columns->Add("ColID", "ID Med.");
 		tablaInventario->Columns->Add("ColNombre", "Nombre");
 		tablaInventario->Columns->Add("ColPrincipio", "Principio Activo");
 		tablaInventario->Columns->Add("ColPrecio", "Precio");
 		tablaInventario->Columns->Add("ColStock", "Stock");
 
-		tablaInventario->Rows->Add("101", "Aspirina", "Ácido Acetilsalicílico", "1.50", "200");
-		tablaInventario->Rows->Add("102", "Panadol", "Paracetamol", "2.00", "150");
-		tablaInventario->Rows->Add("103", "Amoxil", "Amoxicilina", "8.50", "50");
+		Controller::ServicioMedicamentos^ servMedicamentos = gcnew Controller::ServicioMedicamentos();
 
-		// 2. Llenar la Tabla de VENTAS (Concordante con la clase Venta del UML)
+		List<Medicamento^>^ lista = servMedicamentos->ObtenerInventarioCompleto();
+
+		Console::WriteLine("\n--- INVENTARIO CARGADO ---");
+
+		for each (Medicamento ^ med in lista) {
+
+			Console::WriteLine("ID: " + med->id +
+				" | Nombre: " + med->nombre +
+				" | Precio: " + med->precio.ToString() +
+				" | Stock: " + med->stock.ToString());
+
+			tablaInventario->Rows->Add(
+				med->id.ToString(),
+				med->nombre,
+				med->principioActivo,
+				med->precio.ToString("F2"),
+				med->stock.ToString()
+			);
+		}
+
+		// =========================
+		// 💰 VENTAS (opcional real)
+		// =========================
+		tablaVentas->Columns->Clear();
+		tablaVentas->Rows->Clear();
+
 		tablaVentas->Columns->Add("ColIdVenta", "ID Venta");
 		tablaVentas->Columns->Add("ColCant", "Cant. Vendida");
 		tablaVentas->Columns->Add("ColFecha", "Fecha de Venta");
 
-		tablaVentas->Rows->Add("5001", "2", "03/05/2026 14:30");
-		tablaVentas->Rows->Add("5002", "5", "03/05/2026 15:10");
-		tablaVentas->Rows->Add("5003", "1", "03/05/2026 15:45");
+		Controller::ServicioVentas^ servVentas = gcnew Controller::ServicioVentas();
+		List<Venta^>^ ventas = servVentas->ObtenerTodasLasVentas();
+
+		Console::WriteLine("\n--- VENTAS CARGADAS ---");
+
+		for each (Venta ^ v in ventas) {
+
+			Console::WriteLine("Venta ID: " + v->id +
+				" | Cantidad: " + v->cantidadVendida);
+
+			tablaVentas->Rows->Add(
+				v->id.ToString(),
+				v->cantidadVendida.ToString(),
+				DateTime::Now.ToString("dd/MM/yyyy HH:mm") // (tu modelo no guarda fecha aún)
+			);
+		}
+
+		Console::WriteLine("=== FIN CARGA ===");
 	}
 	private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
 private: System::Void label2_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void btnActualizarMed_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	Console::WriteLine("\n=== INICIO btnActualizarMed_Click ===");
+
+	// =========================
+	// 🔍 VALIDACIONES
+	// =========================
+	if (String::IsNullOrWhiteSpace(txtIdMed->Text) ||
+		String::IsNullOrWhiteSpace(txtNuevoPrecio->Text) ||
+		String::IsNullOrWhiteSpace(txtNuevoStock->Text)) {
+
+		Console::WriteLine("❌ Campos incompletos");
+
+		MessageBox::Show("Complete todos los campos.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+		return;
+	}
+
+	int id;
+	double nuevoPrecio;
+	int nuevoStock;
+
+	try {
+		id = Convert::ToInt32(txtIdMed->Text);
+		nuevoPrecio = Convert::ToDouble(txtNuevoPrecio->Text);
+		nuevoStock = Convert::ToInt32(txtNuevoStock->Text);
+	}
+	catch (Exception^) {
+		Console::WriteLine("❌ Error de conversión");
+
+		MessageBox::Show("Ingrese valores numéricos válidos.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		return;
+	}
+
+	Console::WriteLine("✔ Datos recibidos:");
+	Console::WriteLine("ID: " + id);
+	Console::WriteLine("Nuevo Precio: " + nuevoPrecio);
+	Console::WriteLine("Nuevo Stock: " + nuevoStock);
+
+	// =========================
+	// 💊 ACTUALIZAR MEDICAMENTO
+	// =========================
+	Controller::ServicioMedicamentos^ servMedicamentos = gcnew Controller::ServicioMedicamentos();
+
+	bool resultado = servMedicamentos->ActualizarMedicamento(id, nuevoPrecio, nuevoStock);
+
+	if (resultado) {
+		Console::WriteLine("✔ Medicamento actualizado correctamente");
+
+		MessageBox::Show("Medicamento actualizado con éxito.", "Éxito", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
+		// =========================
+		// 🔄 REFRESCAR TABLA
+		// =========================
+		tablaInventario->Rows->Clear();
+
+		List<Medicamento^>^ lista = servMedicamentos->ObtenerInventarioCompleto();
+
+		for each (Medicamento ^ med in lista) {
+			tablaInventario->Rows->Add(
+				med->id.ToString(),
+				med->nombre,
+				med->principioActivo,
+				med->precio.ToString("F2"),
+				med->stock.ToString()
+			);
+		}
+
+		Console::WriteLine("✔ Tabla refrescada");
+	}
+	else {
+		Console::WriteLine("❌ Medicamento no encontrado");
+
+		MessageBox::Show("No se encontró el medicamento con ese ID.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+	}
+
+	Console::WriteLine("=== FIN btnActualizarMed_Click ===");
 }
 };
 }

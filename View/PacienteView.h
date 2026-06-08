@@ -19,6 +19,11 @@ namespace ViewPaciente {
 	private: int idPaciente;
 
 	public:
+
+		Controller::ServicioPacientes^ servPacientes = gcnew Controller::ServicioPacientes();
+		Controller::ServicioMedicamentos^ servMedicamentos = gcnew Controller::ServicioMedicamentos();
+		Controller::ServicioVentas^ servVentas = gcnew Controller::ServicioVentas();
+
 		// Constructor que recibe el nombre
 		PacienteForm(int ID)
 		{
@@ -323,9 +328,6 @@ namespace ViewPaciente {
 
 		Console::WriteLine("\n=== INICIO btnEvaluar_Click ===");
 
-		Controller::ServicioPacientes^ servPacientes = gcnew Controller::ServicioPacientes();
-		Controller::ServicioMedicamentos^ servMedicamentos = gcnew Controller::ServicioMedicamentos();
-
 		// =========================
 		// 📜 HISTORIAL
 		// =========================
@@ -469,13 +471,111 @@ namespace ViewPaciente {
 
 		   // HU04 (Extension): Compra del medicamento
 	private: System::Void btnComprar_Click(System::Object^ sender, System::EventArgs^ e) {
+
+		Console::WriteLine("\n=== INICIO btnComprar_Click ===");
+
 		if (dgvMedicamentos->SelectedRows->Count > 0 || dgvMedicamentos->CurrentCell != nullptr) {
-			MessageBox::Show("Compra procesada con exito!\nPor favor, retire su medicamento del dispensador.", "Operacion Exitosa", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
+			DataGridViewRow^ fila = dgvMedicamentos->CurrentRow;
+
+			// =========================
+			// 🔍 OBTENER DATOS
+			// =========================
+			int idMedicamento = Convert::ToInt32(fila->Cells[0]->Value);
+			String^ nombre = fila->Cells[1]->Value->ToString();
+			String^ principio = fila->Cells[2]->Value->ToString();
+			int dosis = Convert::ToInt32(fila->Cells[3]->Value);
+
+			Console::WriteLine("✔ Medicamento seleccionado:");
+			Console::WriteLine("ID: " + idMedicamento);
+			Console::WriteLine("Nombre: " + nombre);
+			Console::WriteLine("Principio: " + principio);
+			Console::WriteLine("Dosis: " + dosis);
+
+			// =========================
+			// 💊 ACTUALIZAR STOCK
+			// =========================
+			auto dic = servMedicamentos->ObtenerDiccionarioCompleto();
+
+			if (!dic->ContainsKey(idMedicamento)) {
+				Console::WriteLine("❌ Medicamento no encontrado en inventario");
+				return;
+			}
+
+			Medicamento^ med = dic[idMedicamento];
+
+			Console::WriteLine("Stock antes: " + med->stock);
+
+			if (med->stock <= 0) {
+				Console::WriteLine("❌ Sin stock disponible");
+				MessageBox::Show("Este medicamento ya no tiene stock.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				return;
+			}
+
+			int nuevoStock = med->stock - 1;
+
+			servMedicamentos->ActualizarMedicamento(idMedicamento, med->precio, nuevoStock);
+
+			Console::WriteLine("✔ Stock actualizado: " + nuevoStock);
+
+			// =========================
+			// 🧾 REGISTRAR RECETA
+			// =========================
+			int idReceta = (int)(DateTime::Now.Ticks % 100000); // simple ID
+
+			Console::WriteLine("Registrando receta ID: " + idReceta);
+
+			servPacientes->RegistrarReceta(
+				idPaciente,
+				idReceta,
+				dosis,
+				DateTime::Now,
+				nombre,
+				true // entregado
+			);
+
+			Console::WriteLine("✔ Receta registrada");
+
+			// =========================
+			// 💰 REGISTRAR VENTA
+			// =========================
+			int idVenta = (int)(DateTime::Now.Ticks % 100000);
+
+			Console::WriteLine("Registrando venta ID: " + idVenta);
+
+			servVentas->RegistrarVenta(
+				idVenta,
+				idPaciente,
+				idMedicamento,
+				1 // cantidad
+			);
+
+			Console::WriteLine("✔ Venta registrada");
+
+			// =========================
+			// 🖥️ UI
+			// =========================
+			MessageBox::Show(
+				"Compra procesada con éxito!\nPor favor, retire su medicamento del dispensador.",
+				"Operación Exitosa",
+				MessageBoxButtons::OK,
+				MessageBoxIcon::Information
+			);
+
 			txtSintomas->Text = "";
 			dgvMedicamentos->Rows->Clear();
+
+			Console::WriteLine("=== FIN btnComprar_Click ===");
 		}
 		else {
-			MessageBox::Show("Seleccione un medicamento de la tabla para realizar la compra.", "Aviso", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			Console::WriteLine("⚠ No hay selección en el DataGrid");
+
+			MessageBox::Show(
+				"Seleccione un medicamento de la tabla para realizar la compra.",
+				"Aviso",
+				MessageBoxButtons::OK,
+				MessageBoxIcon::Warning
+			);
 		}
 	}
 	private: System::Void lblUsuarioActivo_Click(System::Object^ sender, System::EventArgs^ e) {
