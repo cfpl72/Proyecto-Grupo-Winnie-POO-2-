@@ -1,0 +1,20 @@
+1|Paracetamol 500mg|Acetaminofén|1.50|100
+2|Ibuprofeno 400mg|Ibuprofeno|2.00|80
+3|Amoxicilina 500mg|Amoxicilina|3.50|60
+4|Ácido Fólico|Ácido fólico|1.20|50
+5|Loratadina 10mg|Loratadina|2.30|70
+6|Omeprazol 20mg|Omeprazol|2.80|65
+7|Metformina 850mg|Metformina|3.00|40
+8|Losartán 50mg|Losartán|2.90|55
+9|Salbutamol Inhalador|Salbutamol|15.00|25
+10|Jarabe Antitusivo|Dextrometorfano|12.00|30
+11|Diclofenaco 50mg|Diclofenaco|2.20|75
+12|Aspirina 100mg|Ácido acetilsalicílico|1.00|90
+13|Azitromicina 500mg|Azitromicina|5.50|35
+14|Clorfenamina 4mg|Clorfenamina|1.80|60
+15|Naproxeno 500mg|Naproxeno|2.70|50
+16|Ranitidina 150mg|Ranitidina|2.40|45
+17|Vitamina C 1g|Ácido ascórbico|1.60|85
+18|Prednisona 20mg|Prednisona|4.00|30
+19|Insulina Rápida|Insulina|25.00|20
+20|Enalapril 10mg|Enalapril|2.10|55

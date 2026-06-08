@@ -45,59 +45,71 @@ namespace IA_CLASS {
 
                 HttpClient^ cliente = gcnew HttpClient();
                 cliente->DefaultRequestHeaders->Add("Authorization", "Bearer " + apiKey);
-                Console::WriteLine("✔ HttpClient creado y header agregado");
+                Console::WriteLine("HttpClient creado y header agregado");
 
                 // Construcción del prompt
-                String^ prompt = "Eres un sistema de farmacia robótica inteligente. " +
+                String^ prompt ="Eres un sistema de farmacia robótica inteligente. " +
                     "SOLO puedes recomendar medicamentos que estén en esta lista: [" + listaMedicamentosStock + "]. " +
                     "Si ningún medicamento de la lista sirve para los síntomas, di que no hay stock disponible. " +
                     "Paciente presenta: " + sintomas + ". Historial: " + historial + ". " +
-                    "Responde de forma breve y profesional.";
+
+                    "Responde EXACTAMENTE en este formato:" +
+
+                    "[INICIO_RECOMENDACION]" +
+                    "Texto de recomendación médica profesional" +
+                    "[FIN_RECOMENDACION]" +
+
+                    "[INICIO_RECETA]" +
+                    "nombre|principioActivo|dosis|frecuencia|duracion" +
+                    "(una línea por medicamento)" +
+                    "[FIN_RECETA]" +
+
+                    "No agregues nada fuera de estas etiquetas.";
 
                 Console::WriteLine("✔ Prompt construido:");
                 Console::WriteLine(prompt);
 
                 // JSON
                 String^ cuerpoJson = "{\"model\": \"gpt-4o-mini\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
-                Console::WriteLine("✔ JSON enviado:");
+                Console::WriteLine("JSON enviado:");
                 Console::WriteLine(cuerpoJson);
 
                 StringContent^ contenido = gcnew StringContent(cuerpoJson, Encoding::UTF8, "application/json");
 
-                Console::WriteLine("➡ Enviando request...");
+                Console::WriteLine("Enviando request...");
                 auto tarea = cliente->PostAsync(apiUrl, contenido);
                 tarea->Wait();
 
-                Console::WriteLine("✔ Request completado");
+                Console::WriteLine("Request completado");
 
                 auto response = tarea->Result;
 
-                Console::WriteLine("✔ Status code: " + response->StatusCode.ToString());
+                Console::WriteLine("Status code: " + response->StatusCode.ToString());
 
                 String^ respuestaRaw = response->Content->ReadAsStringAsync()->Result;
 
-                Console::WriteLine("✔ Respuesta RAW:");
+                Console::WriteLine("Respuesta RAW:");
                 Console::WriteLine(respuestaRaw);
 
                 JObject^ datos = JObject::Parse(respuestaRaw);
-                Console::WriteLine("✔ JSON parseado correctamente");
+                Console::WriteLine("JSON parseado correctamente");
 
                 // Validación antes de acceder
                 if (datos["choices"] != nullptr && datos["choices"]->HasValues) {
                     String^ resultado = datos["choices"][0]["message"]["content"]->ToString();
 
-                    Console::WriteLine("✔ Contenido extraído:");
+                    Console::WriteLine("Contenido extraído:");
                     Console::WriteLine(resultado);
 
                     return resultado;
                 }
                 else {
-                    Console::WriteLine("❌ No se encontró 'choices' en la respuesta");
+                    Console::WriteLine("No se encontró 'choices' en la respuesta");
                     return "Error en respuesta: " + respuestaRaw;
                 }
             }
             catch (Exception^ ex) {
-                Console::WriteLine("❌ EXCEPCIÓN:");
+                Console::WriteLine("EXCEPCIÓN:");
                 Console::WriteLine(ex->Message);
                 return "Error: " + ex->Message;
             }

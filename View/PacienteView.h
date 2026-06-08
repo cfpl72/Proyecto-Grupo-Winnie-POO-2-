@@ -304,43 +304,130 @@ namespace ViewPaciente {
 			MessageBox::Show("Por favor, describa sus sintomas para poder evaluarlos.", "Datos incompletos", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			return;
 		}
-		//Se inicializan los servicios para controlar la acción
+
+		Console::WriteLine("\n=== INICIO btnEvaluar_Click ===");
+
 		Controller::ServicioPacientes^ servPacientes = gcnew Controller::ServicioPacientes();
 		Controller::ServicioMedicamentos^ servMedicamentos = gcnew Controller::ServicioMedicamentos();
 
-		// Se obtiene el string para el historial del paciente
+		// =========================
+		// 📜 HISTORIAL
+		// =========================
 		List<String^>^ historialPacienteLista = servPacientes->ExaminarHistorialReceta(idPaciente);
+
+		Console::WriteLine("\n--- HISTORIAL PACIENTE (LISTA) ---");
+		for each (String ^ item in historialPacienteLista) {
+			Console::WriteLine(item);
+		}
+
 		String^ historialPaciente = String::Join("|", historialPacienteLista);
 
-		// Se obtiene el string para el stock de los medicamentos
+		Console::WriteLine("\n--- HISTORIAL STRING ---");
+		Console::WriteLine(historialPaciente);
+
+		// =========================
+		// 💊 STOCK MEDICAMENTOS
+		// =========================
 		List<Medicamento^>^ stockMedicamentosLista = servMedicamentos->ObtenerInventarioCompleto();
+
+		Console::WriteLine("\n--- STOCK MEDICAMENTOS (OBJETOS) ---");
+		for each (Medicamento ^ med in stockMedicamentosLista) {
+			Console::WriteLine("Nombre: " + med->nombre +
+				" | Principio: " + med->principioActivo +
+				" | Precio: " + med->precio.ToString() +
+				" | Stock: " + med->stock.ToString());
+		}
+
 		List<String^>^ medicamentosTexto = gcnew List<String^>();
+
 		for each (Medicamento ^ med in stockMedicamentosLista) {
 			String^ item = med->nombre + " (" + med->principioActivo + ") - Precio: "
 				+ med->precio.ToString() + " - Stock: " + med->stock.ToString();
 
 			medicamentosTexto->Add(item);
 		}
+
 		String^ stockMedicamentos = String::Join("|", medicamentosTexto);
 
-		//Se hacen las funciones de IA
+		Console::WriteLine("\n--- STOCK STRING ENVIADO A IA ---");
+		Console::WriteLine(stockMedicamentos);
+
+		// =========================
+		// 🤖 IA
+		// =========================
 		IA_CLASS::IA^ iaManager = gcnew IA_CLASS::IA();
+
+		Console::WriteLine("\n➡ Enviando a IA...");
+		Console::WriteLine("Síntomas: " + txtSintomas->Text);
+
+		MessageBox::Show("Analizando síntomas...", "Evaluación en curso", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
 		String^ respuesta = iaManager->GenerarRecomendacion(
 			txtSintomas->Text,
 			historialPaciente,
 			stockMedicamentos
 		);
 
-		MessageBox::Show("Analizando sintomas...", "Evaluacion en curso", MessageBoxButtons::OK, MessageBoxIcon::Information);
-		MessageBox::Show(respuesta);
+		Console::WriteLine("\n=== RESPUESTA IA ===");
+		Console::WriteLine(respuesta);
 
+		// =========================
+		// 🔍 PARSEO
+		// =========================
+
+		int iniRec = respuesta->IndexOf("[INICIO_RECOMENDACION]") + 23;
+		int finRec = respuesta->IndexOf("[FIN_RECOMENDACION]");
+		String^ recomendacion = respuesta->Substring(iniRec, finRec - iniRec)->Trim();
+
+		Console::WriteLine("\n--- RECOMENDACION EXTRAIDA ---");
+		Console::WriteLine(recomendacion);
+
+		int iniReceta = respuesta->IndexOf("[INICIO_RECETA]") + 16;
+		int finReceta = respuesta->IndexOf("[FIN_RECETA]");
+		String^ receta = respuesta->Substring(iniReceta, finReceta - iniReceta)->Trim();
+
+		Console::WriteLine("\n--- RECETA CRUDA ---");
+		Console::WriteLine(receta);
+
+		MessageBox::Show(recomendacion, "Recomendación médica", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
+		// =========================
+		// 📊 DATAGRID
+		// =========================
 
 		dgvMedicamentos->Rows->Clear();
 
-		// HU04: Mostrar disponibilidad (Stock) y Precio
-		dgvMedicamentos->Rows->Add("Paracetamol 500mg", "1.50", "50");
-		dgvMedicamentos->Rows->Add("Ibuprofeno 400mg", "2.00", "30");
-		dgvMedicamentos->Rows->Add("Jarabe Antitusivo", "15.00", "12");
+		if (receta != "SIN_STOCK") {
+			array<String^>^ lineas = receta->Split('\n');
+
+			for each (String ^ linea in lineas) {
+				if (String::IsNullOrWhiteSpace(linea)) continue;
+
+				Console::WriteLine("\nProcesando línea: " + linea);
+
+				array<String^>^ campos = linea->Split('|');
+
+				if (campos->Length >= 5) {
+					Console::WriteLine("✔ Parse correcto");
+
+					dgvMedicamentos->Rows->Add(
+						campos[0],
+						campos[2],
+						campos[3],
+						campos[4]
+					);
+				}
+				else {
+					Console::WriteLine("❌ Línea mal formada");
+				}
+			}
+		}
+		else {
+			Console::WriteLine("⚠ SIN STOCK");
+			MessageBox::Show("No hay medicamentos disponibles en stock.", "Sin stock", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+		}
+
+		Console::WriteLine("\n=== FIN btnEvaluar_Click ===");
 	}
 
 		   // HU04 (Extension): Compra del medicamento
