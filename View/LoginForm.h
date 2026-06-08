@@ -14,6 +14,7 @@ namespace WinniePOOview {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace WinniePOO_Modelos;
 
 	//using namespace ViewFarmaceutico;
 	//using namespace ViewPaciente;
@@ -253,6 +254,7 @@ namespace WinniePOOview {
 		// --- NUEVA LÓGICA DE CONEXIÓN ---
 		// 1. Creamos una "instancia" del servicio que acabamos de hacer
 		Controller::ServicioAutenticacion^ authService = gcnew Controller::ServicioAutenticacion();
+		Controller::ServicioPacientes^ pacientesService = gcnew Controller::ServicioPacientes();
 
 
 		// 2. Le preguntamos al controlador si las credenciales son válidas
@@ -268,7 +270,8 @@ namespace WinniePOOview {
 		// 3. Reaccionamos a la respuesta
 		if (accesoConcedido) {
 			MessageBox::Show("¡Hola " + usuario + "!\nIngresando al sistema como: " + rol, "¡Bienvenido a WinniePOO!", MessageBoxButtons::OK, MessageBoxIcon::Information);
-			ViewPaciente::PacienteForm^ form = gcnew ViewPaciente::PacienteForm(); //INVOCACIÓN DEL FORMS DE PACIENTES
+			Paciente^ paciente = pacientesService->ObtenerPorId(Convert::ToInt32(usuario));
+			ViewPaciente::PacienteForm^ form = gcnew ViewPaciente::PacienteForm(paciente->nombre); //INVOCACIÓN DEL FORMS DE PACIENTES
 			form->Show();
 			this->Hide();
 		}

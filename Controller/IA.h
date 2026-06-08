@@ -1,22 +1,43 @@
-/*#pragma once
+#pragma once
 #using <System.dll>
 #using <System.Net.Http.dll>
+#using <System.IO.dll>
 // Asegúrate de haber agregado la referencia a Newtonsoft.Json.dll como hicimos antes
 
 using namespace System;
 using namespace System::Net::Http;
 using namespace System::Text;
 using namespace Newtonsoft::Json::Linq;
+using namespace System::IO;
 
 namespace IA_CLASS {
 
     // IA.h
     public ref class IA {
     private:
-        String^ apiKey = "AIzaSyBEUPOmEdMBDE9a9P13rUGuhhgkol0O438";
+        String^ apiKey ;
         String^ apiUrl = "https://api.openai.com/v1/chat/completions";
 
     public:
+
+        // Constructor de la clase que lee el apiKey desde un archivo local
+        IA() {
+            try {
+                String^ ruta = "C:\\Users\\music\\OneDrive\\Escritorio\\apiKey.txt";
+
+                if (File::Exists(ruta)) {
+                    apiKey = File::ReadAllText(ruta)->Trim();
+                }
+                else {
+                    throw gcnew Exception("No se encontró el archivo apiKey.txt");
+                }
+            }
+            catch (Exception^ ex) {
+                apiKey = "";
+                Console::WriteLine("Error al leer API Key: " + ex->Message);
+            }
+        }
+
         // Ahora recibe la lista de medicamentos del sistema
         String^ GenerarRecomendacion(String^ sintomas, String^ historial, String^ listaMedicamentosStock) {
             try {
@@ -31,7 +52,7 @@ namespace IA_CLASS {
                     "Responde de forma breve y profesional.";
 
                 // Construcción del JSON
-                String^ cuerpoJson = "{\"model\": \"gpt-3.5-turbo\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
+                String^ cuerpoJson = "{\"model\": \"gpt-4o-mini\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
                 StringContent^ contenido = gcnew StringContent(cuerpoJson, Encoding::UTF8, "application/json");
 
                 auto tarea = cliente->PostAsync(apiUrl, contenido);
@@ -47,6 +68,6 @@ namespace IA_CLASS {
         }
     };
 
-}*/
+}
 
 
