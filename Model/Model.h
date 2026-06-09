@@ -38,10 +38,9 @@ namespace WinniePOO_Modelos {
 	public ref class Receta {
 	public:
 		int idReceta;
-		int idPaciente;
-		int idMedicamento;
 		int dosis;
 		DateTime fechaEmision;
+		Medicamento^ medicamento;
 		bool entregado;
 		void EmitirReporte() {
 			Console::WriteLine("Emitiendo reporte detallado de la receta " + idReceta);
@@ -254,17 +253,13 @@ namespace WinniePOO_Modelos1 {
 	public ref class Receta {
 	public:
 		int idReceta;
+		int idPaciente;
+		int idMedicamento;
 		int dosis;
 		DateTime fechaEmision;
-		Medicamento^ medicamento; // Relación con el Medicamento
 		bool entregado;
 		void EmitirReporte() {
 			Console::WriteLine("Emitiendo reporte detallado de la receta " + idReceta);
-		}
-		void MostrarResumenCorto() {
-			if (medicamento != nullptr) {
-				Console::WriteLine("Resumen: " + medicamento->nombre + " - Dosis: " + dosis);
-			}
 		}
 	};
 	// 2. SISTEMA DE USUARIOS (Jerarquía de Herencia)

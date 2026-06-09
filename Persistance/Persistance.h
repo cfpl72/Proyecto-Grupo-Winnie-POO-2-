@@ -3,9 +3,11 @@
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::IO;
-using namespace WinniePOO_Modelos;
+
 
 namespace Persistance {
+
+    using namespace WinniePOO_Modelos;
 
     public ref class PersistanceManager {
     public:
@@ -50,6 +52,8 @@ namespace Persistance {
 }
 
 namespace Persistance1 {
+    
+    using namespace WinniePOO_Modelos1;
 
     public ref class PersistanceManager {
     public:
@@ -85,20 +89,15 @@ namespace Persistance1 {
         // =========================
         // HISTORIAL RECETAS
         // =========================
-        void CrearHistorialSiNoExiste(String^ filePath);
+        bool InsertReceta(int idReceta, int idPaciente, int idMedicamento, int dosis, DateTime fecha, bool entregado);
 
-        void SaveHistorialRecetas(String^ filePath, List<Receta^>^ lista);
+        List<Receta^>^ GetAllRecetas();
 
-        void AppendReceta(
-            String^ filePath,
-            int idReceta,
-            int dosis,
-            DateTime fecha,
-            String^ nombreMedicamento,
-            bool entregado
-        );
+        Receta^ GetRecetaById(int idReceta);
 
-        List<Receta^>^ LoadHistorialRecetas(String^ filePath);
+        bool MarcarRecetaComoEntregada(int idReceta);
+
+        bool DeleteReceta(int idReceta);
     };
 
 }

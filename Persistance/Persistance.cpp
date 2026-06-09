@@ -863,125 +863,110 @@ namespace Persistance1 {
     // HISTORIAL RECETAS
     // =========================
 
-    void PersistanceManager::CrearHistorialSiNoExiste(String^ filePath) {
+    bool PersistanceManager::InsertReceta(int idReceta, int idPaciente, int idMedicamento, int dosis, DateTime fecha, bool entregado) {
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
         try {
-            if (!File::Exists(filePath)) {
-                FileStream^ fs = File::Create(filePath);
-                fs->Close();
-            }
+            conn->Open();
+            String^ query = "INSERT INTO Recetas (idReceta,idPaciente,idMedicamento,dosis,fechaEmision,entregado) VALUES (@id,@idPaciente,@idMed,@dosis,@fecha,@entregado)";
+            SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+            cmd->Parameters->AddWithValue("@id", idReceta);
+            cmd->Parameters->AddWithValue("@idPaciente", idPaciente);
+            cmd->Parameters->AddWithValue("@idMed", idMedicamento);
+            cmd->Parameters->AddWithValue("@dosis", dosis);
+            cmd->Parameters->AddWithValue("@fecha", fecha);
+            cmd->Parameters->AddWithValue("@entregado", entregado);
+            cmd->ExecuteNonQuery();
+            return true;
         }
         catch (Exception^ ex) {
-            Console::WriteLine("ERROR (CrearHistorial): " + ex->Message);
+            Console::WriteLine("ERROR INSERT RECETA: " + ex->Message);
+            return false;
         }
+        finally { conn->Close(); }
     }
 
-    void PersistanceManager::SaveHistorialRecetas(String^ filePath, List<Receta^>^ lista) {
-        StreamWriter^ writer = nullptr;
-
-        try {
-            writer = gcnew StreamWriter(filePath); // overwrite
-
-            for each (Receta ^ r in lista) {
-                writer->WriteLine(String::Format("{0}|{1}|{2}|{3}|{4}",
-                    r->idReceta,
-                    r->medicamento->nombre,
-                    r->dosis,
-                    r->fechaEmision.ToString("dd/MM/yyyy"),
-                    r->entregado ? 1 : 0
-                ));
-            }
-        }
-        catch (Exception^ ex) {
-            Console::WriteLine("ERROR (SaveHistorialRecetas): " + ex->Message);
-        }
-        finally {
-            if (writer != nullptr) writer->Close();
-        }
-    }
-
-    void PersistanceManager::AppendReceta(
-        String^ filePath,
-        int idReceta,
-        int dosis,
-        DateTime fecha,
-        String^ nombreMedicamento,
-        bool entregado
-    ) {
-        StreamWriter^ writer = nullptr;
-
-        try {
-            writer = gcnew StreamWriter(filePath, true); // append
-
-            writer->WriteLine(String::Format("{0}|{1}|{2}|{3}|{4}",
-                idReceta,
-                nombreMedicamento,
-                dosis,
-                fecha.ToString("dd/MM/yyyy"),
-                entregado ? 1 : 0
-            ));
-        }
-        catch (Exception^ ex) {
-            Console::WriteLine("ERROR (AppendReceta): " + ex->Message);
-        }
-        finally {
-            if (writer != nullptr) writer->Close();
-        }
-    }
-
-
-    List<Receta^>^ PersistanceManager::LoadHistorialRecetas(String^ filePath) {
+    List<Receta^>^ PersistanceManager::GetAllRecetas() {
         List<Receta^>^ lista = gcnew List<Receta^>();
-        StreamReader^ reader = nullptr;
-
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
         try {
-            if (!File::Exists(filePath)) return lista;
-
-            reader = gcnew StreamReader(filePath);
-
-            while (!reader->EndOfStream) {
-                String^ linea = reader->ReadLine();
-                auto campos = linea->Split('|');
-
-                if (campos->Length < 5) continue;
-
-                Receta^ r = gcnew Receta();
-
-                // ID
-                r->idReceta = Convert::ToInt32(campos[0]);
-
-                // Medicamento (dummy, igual que en ventas)
-                Medicamento^ m = gcnew Medicamento(
-                    0,                      // id no persistido aquí
-                    campos[1],              // nombre
-                    "",                     // principio activo
-                    0,                      // precio
-                    0                       // stock
-                );
-                r->medicamento = m;
-
-                // Dosis
-                r->dosis = Convert::ToInt32(campos[2]);
-
-                // Fecha
-                r->fechaEmision = DateTime::ParseExact(
-                    campos[3],
-                    "dd/MM/yyyy",
-                    nullptr
-                );
-
-                // Entregado
-                r->entregado = (campos[4] == "1");
-
-                lista->Add(r);
+            conn->Open();
+            SqlCommand^ cmd = gcnew SqlCommand("SELECT * FROM Recetas", conn);
+            SqlDataReader^ r = cmd->ExecuteReader();
+            while (r->Read()) {
+                Receta^ rec = gcnew Receta();
+                rec->idReceta = r->GetInt32(0);
+                rec->idPaciente = r->GetInt32(1);
+                rec->idMedicamento = r->GetInt32(2);
+                rec->dosis = r->GetInt32(3);
+                rec->fechaEmision = r->GetDateTime(4);
+                rec->entregado = r->GetBoolean(5);
+                lista->Add(rec);
             }
+            r->Close();
         }
         catch (Exception^ ex) {
-            Console::WriteLine("ERROR (LoadHistorialRecetas): " + ex->Message);
+            Console::WriteLine("ERROR GET RECETAS: " + ex->Message);
         }
-        finally {
-            if (reader != nullptr) reader->Close();
-        }
-
+        finally { conn->Close(); }
         return lista;
+    }
+
+    Receta^ PersistanceManager::GetRecetaById(int idReceta) {
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+        try {
+            conn->Open();
+            SqlCommand^ cmd = gcnew SqlCommand("SELECT * FROM Recetas WHERE idReceta=@id", conn);
+            cmd->Parameters->AddWithValue("@id", idReceta);
+            SqlDataReader^ r = cmd->ExecuteReader();
+            if (r->Read()) {
+                Receta^ rec = gcnew Receta();
+                rec->idReceta = r->GetInt32(0);
+                rec->idPaciente = r->GetInt32(1);
+                rec->idMedicamento = r->GetInt32(2);
+                rec->dosis = r->GetInt32(3);
+                rec->fechaEmision = r->GetDateTime(4);
+                rec->entregado = r->GetBoolean(5);
+                r->Close();
+                return rec;
+            }
+            r->Close();
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR GET RECETA: " + ex->Message);
+        }
+        finally { conn->Close(); }
+        return nullptr;
+    }
+
+    bool PersistanceManager::MarcarRecetaComoEntregada(int idReceta) {
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+        try {
+            conn->Open();
+            SqlCommand^ cmd = gcnew SqlCommand("UPDATE Recetas SET entregado=1 WHERE idReceta=@id", conn);
+            cmd->Parameters->AddWithValue("@id", idReceta);
+            int rows = cmd->ExecuteNonQuery();
+            return rows > 0;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR UPDATE RECETA: " + ex->Message);
+            return false;
+        }
+        finally { conn->Close(); }
+    }
+
+    bool PersistanceManager::DeleteReceta(int idReceta) {
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+        try {
+            conn->Open();
+            SqlCommand^ cmd = gcnew SqlCommand("DELETE FROM Recetas WHERE idReceta=@id", conn);
+            cmd->Parameters->AddWithValue("@id", idReceta);
+            int rows = cmd->ExecuteNonQuery();
+            return rows > 0;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR DELETE RECETA: " + ex->Message);
+            return false;
+        }
+        finally { conn->Close(); }
     }
 }
