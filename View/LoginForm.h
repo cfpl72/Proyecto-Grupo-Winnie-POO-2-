@@ -1,8 +1,5 @@
 ﻿#pragma once
 #include "RegisterForm.h"
-//#include "../Controller/Controller.h"
-//#include "OperadorVentas.h"
-
 #include "FarmaceuticoView.h"
 #include "PacienteView.h"
 #include "OperadorVentas.h"
@@ -16,10 +13,6 @@ namespace WinniePOOview {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace WinniePOO_Modelos;
-
-	//using namespace ViewFarmaceutico;
-	//using namespace ViewPaciente;
-
 	using namespace Controller;
 
 

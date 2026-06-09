@@ -103,7 +103,6 @@ namespace Controller {
         List<Medicamento^>^ ObtenerInventarioCompleto();
         Dictionary<int, Medicamento^>^ ObtenerDiccionarioCompleto();
         bool ActualizarMedicamento(int id, double nuevoPrecio, int nuevoStock);
-        bool EliminarMedicamento(int id);
     };
 
     // =========================

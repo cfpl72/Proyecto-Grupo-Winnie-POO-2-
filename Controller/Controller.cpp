@@ -10,21 +10,21 @@ namespace Controller {
     // =========================
     // PACIENTES
     // =========================
-
     Dictionary<int, Paciente^>^ ServicioPacientes::LeerTodos() {
-        return repo->GetAllPacientes();
+        return repo->LoadPacientes(filePath);
     }
 
     Paciente^ ServicioPacientes::ObtenerPorId(int id) {
-        return repo->GetPacienteById(id);
+        auto dic = LeerTodos();
+        return dic->ContainsKey(id) ? dic[id] : nullptr;
     }
 
     bool ServicioPacientes::RegistrarPaciente(int id, String^ token, String^ nombre,
         String^ apellido, int edad, String^ alergias, String^ sintomas) {
 
-        // Verificación directa en BD
-        if (repo->GetPacienteById(id) != nullptr)
-            return false;
+        auto dic = LeerTodos();
+
+        if (dic->ContainsKey(id)) return false;
 
         Paciente^ p = gcnew Paciente(id, token);
         p->nombre = nombre;
@@ -33,14 +33,18 @@ namespace Controller {
         p->alergias = alergias;
         p->sintomas = sintomas;
 
-        return repo->InsertPaciente(p);
+        dic->Add(id, p);
+        repo->SavePacientes(filePath, dic);
+
+        return true;
     }
 
     void ServicioPacientes::ModificarPaciente(int id, String^ atributo, String^ nuevoValor) {
+        auto dic = LeerTodos();
 
-        Paciente^ p = repo->GetPacienteById(id);
+        if (!dic->ContainsKey(id)) return;
 
-        if (p == nullptr) return;
+        Paciente^ p = dic[id];
 
         if (atributo == "nombre") p->nombre = nuevoValor;
         else if (atributo == "apellido") p->apellido = nuevoValor;
@@ -48,22 +52,27 @@ namespace Controller {
         else if (atributo == "alergias") p->alergias = nuevoValor;
         else if (atributo == "sintomas") p->sintomas = nuevoValor;
 
-        repo->UpdatePaciente(p);
+        repo->SavePacientes(filePath, dic);
     }
 
     void ServicioPacientes::EliminarPaciente(int id) {
-        repo->DeletePaciente(id);
+        auto dic = LeerTodos();
+
+        if (dic->ContainsKey(id)) {
+            dic->Remove(id);
+            repo->SavePacientes(filePath, dic);
+        }
     }
 
     // =========================
     // MEDICAMENTOS
     // =========================
     Dictionary<int, Medicamento^>^ ServicioMedicamentos::ObtenerDiccionarioCompleto() {
-        return repo->GetAllMedicamentos();
+        return repo->LoadMedicamentos(filePath);
     }
 
     List<Medicamento^>^ ServicioMedicamentos::ObtenerInventarioCompleto() {
-        auto dic = repo->GetAllMedicamentos();
+        auto dic = ObtenerDiccionarioCompleto();
         List<Medicamento^>^ lista = gcnew List<Medicamento^>();
 
         for each (auto kv in dic)
@@ -75,36 +84,36 @@ namespace Controller {
     bool ServicioMedicamentos::RegistrarMedicamento(int id, String^ nombre,
         String^ principioActivo, double precio, int stock) {
 
-        if (repo->GetMedicamentoById(id) != nullptr)
-            return false;
+        auto dic = ObtenerDiccionarioCompleto();
+
+        if (dic->ContainsKey(id)) return false;
 
         Medicamento^ m = gcnew Medicamento(id, nombre, principioActivo, precio, stock);
 
-        return repo->InsertMedicamento(m);
+        dic->Add(id, m);
+        repo->SaveMedicamentos(filePath, dic);
+
+        return true;
     }
 
     bool ServicioMedicamentos::ActualizarMedicamento(int id, double nuevoPrecio, int nuevoStock) {
+        auto dic = ObtenerDiccionarioCompleto();
 
-        Medicamento^ m = repo->GetMedicamentoById(id);
+        if (!dic->ContainsKey(id)) return false;
 
-        if (m == nullptr) return false;
-
+        Medicamento^ m = dic[id];
         m->ActualizarPrecio(nuevoPrecio);
         m->ActualizarStock(nuevoStock);
 
-        return repo->UpdateMedicamento(id, nuevoPrecio, nuevoStock);
-    }
-
-    bool ServicioMedicamentos::EliminarMedicamento(int id) {
-        return repo->DeleteMedicamento(id);
+        repo->SaveMedicamentos(filePath, dic);
+        return true;
     }
 
     // =========================
     // VENTAS
     // =========================
     List<Venta^>^ ServicioVentas::ObtenerTodasLasVentas() {
-
-        auto dic = repo->GetAllVentas();
+        auto dic = repo->LoadVentas(filePath);
         List<Venta^>^ lista = gcnew List<Venta^>();
 
         for each (auto kv in dic)
@@ -114,72 +123,52 @@ namespace Controller {
     }
 
     Venta^ ServicioVentas::LeerVenta(int idVenta) {
-        return repo->GetVentaById(idVenta);
+        auto dic = repo->LoadVentas(filePath);
+        return dic->ContainsKey(idVenta) ? dic[idVenta] : nullptr;
     }
 
     bool ServicioVentas::RegistrarVenta(int idVenta, int idPaciente, int idMedicamento, int cantidad) {
 
-        Controller::ServicioMedicamentos^ servMed = gcnew ServicioMedicamentos();
+        Controller::ServicioMedicamentos^ servMedicamentos = gcnew ServicioMedicamentos();
 
-        // ❌ Ya no usamos diccionario de ventas
-        if (repo->GetVentaById(idVenta) != nullptr)
-            return false;
+        auto dic = repo->LoadVentas(filePath);
 
-        // Obtener medicamento real
-        auto dicMed = servMed->ObtenerDiccionarioCompleto();
+        if (dic->ContainsKey(idVenta)) return false;
 
-        if (!dicMed->ContainsKey(idMedicamento))
-            return false;
+        // Medicamento dummy (por dependencia del constructor)
+        Dictionary<int, Medicamento^>^ dummyDic = servMedicamentos->ObtenerDiccionarioCompleto();
 
-        Medicamento^ med = dicMed[idMedicamento];
+        Venta^ v = gcnew Venta(idVenta, idPaciente, cantidad, idMedicamento, 1, "Paracetamol", DateTime::Now);
 
-        // Validar stock
-        if (med->stock < cantidad)
-            return false;
-
-        // Crear venta con nuevo modelo
-        Venta^ v = gcnew Venta(
-            idVenta,
-            idPaciente,
-            cantidad,
-            idMedicamento,
-            med->precio,
-            med->nombre,
-            DateTime::Now
-        );
-
-        // Guardar en SQL
-        bool ok = repo->InsertVenta(v);
-
-        if (!ok) return false;
-
-        // Actualizar stock
-        servMed->ActualizarMedicamento(
-            idMedicamento,
-            med->precio,
-            med->stock - cantidad
-        );
+        dic->Add(idVenta, v);
+        repo->SaveVentas(filePath, dic);
 
         return true;
     }
 
     bool ServicioVentas::ModificarVenta(int idVenta, int nuevaCantidadVendida) {
+        auto dic = repo->LoadVentas(filePath);
 
-        Venta^ v = repo->GetVentaById(idVenta);
+        if (!dic->ContainsKey(idVenta)) return false;
 
-        if (v == nullptr) return false;
-
+        Venta^ v = dic[idVenta];
         v->cantidadVendida = nuevaCantidadVendida;
         v->totalVenta = v->precioMedicamento * nuevaCantidadVendida;
 
-        // ⚠️ No tienes UPDATE en SQL aún → solo lógico
-        Console::WriteLine("⚠ Modificación local (no persistida en SQL)");
-
+        repo->SaveVentas(filePath, dic);
         return true;
     }
 
     bool ServicioVentas::EliminarVenta(int idVenta) {
-        return repo->DeleteVenta(idVenta);
+        auto dic = repo->LoadVentas(filePath);
+
+        if (dic->ContainsKey(idVenta)) {
+            dic->Remove(idVenta);
+            repo->SaveVentas(filePath, dic);
+            return true;
+        }
+
+        return false;
     }
 
     String^ ServicioVentas::MostrarBoletaVenta(int idVenta) {
@@ -212,7 +201,7 @@ namespace Controller {
         }
 
         return folder + "\\Historial_Recetas_" + idPaciente + ".txt";
-    } 
+    }
 
     // CREATE
     void ServicioPacientes::RegistrarReceta(int idPaciente, int idReceta, int dosis,
@@ -237,7 +226,7 @@ namespace Controller {
         String^ path = GetHistorialPath(idPaciente);
         auto lista = repo->LoadHistorialRecetas(path);
 
-        for each(Receta ^ r in lista) {
+        for each (Receta ^ r in lista) {
             if (r->idReceta == idReceta) {
                 r->dosis = nuevaDosis;
                 r->entregado = nuevoEstado;
@@ -255,7 +244,7 @@ namespace Controller {
 
         List<Receta^>^ nueva = gcnew List<Receta^>();
 
-        for each(Receta ^ r in lista) {
+        for each (Receta ^ r in lista) {
             if (r->idReceta != idReceta) {
                 nueva->Add(r);
             }
@@ -274,14 +263,14 @@ namespace Controller {
 
         auto lista = repo->LoadHistorialRecetas(path);
 
-        for each(Receta ^ r in lista) {
+        for each (Receta ^ r in lista) {
 
             // Formato ID tipo REC-001
             String^ idFormateado = "REC-" + r->idReceta.ToString("D3");
 
             // Medicamento
             String^ medicamento = r->medicamento->nombre;
-
+           
             // Dosis (simplificada)
             String^ dosis = r->dosis + " c/12h";
 
@@ -307,12 +296,12 @@ namespace Controller {
 
         List<String^>^ lista = gcnew List<String^>();
 
-        auto dic = repo->GetAllPacientes();
+        auto dic = repo->LoadPacientes(filePath);
 
         for each (auto kv in dic) {
             Paciente^ p = kv.Value;
 
-           
+
             String^ nombre = p->nombre + " " + p->apellido;
 
             lista->Add(nombre);
@@ -473,7 +462,7 @@ namespace Controller1 {
 
     bool ServicioVentas::RegistrarVenta(int idVenta, int idPaciente, int idMedicamento, int cantidad) {
 
-        Controller::ServicioMedicamentos^ servMed = gcnew ServicioMedicamentos();
+        Controller1::ServicioMedicamentos^ servMed = gcnew ServicioMedicamentos();
 
         // ❌ Ya no usamos diccionario de ventas
         if (repo->GetVentaById(idVenta) != nullptr)
