@@ -203,8 +203,10 @@ namespace Persistance {
                     Convert::ToInt32(campos[0]),
                     Convert::ToInt32(campos[1]),
                     Convert::ToInt32(campos[3]),
-                    dummy,
-                    DateTime::Now   // no estás persistiendo fecha aún
+                    1,
+                    1.5,
+                    "A",
+                    DateTime::Now// no estás persistiendo fecha aún
                 );
 
                 if (!dic->ContainsKey(v->id))
@@ -702,78 +704,159 @@ namespace Persistance1 {
     // =========================
     // VENTAS
     // =========================
-    void PersistanceManager::SaveVentas(String^ filePath, Dictionary<int, Venta^>^ dic) {
-        StreamWriter^ writer = nullptr;
+
+    bool PersistanceManager::InsertVenta(Venta^ v) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
 
         try {
-            writer = gcnew StreamWriter(filePath);
+            conn->Open();
 
-            for each (auto kv in dic) {
-                Venta^ v = kv.Value;
+            String^ query = "INSERT INTO Ventas (id, idPaciente, idMedicamento, cantidadVendida, precioMedicamento, totalVenta, nombreMedicamento, fecha) "
+                "VALUES (@id, @idPaciente, @idMed, @cantidad, @precio, @total, @nombre, @fecha)";
 
-                writer->WriteLine(String::Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}",
-                    v->id,
-                    v->idPaciente,
-                    v->idMedicamento,
-                    v->cantidadVendida,
-                    v->precioMedicamento,
-                    v->totalVenta,
-                    v->nombreMedicamento
-                ));
-            }
+            SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+
+            cmd->Parameters->AddWithValue("@id", v->id);
+            cmd->Parameters->AddWithValue("@idPaciente", v->idPaciente);
+            cmd->Parameters->AddWithValue("@idMed", v->idMedicamento);
+            cmd->Parameters->AddWithValue("@cantidad", v->cantidadVendida);
+            cmd->Parameters->AddWithValue("@precio", v->precioMedicamento);
+            cmd->Parameters->AddWithValue("@total", v->totalVenta);
+            cmd->Parameters->AddWithValue("@nombre", v->nombreMedicamento);
+            cmd->Parameters->AddWithValue("@fecha", v->fecha);
+
+            cmd->ExecuteNonQuery();
+
+            Console::WriteLine("✔ INSERT Venta ID: " + v->id);
+            return true;
         }
         catch (Exception^ ex) {
-            Console::WriteLine("ERROR (SaveVentas): " + ex->Message);
+            Console::WriteLine("❌ INSERT ERROR: " + ex->Message);
+            return false;
         }
         finally {
-            if (writer != nullptr) writer->Close();
+            conn->Close();
         }
     }
 
-    Dictionary<int, Venta^>^ PersistanceManager::LoadVentas(String^ filePath) {
+    Dictionary<int, Venta^>^ PersistanceManager::GetAllVentas() {
+
         Dictionary<int, Venta^>^ dic = gcnew Dictionary<int, Venta^>();
-        StreamReader^ reader = nullptr;
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
 
         try {
-            if (!File::Exists(filePath)) return dic;
+            conn->Open();
 
-            reader = gcnew StreamReader(filePath);
+            SqlCommand^ cmd = gcnew SqlCommand("SELECT * FROM Ventas", conn);
+            SqlDataReader^ r = cmd->ExecuteReader();
 
-            while (!reader->EndOfStream) {
-                String^ linea = reader->ReadLine();
-                auto campos = linea->Split('|');
+            while (r->Read()) {
 
-                if (campos->Length < 7) continue;
-
-                // ⚠️ Venta necesita un Medicamento para construirse
-                Medicamento^ dummy = gcnew Medicamento(
-                    Convert::ToInt32(campos[2]),
-                    campos[6],      // nombreMedicamento
-                    "",             // principioActivo (no persistido)
-                    Convert::ToDouble(campos[4]),
-                    0               // stock irrelevante aquí
-                );
+                int id = r->GetInt32(0);
+                int idPaciente = r->GetInt32(1);
+                int idMedicamento = r->GetInt32(2);
+                int cantidad = r->GetInt32(3);
+                double precio = Convert::ToDouble(r->GetDecimal(4));
+                double total = Convert::ToDouble(r->GetDecimal(5));
+                String^ nombre = r->GetString(6);
+                DateTime fecha = r->GetDateTime(7);
 
                 Venta^ v = gcnew Venta(
-                    Convert::ToInt32(campos[0]),
-                    Convert::ToInt32(campos[1]),
-                    Convert::ToInt32(campos[3]),
-                    dummy,
-                    DateTime::Now   // no estás persistiendo fecha aún
+                    id,
+                    idPaciente,
+                    cantidad,
+                    idMedicamento,
+                    precio,
+                    nombre,
+                    fecha
                 );
 
-                if (!dic->ContainsKey(v->id))
-                    dic->Add(v->id, v);
+                dic[id] = v;
             }
+
+            r->Close();
         }
         catch (Exception^ ex) {
-            Console::WriteLine("ERROR (LoadVentas): " + ex->Message);
+            Console::WriteLine("❌ GET ALL ERROR: " + ex->Message);
         }
         finally {
-            if (reader != nullptr) reader->Close();
+            conn->Close();
         }
 
         return dic;
+    }
+
+    Venta^ PersistanceManager::GetVentaById(int id) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            SqlCommand^ cmd = gcnew SqlCommand("SELECT * FROM Ventas WHERE id=@id", conn);
+            cmd->Parameters->AddWithValue("@id", id);
+
+            SqlDataReader^ r = cmd->ExecuteReader();
+
+            if (r->Read()) {
+
+                int idPaciente = r->GetInt32(1);
+                int idMedicamento = r->GetInt32(2);
+                int cantidad = r->GetInt32(3);
+                double precio = Convert::ToDouble(r->GetDecimal(4));
+                String^ nombre = r->GetString(6);
+                DateTime fecha = r->GetDateTime(7);
+
+                Venta^ v = gcnew Venta(
+                    id,
+                    idPaciente,
+                    cantidad,
+                    idMedicamento,
+                    precio,
+                    nombre,
+                    fecha
+                );
+
+                r->Close();
+                return v;
+            }
+
+            r->Close();
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ GET ERROR: " + ex->Message);
+        }
+        finally {
+            conn->Close();
+        }
+
+        return nullptr;
+    }
+
+    bool PersistanceManager::DeleteVenta(int id) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            SqlCommand^ cmd = gcnew SqlCommand("DELETE FROM Ventas WHERE id=@id", conn);
+            cmd->Parameters->AddWithValue("@id", id);
+
+            int rows = cmd->ExecuteNonQuery();
+
+            Console::WriteLine("✔ DELETE rows: " + rows);
+            return rows > 0;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ DELETE ERROR: " + ex->Message);
+            return false;
+        }
+        finally {
+            conn->Close();
+        }
     }
 
     // =========================

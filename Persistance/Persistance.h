@@ -77,8 +77,10 @@ namespace Persistance1 {
         // =========================
         // VENTAS
         // =========================
-        void SaveVentas(String^ filePath, Dictionary<int, Venta^>^ dic);
-        Dictionary<int, Venta^>^ LoadVentas(String^ filePath);
+        bool InsertVenta(Venta^ v);
+        Dictionary<int, Venta^>^ GetAllVentas();
+        Venta^ GetVentaById(int id);
+        bool DeleteVenta(int id);
 
         // =========================
         // HISTORIAL RECETAS

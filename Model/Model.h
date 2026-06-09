@@ -139,16 +139,16 @@ namespace WinniePOO_Modelos {
 		
 
         // Constructor para facilitar la creación de ventas
-		Venta(int idVenta, int idPaciente, int cantidad, Medicamento^ med, DateTime^ fechaVenta)
+		Venta(int idVenta, int idPaciente, int cantidad, int idMed,double precioMed, String^ nombreMed, DateTime^ fechaVenta)
 		{
 			this->id = idVenta;
 			this->idPaciente = idPaciente;
-			this->idMedicamento = med->id;
+			this->idMedicamento = idMed;
 
 			this->cantidadVendida = cantidad;
 
-			this->precioMedicamento = med->precio;
-			this->nombreMedicamento = med->nombre;
+			this->precioMedicamento = precioMed;
+			this->nombreMedicamento = nombreMed;
 
 			this->totalVenta = this->precioMedicamento * this->cantidadVendida;
 

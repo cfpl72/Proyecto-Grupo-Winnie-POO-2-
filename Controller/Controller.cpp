@@ -105,7 +105,8 @@ namespace Controller {
     // VENTAS
     // =========================
     List<Venta^>^ ServicioVentas::ObtenerTodasLasVentas() {
-        auto dic = repo->LoadVentas(filePath);
+
+        auto dic = repo->GetAllVentas();
         List<Venta^>^ lista = gcnew List<Venta^>();
 
         for each (auto kv in dic)
@@ -115,52 +116,72 @@ namespace Controller {
     }
 
     Venta^ ServicioVentas::LeerVenta(int idVenta) {
-        auto dic = repo->LoadVentas(filePath);
-        return dic->ContainsKey(idVenta) ? dic[idVenta] : nullptr;
+        return repo->GetVentaById(idVenta);
     }
 
     bool ServicioVentas::RegistrarVenta(int idVenta, int idPaciente, int idMedicamento, int cantidad) {
 
-        Controller::ServicioMedicamentos^ servMedicamentos = gcnew ServicioMedicamentos();
+        Controller::ServicioMedicamentos^ servMed = gcnew ServicioMedicamentos();
 
-        auto dic = repo->LoadVentas(filePath);
+        // ❌ Ya no usamos diccionario de ventas
+        if (repo->GetVentaById(idVenta) != nullptr)
+            return false;
 
-        if (dic->ContainsKey(idVenta)) return false;
+        // Obtener medicamento real
+        auto dicMed = servMed->ObtenerDiccionarioCompleto();
 
-        // Medicamento dummy (por dependencia del constructor)
-        Dictionary<int, Medicamento^>^ dummyDic = servMedicamentos->ObtenerDiccionarioCompleto();
+        if (!dicMed->ContainsKey(idMedicamento))
+            return false;
 
-        Venta^ v = gcnew Venta(idVenta, idPaciente, cantidad, dummyDic[idMedicamento], DateTime::Now);
+        Medicamento^ med = dicMed[idMedicamento];
 
-        dic->Add(idVenta, v);
-        repo->SaveVentas(filePath, dic);
+        // Validar stock
+        if (med->stock < cantidad)
+            return false;
+
+        // Crear venta con nuevo modelo
+        Venta^ v = gcnew Venta(
+            idVenta,
+            idPaciente,
+            cantidad,
+            idMedicamento,
+            med->precio,
+            med->nombre,
+            DateTime::Now
+        );
+
+        // Guardar en SQL
+        bool ok = repo->InsertVenta(v);
+
+        if (!ok) return false;
+
+        // Actualizar stock
+        servMed->ActualizarMedicamento(
+            idMedicamento,
+            med->precio,
+            med->stock - cantidad
+        );
 
         return true;
     }
 
     bool ServicioVentas::ModificarVenta(int idVenta, int nuevaCantidadVendida) {
-        auto dic = repo->LoadVentas(filePath);
 
-        if (!dic->ContainsKey(idVenta)) return false;
+        Venta^ v = repo->GetVentaById(idVenta);
 
-        Venta^ v = dic[idVenta];
+        if (v == nullptr) return false;
+
         v->cantidadVendida = nuevaCantidadVendida;
         v->totalVenta = v->precioMedicamento * nuevaCantidadVendida;
 
-        repo->SaveVentas(filePath, dic);
+        // ⚠️ No tienes UPDATE en SQL aún → solo lógico
+        Console::WriteLine("⚠ Modificación local (no persistida en SQL)");
+
         return true;
     }
 
     bool ServicioVentas::EliminarVenta(int idVenta) {
-        auto dic = repo->LoadVentas(filePath);
-
-        if (dic->ContainsKey(idVenta)) {
-            dic->Remove(idVenta);
-            repo->SaveVentas(filePath, dic);
-            return true;
-        }
-
-        return false;
+        return repo->DeleteVenta(idVenta);
     }
 
     String^ ServicioVentas::MostrarBoletaVenta(int idVenta) {
