@@ -16,89 +16,97 @@ using namespace Controller;
 //    return 0;
 //}
 
+
 int main(array<System::String^>^ args)
 {
-    Console::WriteLine("=== TEST CRUD COMPLETO ===");
+    Console::WriteLine("=== INICIO TEST SISTEMA ===");
 
     ServicioPacientes^ servPac = gcnew ServicioPacientes();
     ServicioMedicamentos^ servMed = gcnew ServicioMedicamentos();
+    ServicioVentas^ servVen = gcnew ServicioVentas();
 
     // =========================
-    // 🧪 PACIENTES
+    // 👤 PACIENTES
     // =========================
-
     Console::WriteLine("\n=== PACIENTES ===");
 
-    // CREATE
-    Console::WriteLine("\n--- CREATE PACIENTE ---");
-    bool creado = servPac->RegistrarPaciente(1001, "token1001", "Claudio", "Test", 25, "Ninguna", "Fiebre");
-    Console::WriteLine("Creado: " + creado);
+    bool creadoPac = servPac->RegistrarPaciente(1, "token1", "Claudio", "Test", 25, "Ninguna", "Fiebre");
+    Console::WriteLine("Crear paciente: " + creadoPac);
 
-    // READ ALL
-    Console::WriteLine("\n--- READ ALL PACIENTES ---");
-    auto pacientes = servPac->LeerTodos();
-    for each (auto kv in pacientes) {
-        Console::WriteLine("ID: " + kv.Value->id + " | Nombre: " + kv.Value->nombre);
-    }
-
-    // READ BY ID
-    Console::WriteLine("\n--- READ BY ID ---");
-    auto p = servPac->ObtenerPorId(1001);
+    Paciente^ p = servPac->ObtenerPorId(1);
     if (p != nullptr)
-        Console::WriteLine("Encontrado: " + p->nombre);
+        Console::WriteLine("Paciente leído: " + p->nombre);
 
-    // UPDATE
-    Console::WriteLine("\n--- UPDATE ---");
-    servPac->ModificarPaciente(1001, "edad", "30");
-    p = servPac->ObtenerPorId(1001);
+    servPac->ModificarPaciente(1, "edad", "30");
+    p = servPac->ObtenerPorId(1);
     if (p != nullptr)
         Console::WriteLine("Edad actualizada: " + p->edad);
-
-    // DELETE
-    Console::WriteLine("\n--- DELETE ---");
-    servPac->EliminarPaciente(1001);
-    p = servPac->ObtenerPorId(1001);
-    Console::WriteLine(p == nullptr ? "Eliminado correctamente" : "Error al eliminar");
-
 
     // =========================
     // 💊 MEDICAMENTOS
     // =========================
-
     Console::WriteLine("\n=== MEDICAMENTOS ===");
 
-    // CREATE
-    Console::WriteLine("\n--- CREATE MEDICAMENTO ---");
-    bool creadoMed = servMed->RegistrarMedicamento(2001, "TestMed", "ActivoX", 5.5, 20);
-    Console::WriteLine("Creado: " + creadoMed);
+    bool creadoMed = servMed->RegistrarMedicamento(10, "Paracetamol", "Acetaminofén", 2.5, 100);
+    Console::WriteLine("Crear medicamento: " + creadoMed);
 
-    // READ ALL
-    Console::WriteLine("\n--- READ ALL MEDICAMENTOS ---");
     auto meds = servMed->ObtenerInventarioCompleto();
     for each (Medicamento ^ m in meds) {
-        Console::WriteLine("ID: " + m->id + " | Nombre: " + m->nombre + " | Stock: " + m->stock);
+        Console::WriteLine("Med: " + m->id + " | " + m->nombre + " | Stock: " + m->stock);
     }
 
-    // READ BY ID (usando repo indirectamente)
-    Console::WriteLine("\n--- READ BY ID ---");
-    auto dic = servMed->ObtenerDiccionarioCompleto();
-    if (dic->ContainsKey(2001))
-        Console::WriteLine("Encontrado: " + dic[2001]->nombre);
+    servMed->ActualizarMedicamento(10, 3.0, 80);
 
-    // UPDATE
-    Console::WriteLine("\n--- UPDATE ---");
-    servMed->ActualizarMedicamento(2001, 9.9, 99);
-    dic = servMed->ObtenerDiccionarioCompleto();
-    if (dic->ContainsKey(2001))
-        Console::WriteLine("Nuevo Precio: " + dic[2001]->precio + " | Nuevo Stock: " + dic[2001]->stock);
+    auto dicMed = servMed->ObtenerDiccionarioCompleto();
+    if (dicMed->ContainsKey(10))
+        Console::WriteLine("Precio actualizado: " + dicMed[10]->precio);
 
-    // DELETE
-    Console::WriteLine("\n--- DELETE ---");
-    bool eliminadoMed = servMed->EliminarMedicamento(2001);
-    Console::WriteLine(eliminadoMed ? "Eliminado correctamente" : "Error al eliminar");
+    // =========================
+    // 💰 VENTAS
+    // =========================
+    Console::WriteLine("\n=== VENTAS ===");
 
-    dic = servMed->ObtenerDiccionarioCompleto();
-    Console::WriteLine(dic->ContainsKey(2001) ? "Aún existe" : "Confirmado eliminado");
+    bool ventaOk = servVen->RegistrarVenta(100, 1, 10, 5);
+    Console::WriteLine("Registrar venta: " + ventaOk);
+
+    Venta^ v = servVen->LeerVenta(100);
+    if (v != nullptr) {
+        Console::WriteLine("Venta leída:");
+        Console::WriteLine("ID: " + v->id);
+        Console::WriteLine("Paciente: " + v->idPaciente);
+        Console::WriteLine("Medicamento: " + v->nombreMedicamento);
+        Console::WriteLine("Cantidad: " + v->cantidadVendida);
+        Console::WriteLine("Total: " + v->totalVenta);
+    }
+
+    // Verificar reducción de stock
+    dicMed = servMed->ObtenerDiccionarioCompleto();
+    if (dicMed->ContainsKey(10))
+        Console::WriteLine("Stock después de venta: " + dicMed[10]->stock);
+
+    // =========================
+    // 📋 LISTAR TODO
+    // =========================
+    Console::WriteLine("\n=== LISTAR VENTAS ===");
+
+    auto ventas = servVen->ObtenerTodasLasVentas();
+    for each (Venta ^ venta in ventas) {
+        Console::WriteLine("Venta ID: " + venta->id + " | Total: " + venta->totalVenta);
+    }
+
+    // =========================
+    // 🔴 DELETE
+    // =========================
+    Console::WriteLine("\n=== ELIMINACIONES ===");
+
+    bool delVenta = servVen->EliminarVenta(100);
+    Console::WriteLine("Eliminar venta: " + delVenta);
+
+    bool delMed = servMed->EliminarMedicamento(10);
+    Console::WriteLine("Eliminar medicamento: " + delMed);
+
+    servPac->EliminarPaciente(1);
+    Console::WriteLine("Paciente eliminado");
 
     Console::WriteLine("\n=== FIN TEST ===");
     Console::ReadKey();
