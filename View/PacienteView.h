@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "PacienteView.h"
+//#include "PacienteView.h"
 
 namespace ViewPaciente {
 
@@ -89,10 +89,11 @@ namespace ViewPaciente {
 			this->panelSuperior->Controls->Add(this->lblBienvenida);
 			this->panelSuperior->Controls->Add(this->lblTituloPpal);
 			this->panelSuperior->Location = System::Drawing::Point(0, 0);
-			this->panelSuperior->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->panelSuperior->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->panelSuperior->Name = L"panelSuperior";
-			this->panelSuperior->Size = System::Drawing::Size(714, 50);
+			this->panelSuperior->Size = System::Drawing::Size(952, 62);
 			this->panelSuperior->TabIndex = 0;
+			this->panelSuperior->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &PacienteForm::panelSuperior_Paint);
 			// 
 			// label1
 			// 
@@ -101,10 +102,9 @@ namespace ViewPaciente {
 			this->label1->Font = (gcnew System::Drawing::Font(L"Franklin Gothic Heavy", 13.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->label1->ForeColor = System::Drawing::Color::Cornsilk;
-			this->label1->Location = System::Drawing::Point(9, 19);
-			this->label1->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
+			this->label1->Location = System::Drawing::Point(12, 23);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(96, 24);
+			this->label1->Size = System::Drawing::Size(117, 29);
 			this->label1->TabIndex = 7;
 			this->label1->Text = L"PACIENTE";
 			this->label1->Click += gcnew System::EventHandler(this, &PacienteForm::label1_Click);
@@ -115,10 +115,9 @@ namespace ViewPaciente {
 			this->lblBienvenida->Font = (gcnew System::Drawing::Font(L"Segoe UI", 16.2F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->lblBienvenida->ForeColor = System::Drawing::SystemColors::Control;
-			this->lblBienvenida->Location = System::Drawing::Point(663, 8);
-			this->lblBienvenida->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
+			this->lblBienvenida->Location = System::Drawing::Point(884, 10);
 			this->lblBienvenida->Name = L"lblBienvenida";
-			this->lblBienvenida->Size = System::Drawing::Size(44, 30);
+			this->lblBienvenida->Size = System::Drawing::Size(56, 38);
 			this->lblBienvenida->TabIndex = 6;
 			this->lblBienvenida->Text = L"🐻";
 			this->lblBienvenida->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
@@ -130,10 +129,9 @@ namespace ViewPaciente {
 			this->lblTituloPpal->Font = (gcnew System::Drawing::Font(L"Arial", 7.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->lblTituloPpal->ForeColor = System::Drawing::Color::Teal;
-			this->lblTituloPpal->Location = System::Drawing::Point(10, 8);
-			this->lblTituloPpal->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
+			this->lblTituloPpal->Location = System::Drawing::Point(13, 10);
 			this->lblTituloPpal->Name = L"lblTituloPpal";
-			this->lblTituloPpal->Size = System::Drawing::Size(132, 14);
+			this->lblTituloPpal->Size = System::Drawing::Size(151, 16);
 			this->lblTituloPpal->TabIndex = 1;
 			this->lblTituloPpal->Text = L"Portal de Autoconsulta";
 			this->lblTituloPpal->Click += gcnew System::EventHandler(this, &PacienteForm::lblTituloPpal_Click);
@@ -148,10 +146,10 @@ namespace ViewPaciente {
 			this->panelDashboard->Controls->Add(this->btnEvaluar);
 			this->panelDashboard->Controls->Add(this->txtSintomas);
 			this->panelDashboard->Controls->Add(this->lblSintomas);
-			this->panelDashboard->Location = System::Drawing::Point(0, 50);
-			this->panelDashboard->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->panelDashboard->Location = System::Drawing::Point(0, 62);
+			this->panelDashboard->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->panelDashboard->Name = L"panelDashboard";
-			this->panelDashboard->Size = System::Drawing::Size(714, 349);
+			this->panelDashboard->Size = System::Drawing::Size(952, 430);
 			this->panelDashboard->TabIndex = 2;
 			this->panelDashboard->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &PacienteForm::panelDashboard_Paint);
 			// 
@@ -162,10 +160,10 @@ namespace ViewPaciente {
 			this->btnComprar->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->btnComprar->ForeColor = System::Drawing::Color::White;
-			this->btnComprar->Location = System::Drawing::Point(562, 187);
-			this->btnComprar->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->btnComprar->Location = System::Drawing::Point(749, 230);
+			this->btnComprar->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->btnComprar->Name = L"btnComprar";
-			this->btnComprar->Size = System::Drawing::Size(112, 41);
+			this->btnComprar->Size = System::Drawing::Size(149, 50);
 			this->btnComprar->TabIndex = 5;
 			this->btnComprar->Text = L"Realizar Compra";
 			this->btnComprar->UseVisualStyleBackColor = false;
@@ -198,14 +196,14 @@ namespace ViewPaciente {
 			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::Color::White;
 			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
 			this->dgvMedicamentos->DefaultCellStyle = dataGridViewCellStyle2;
-			this->dgvMedicamentos->Location = System::Drawing::Point(26, 146);
-			this->dgvMedicamentos->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->dgvMedicamentos->Location = System::Drawing::Point(35, 180);
+			this->dgvMedicamentos->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->dgvMedicamentos->Name = L"dgvMedicamentos";
 			this->dgvMedicamentos->RowHeadersVisible = false;
 			this->dgvMedicamentos->RowHeadersWidth = 51;
 			this->dgvMedicamentos->RowTemplate->Height = 24;
 			this->dgvMedicamentos->SelectionMode = System::Windows::Forms::DataGridViewSelectionMode::FullRowSelect;
-			this->dgvMedicamentos->Size = System::Drawing::Size(525, 122);
+			this->dgvMedicamentos->Size = System::Drawing::Size(700, 150);
 			this->dgvMedicamentos->TabIndex = 4;
 			// 
 			// colNombre
@@ -234,10 +232,9 @@ namespace ViewPaciente {
 			this->lblRecomendaciones->AutoSize = true;
 			this->lblRecomendaciones->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 10.2F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->lblRecomendaciones->Location = System::Drawing::Point(22, 122);
-			this->lblRecomendaciones->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
+			this->lblRecomendaciones->Location = System::Drawing::Point(29, 150);
 			this->lblRecomendaciones->Name = L"lblRecomendaciones";
-			this->lblRecomendaciones->Size = System::Drawing::Size(217, 16);
+			this->lblRecomendaciones->Size = System::Drawing::Size(266, 20);
 			this->lblRecomendaciones->TabIndex = 3;
 			this->lblRecomendaciones->Text = L"Medicamentos Recomendados:";
 			// 
@@ -248,10 +245,10 @@ namespace ViewPaciente {
 			this->btnEvaluar->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->btnEvaluar->ForeColor = System::Drawing::Color::White;
-			this->btnEvaluar->Location = System::Drawing::Point(562, 49);
-			this->btnEvaluar->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->btnEvaluar->Location = System::Drawing::Point(749, 60);
+			this->btnEvaluar->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->btnEvaluar->Name = L"btnEvaluar";
-			this->btnEvaluar->Size = System::Drawing::Size(112, 49);
+			this->btnEvaluar->Size = System::Drawing::Size(149, 60);
 			this->btnEvaluar->TabIndex = 2;
 			this->btnEvaluar->Text = L"Evaluar Malestar";
 			this->btnEvaluar->UseVisualStyleBackColor = false;
@@ -259,11 +256,11 @@ namespace ViewPaciente {
 			// 
 			// txtSintomas
 			// 
-			this->txtSintomas->Location = System::Drawing::Point(26, 49);
-			this->txtSintomas->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->txtSintomas->Location = System::Drawing::Point(35, 60);
+			this->txtSintomas->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->txtSintomas->Multiline = true;
 			this->txtSintomas->Name = L"txtSintomas";
-			this->txtSintomas->Size = System::Drawing::Size(526, 50);
+			this->txtSintomas->Size = System::Drawing::Size(700, 61);
 			this->txtSintomas->TabIndex = 1;
 			// 
 			// lblSintomas
@@ -271,21 +268,20 @@ namespace ViewPaciente {
 			this->lblSintomas->AutoSize = true;
 			this->lblSintomas->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 10.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->lblSintomas->Location = System::Drawing::Point(22, 24);
-			this->lblSintomas->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
+			this->lblSintomas->Location = System::Drawing::Point(29, 30);
 			this->lblSintomas->Name = L"lblSintomas";
-			this->lblSintomas->Size = System::Drawing::Size(289, 16);
+			this->lblSintomas->Size = System::Drawing::Size(347, 20);
 			this->lblSintomas->TabIndex = 0;
 			this->lblSintomas->Text = L"Describa sus sintomas y malestares aqui:";
 			// 
 			// PacienteForm
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(714, 397);
+			this->ClientSize = System::Drawing::Size(952, 489);
 			this->Controls->Add(this->panelDashboard);
 			this->Controls->Add(this->panelSuperior);
-			this->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->Name = L"PacienteForm";
 			this->Text = L"Sistema de Dispensacion - Paciente";
 			this->panelSuperior->ResumeLayout(false);
@@ -382,5 +378,7 @@ private: System::Void panelDashboard_Paint(System::Object^ sender, System::Windo
 			   // Borrar alertas tras mostrarlas (opcional)
 		   }
 	   }
+private: System::Void panelSuperior_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+}
 };
 }

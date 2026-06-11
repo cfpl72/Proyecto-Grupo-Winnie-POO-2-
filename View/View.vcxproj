@@ -133,6 +133,9 @@
     <ClInclude Include="LoginForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="OpcionesVenta.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="OperadorVentas.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -150,6 +153,7 @@
     <ClCompile Include="FarmaceuticoView.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="LoginForm.cpp" />
+    <ClCompile Include="OpcionesVenta.cpp" />
     <ClCompile Include="OperadorVentas.cpp" />
     <ClCompile Include="PacienteView.cpp" />
     <ClCompile Include="pch.cpp">
@@ -180,6 +184,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpcionesVenta.resx">
+      <DependentUpon>OpcionesVenta.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OperadorVentas.resx">
       <DependentUpon>OperadorVentas.h</DependentUpon>

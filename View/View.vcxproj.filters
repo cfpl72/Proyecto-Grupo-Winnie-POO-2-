@@ -44,6 +44,9 @@
     <ClInclude Include="RegisterForm.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="OpcionesVenta.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="View.cpp">
@@ -71,6 +74,9 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="RegisterForm.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="OpcionesVenta.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>

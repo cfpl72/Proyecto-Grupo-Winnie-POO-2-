@@ -20,8 +20,6 @@ namespace Controller {
             filePath = "Pacientes.txt";
         }
 
-
-        // Sección Pacientes
         Dictionary<int, Paciente^>^ LeerTodos();
         Paciente^ ObtenerPorId(int id);
         bool RegistrarPaciente(int id, String^ token, String^ nombre, String^ apellido,
@@ -29,39 +27,18 @@ namespace Controller {
         void ModificarPaciente(int id, String^ atributo, String^ nuevoValor);
         void EliminarPaciente(int id);
 
-        // Sección Recetas
     private:
         String^ GetHistorialPath(int idPaciente);
 
     public:
-        void RegistrarReceta(
-            int idPaciente,
-            int idReceta,
-            int dosis,
-            DateTime fecha,
-            String^ nombreMedicamento,
-            bool entregado
-        );
-
+        void RegistrarReceta(int idPaciente, int idReceta, int dosis,
+            DateTime fecha, String^ nombreMedicamento, bool entregado);
         List<Receta^>^ ObtenerHistorial(int idPaciente);
-
-        void ModificarReceta(
-            int idPaciente,
-            int idReceta,
-            int nuevaDosis,
-            bool nuevoEstado
-        );
-
-        void EliminarReceta(
-            int idPaciente,
-            int idReceta
-        );
-
-
+        void ModificarReceta(int idPaciente, int idReceta, int nuevaDosis, bool nuevoEstado);
+        void EliminarReceta(int idPaciente, int idReceta);
         List<String^>^ ExaminarHistorialReceta(int idPaciente);
         List<String^>^ ObtenerNombresPacientes();
-
-    }; // FIN DE LA CLASE SERVICIO PACIENTES
+    };
 
     // =========================
     // FARMACÉUTICO
@@ -74,11 +51,9 @@ namespace Controller {
                 "[" + DateTime::Now.ToString("dd/MM/yyyy HH:mm") + "] " + mensaje + "\n");
         }
 
-        // ── NUEVO: Lee y devuelve todas las alertas de un paciente ─────────────
         static String^ LeerAlertas(String^ nombre) {
             String^ archivo = "alertas_" + nombre->Replace(" ", "_") + ".txt";
-            if (!System::IO::File::Exists(archivo))
-                return nullptr;   // sin alertas
+            if (!System::IO::File::Exists(archivo)) return nullptr;
             return System::IO::File::ReadAllText(archivo);
         }
     };
@@ -101,6 +76,9 @@ namespace Controller {
         List<Medicamento^>^ ObtenerInventarioCompleto();
         Dictionary<int, Medicamento^>^ ObtenerDiccionarioCompleto();
         bool ActualizarMedicamento(int id, double nuevoPrecio, int nuevoStock);
+
+        // ── SEED: puebla Medicamentos.txt si está vacío ──────────────────────
+        void SeedMedicamentosDemo();
     };
 
     // =========================
@@ -123,8 +101,10 @@ namespace Controller {
         bool ModificarVenta(int idVenta, int nuevaCantidadVendida);
         bool EliminarVenta(int idVenta);
         String^ MostrarBoletaVenta(int idVenta);
-    };
 
+        // ── SEED: puebla Ventas.txt si está vacío ────────────────────────────
+        void SeedVentasDemo();
+    };
 
     // =========================
     // AUTENTICACIÓN (LOGIN)
@@ -138,7 +118,6 @@ namespace Controller {
             pacientesService = gcnew ServicioPacientes();
         }
 
-        // Para validar el acceso
         bool ValidarAcceso(String^ rol, String^ usuarioDNI, String^ password);
     };
 

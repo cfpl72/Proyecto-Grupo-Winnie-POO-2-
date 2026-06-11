@@ -1,8 +1,7 @@
 ﻿#pragma once
 #include "RegisterForm.h"
-//#include "../Controller/Controller.h"
-//#include "OperadorVentas.h"
 
+#include "OperadorVentas.h"
 #include "FarmaceuticoView.h"
 #include "PacienteView.h"
 
@@ -236,6 +235,7 @@ namespace WinniePOOview {
 
 	private: System::Void btnIngresar_Click(System::Object^ sender, System::EventArgs^ e) {
 
+		/**
 		if (cmbRol->SelectedItem == nullptr) {
 			MessageBox::Show("¡WinniePOO necesita saber tu rol para dejarte entrar!", "Falta información", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			return;
@@ -273,6 +273,54 @@ namespace WinniePOOview {
 			Paciente^ paciente = pacientesService->ObtenerPorId(Convert::ToInt32(usuario));
 			ViewPaciente::PacienteForm^ form = gcnew ViewPaciente::PacienteForm(paciente->id); //INVOCACIÓN DEL FORMS DE PACIENTES
 			form->Show();
+			this->Hide();
+		}
+		else {
+			MessageBox::Show("DNI o contraseña incorrectos, o el usuario no existe.", "Credenciales incorrectas", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		} **/
+
+
+		if (cmbRol->SelectedItem == nullptr) {
+			MessageBox::Show("¡WinniePOO necesita saber tu rol para dejarte entrar!", "Falta información", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			return;
+		}
+
+		String^ rol = cmbRol->SelectedItem->ToString();
+		String^ usuario = txtUsuario->Text;
+		String^ password = txtPassword->Text;
+
+		if (usuario == "" || password == "") {
+			MessageBox::Show("Por favor, ingresa tu DNI y contraseña.", "Campos vacíos", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			return;
+		}
+
+		// --- NUEVA LÓGICA DE CONEXIÓN ---
+		// 1. Creamos una "instancia" del servicio que acabamos de hacer
+		Controller::ServicioAutenticacion^ authService = gcnew Controller::ServicioAutenticacion();
+
+		// 2. Le preguntamos al controlador si las credenciales son válidas
+		bool accesoConcedido = authService->ValidarAcceso(rol, usuario, password);
+
+		// 3. Reaccionamos a la respuesta
+		if (accesoConcedido) {
+			MessageBox::Show("¡Hola " + usuario + "!\nIngresando al sistema como: " + rol, "¡Bienvenido a WinniePOO!", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
+			// --- EVALUAMOS EL ROL PARA ABRIR LA VENTANA CORRESPONDIENTE ---
+			if (rol == "Farmacéutico") {
+				ViewFarmaceutico::Farmaceutico^ formFarma = gcnew ViewFarmaceutico::Farmaceutico();
+				formFarma->Show();
+			}
+			else if (rol == "Operador de Ventas") { // Ojo: Debe ser idéntico a tu ComboBox
+				WinniePOOview::OperadorVentas^ formVentas = gcnew WinniePOOview::OperadorVentas();
+				formVentas->Show();
+			}
+			/**else if (rol == "Paciente") {
+				// Asegúrate de que el nombre de la clase sea el correcto (Paciente o PacienteView)
+				WinniePOOview::PacienteForm^ formPaciente = gcnew WinniePOOview::PacienteForm();
+				formPaciente->Show();
+			} **/
+
+			// Ocultamos el login sin importar qué ventana se abrió
 			this->Hide();
 		}
 		else {
