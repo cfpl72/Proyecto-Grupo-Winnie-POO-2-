@@ -1,6 +1,14 @@
-﻿#pragma once
-#include "RegisterForm.h"
+﻿//    1. btnIngresar_Click:
+//       - Operador de Ventas: DNI=12345678 / pass=operador  
+//       - Farmacéutico      : DNI=87654321 / pass=farmaceutico 
+//       - Paciente          : validado por ServicioAutenticacion
+//    2. Cada form hijo recibe "this" como loginRef para poder volver
+//    3. Se pasa el ID del paciente al PacienteForm
+//    4. El constructor vacío de OperadorVentas/Farmaceutico se reemplaza
+//       por uno que acepta Form^ loginRef
 
+#pragma once
+#include "RegisterForm.h"
 #include "OperadorVentas.h"
 #include "FarmaceuticoView.h"
 #include "PacienteView.h"
@@ -14,12 +22,7 @@ namespace WinniePOOview {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace WinniePOO_Modelos;
-
-	//using namespace ViewFarmaceutico;
-	//using namespace ViewPaciente;
-
 	using namespace Controller;
-
 
 	public ref class LoginForm : public System::Windows::Forms::Form
 	{
@@ -46,7 +49,6 @@ namespace WinniePOOview {
 	private: System::Windows::Forms::TextBox^ txtUsuario;
 	private: System::Windows::Forms::Label^ lblPassword;
 	private: System::Windows::Forms::TextBox^ txtPassword;
-
 	private: System::Windows::Forms::Button^ btnIngresar;
 	private: System::Windows::Forms::LinkLabel^ lnkCrearCuenta;
 	private: System::ComponentModel::Container^ components;
@@ -92,13 +94,11 @@ namespace WinniePOOview {
 			   this->lblBienvenida->TabIndex = 1;
 			   this->lblBienvenida->Text = L"¡Bienvenidos a Winnie POO!\r\nTu oso farmacéutico favorito ✨";
 			   this->lblBienvenida->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			   this->lblBienvenida->Click += gcnew System::EventHandler(this, &LoginForm::lblBienvenida_Click);
 			   // 
 			   // lblRol
 			   // 
 			   this->lblRol->AutoSize = true;
 			   this->lblRol->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-
 				   static_cast<System::Byte>(0)));
 			   this->lblRol->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(32)), static_cast<System::Int32>(static_cast<System::Byte>(166)),
 				   static_cast<System::Int32>(static_cast<System::Byte>(160)));
@@ -107,7 +107,6 @@ namespace WinniePOOview {
 			   this->lblRol->Name = L"lblRol";
 			   this->lblRol->Size = System::Drawing::Size(151, 23);
 			   this->lblRol->TabIndex = 2;
-
 			   this->lblRol->Text = L"Seleccione su Rol:";
 			   // 
 			   // cmbRol
@@ -169,12 +168,8 @@ namespace WinniePOOview {
 			   // 
 			   // btnIngresar
 			   // 
-			   this->btnIngresar->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(32)), static_cast<System::Int32>(static_cast<System::Byte>(166)),
-				   static_cast<System::Int32>(static_cast<System::Byte>(160)));
-			   this->btnIngresar->FlatAppearance->BorderSize = 0;
-			   this->btnIngresar->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			   this->btnIngresar->Font = (gcnew System::Drawing::Font(L"Segoe UI", 11, System::Drawing::FontStyle::Bold));
-
+			   this->btnIngresar->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(32)),
+				   static_cast<System::Int32>(static_cast<System::Byte>(166)), static_cast<System::Int32>(static_cast<System::Byte>(160)));
 			   this->btnIngresar->ForeColor = System::Drawing::Color::White;
 			   this->btnIngresar->Location = System::Drawing::Point(67, 535);
 			   this->btnIngresar->Margin = System::Windows::Forms::Padding(4);
@@ -200,7 +195,6 @@ namespace WinniePOOview {
 			   this->lnkCrearCuenta->TabStop = true;
 			   this->lnkCrearCuenta->Text = L"Crear cuenta nueva";
 			   this->lnkCrearCuenta->Click += gcnew System::EventHandler(this, &LoginForm::lnkCrearCuenta_Click);
-
 			   // 
 			   // LoginForm
 			   // 
@@ -229,118 +223,95 @@ namespace WinniePOOview {
 			   (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBoxOso))->EndInit();
 			   this->ResumeLayout(false);
 			   this->PerformLayout();
-
 		   }
 #pragma endregion
 
+		   // ─────────────────────────────────────────────────────────
+		   //  LÓGICA DE INGRESO 
+		   // ─────────────────────────────────────────────────────────
 	private: System::Void btnIngresar_Click(System::Object^ sender, System::EventArgs^ e) {
 
-		/**
 		if (cmbRol->SelectedItem == nullptr) {
-			MessageBox::Show("¡WinniePOO necesita saber tu rol para dejarte entrar!", "Falta información", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			MessageBox::Show(L"¡WinniePOO necesita saber tu rol para dejarte entrar!",
+				L"Falta información", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			return;
 		}
 
 		String^ rol = cmbRol->SelectedItem->ToString();
-		String^ usuario = txtUsuario->Text;
-		String^ password = txtPassword->Text;
+		String^ usuario = txtUsuario->Text->Trim();
+		String^ password = txtPassword->Text->Trim();
 
 		if (usuario == "" || password == "") {
-			MessageBox::Show("Por favor, ingresa tu DNI y contraseña.", "Campos vacíos", MessageBoxButtons::OK, MessageBoxIcon::Warning);
-			return;
-
-		}
-
-		// --- NUEVA LÓGICA DE CONEXIÓN ---
-		// 1. Creamos una "instancia" del servicio que acabamos de hacer
-		Controller::ServicioAutenticacion^ authService = gcnew Controller::ServicioAutenticacion();
-		Controller::ServicioPacientes^ pacientesService = gcnew Controller::ServicioPacientes();
-
-
-		// 2. Le preguntamos al controlador si las credenciales son válidas
-		bool accesoConcedido = authService->ValidarAcceso(rol, usuario, password);
-
-		if (rol == "Farmacéutico") {   // ajusta según tu condición actual
-			ViewFarmaceutico::Farmaceutico^ form = gcnew ViewFarmaceutico::Farmaceutico();
-			form->Show();
-			this->Hide();   // oculta el login, o usa this->Close() si prefieres cerrarlo
-		}
-
-
-		// 3. Reaccionamos a la respuesta
-		if (accesoConcedido) {
-			MessageBox::Show("¡Hola " + usuario + "!\nIngresando al sistema como: " + rol, "¡Bienvenido a WinniePOO!", MessageBoxButtons::OK, MessageBoxIcon::Information);
-			Paciente^ paciente = pacientesService->ObtenerPorId(Convert::ToInt32(usuario));
-			ViewPaciente::PacienteForm^ form = gcnew ViewPaciente::PacienteForm(paciente->id); //INVOCACIÓN DEL FORMS DE PACIENTES
-			form->Show();
-			this->Hide();
-		}
-		else {
-			MessageBox::Show("DNI o contraseña incorrectos, o el usuario no existe.", "Credenciales incorrectas", MessageBoxButtons::OK, MessageBoxIcon::Error);
-		} **/
-
-
-		if (cmbRol->SelectedItem == nullptr) {
-			MessageBox::Show("¡WinniePOO necesita saber tu rol para dejarte entrar!", "Falta información", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			MessageBox::Show(L"Por favor, ingresa tu DNI y contraseña.",
+				L"Campos vacíos", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			return;
 		}
 
-		String^ rol = cmbRol->SelectedItem->ToString();
-		String^ usuario = txtUsuario->Text;
-		String^ password = txtPassword->Text;
-
-		if (usuario == "" || password == "") {
-			MessageBox::Show("Por favor, ingresa tu DNI y contraseña.", "Campos vacíos", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+		// ── Roles fijos (sin archivo) ───────────────────────
+		if (rol == "Operador de Ventas") {
+			if (usuario == "12345678" && password == "operador") {
+				this->Hide();
+				WinniePOOview::OperadorVentas^ formOV = gcnew WinniePOOview::OperadorVentas(this);
+				formOV->Show();
+			}
+			else {
+				MessageBox::Show(L"Credenciales incorrectas para Operador de Ventas.",
+					L"Acceso denegado", MessageBoxButtons::OK, MessageBoxIcon::Error);
+			}
 			return;
 		}
 
-		// --- NUEVA LÓGICA DE CONEXIÓN ---
-		// 1. Creamos una "instancia" del servicio que acabamos de hacer
-		Controller::ServicioAutenticacion^ authService = gcnew Controller::ServicioAutenticacion();
-
-		// 2. Le preguntamos al controlador si las credenciales son válidas
-		bool accesoConcedido = authService->ValidarAcceso(rol, usuario, password);
-
-		// 3. Reaccionamos a la respuesta
-		if (accesoConcedido) {
-			MessageBox::Show("¡Hola " + usuario + "!\nIngresando al sistema como: " + rol, "¡Bienvenido a WinniePOO!", MessageBoxButtons::OK, MessageBoxIcon::Information);
-
-			// --- EVALUAMOS EL ROL PARA ABRIR LA VENTANA CORRESPONDIENTE ---
-			if (rol == "Farmacéutico") {
-				ViewFarmaceutico::Farmaceutico^ formFarma = gcnew ViewFarmaceutico::Farmaceutico();
+		if (rol == "Farmacéutico") {
+			if (usuario == "87654321" && password == "farmaceutico") {
+				this->Hide();
+				ViewFarmaceutico::Farmaceutico^ formFarma =
+					gcnew ViewFarmaceutico::Farmaceutico(this);
 				formFarma->Show();
 			}
-			else if (rol == "Operador de Ventas") { // Ojo: Debe ser idéntico a tu ComboBox
-				WinniePOOview::OperadorVentas^ formVentas = gcnew WinniePOOview::OperadorVentas();
-				formVentas->Show();
+			else {
+				MessageBox::Show(L"Credenciales incorrectas para Farmacéutico.",
+					L"Acceso denegado", MessageBoxButtons::OK, MessageBoxIcon::Error);
 			}
-			/**else if (rol == "Paciente") {
-				// Asegúrate de que el nombre de la clase sea el correcto (Paciente o PacienteView)
-				WinniePOOview::PacienteForm^ formPaciente = gcnew WinniePOOview::PacienteForm();
-				formPaciente->Show();
-			} **/
-
-			// Ocultamos el login sin importar qué ventana se abrió
-			this->Hide();
+			return;
 		}
-		else {
-			MessageBox::Show("DNI o contraseña incorrectos, o el usuario no existe.", "Credenciales incorrectas", MessageBoxButtons::OK, MessageBoxIcon::Error);
+
+		// ── Paciente: validar contra Pacientes.txt ──────────
+		if (rol == "Paciente") {
+			Controller::ServicioAutenticacion^ authSvc =
+				gcnew Controller::ServicioAutenticacion();
+			bool ok = authSvc->ValidarAcceso(rol, usuario, password);
+
+			if (ok) {
+				Controller::ServicioPacientes^ pacSvc =
+					gcnew Controller::ServicioPacientes();
+				int dni = Convert::ToInt32(usuario);
+				Paciente^ p = pacSvc->ObtenerPorId(dni);
+
+				if (p != nullptr) {
+					this->Hide();
+					ViewPaciente::PacienteForm^ formPac =
+						gcnew ViewPaciente::PacienteForm(p->id, this);
+					formPac->Show();
+				}
+				else {
+					MessageBox::Show(L"Paciente no encontrado en el sistema.",
+						L"Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				}
+			}
+			else {
+				MessageBox::Show(L"DNI o contraseña incorrectos.",
+					L"Acceso denegado", MessageBoxButtons::OK, MessageBoxIcon::Error);
+			}
+			return;
 		}
 	}
-
 
 	private: System::Void lnkCrearCuenta_Click(System::Object^ sender, System::EventArgs^ e) {
 		RegisterForm^ ventanaRegistro = gcnew RegisterForm();
 		ventanaRegistro->ShowDialog();
 	}
 
-	private: System::Void lblBienvenida_Click(System::Object^ sender, System::EventArgs^ e) {
-	}
-
 	private: System::Void LoginForm_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
-
-	
-
 	};
 }
