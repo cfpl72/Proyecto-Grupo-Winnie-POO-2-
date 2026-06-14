@@ -1,1 +1,5 @@
-1|Aspirina|dolor|2|2
+1|Aspirina|Acido Acetilsalicilico|2|180
+2|Panadol|Paracetamol|2|150
+3|Amoxil|Amoxicilina|8,5|50
+4|Ibuprofeno|Ibuprofeno 400mg|3,2|120
+5|Loratadina|Loratadina 10mg|3,5|8

@@ -1,4 +1,5 @@
 #pragma once
+
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace WinniePOO_Modelos;
@@ -17,7 +18,9 @@ namespace Controller {
     public:
         ServicioPacientes() {
             repo = gcnew PersistanceManager();
-            filePath = "Pacientes.txt";
+            // Ruta dinámica para pacientes
+            String^ rutaBase = System::AppDomain::CurrentDomain->BaseDirectory;
+            filePath = rutaBase + "Pacientes.txt";
         }
 
         Dictionary<int, Paciente^>^ LeerTodos();
@@ -46,13 +49,15 @@ namespace Controller {
     public ref class ServicioFarmaceutico {
     public:
         static void AlertarPaciente(String^ nombre, String^ mensaje) {
-            String^ archivo = "alertas_" + nombre->Replace(" ", "_") + ".txt";
+            String^ rutaBase = System::AppDomain::CurrentDomain->BaseDirectory;
+            String^ archivo = rutaBase + "alertas_" + nombre->Replace(" ", "_") + ".txt";
             System::IO::File::AppendAllText(archivo,
                 "[" + DateTime::Now.ToString("dd/MM/yyyy HH:mm") + "] " + mensaje + "\n");
         }
 
         static String^ LeerAlertas(String^ nombre) {
-            String^ archivo = "alertas_" + nombre->Replace(" ", "_") + ".txt";
+            String^ rutaBase = System::AppDomain::CurrentDomain->BaseDirectory;
+            String^ archivo = rutaBase + "alertas_" + nombre->Replace(" ", "_") + ".txt";
             if (!System::IO::File::Exists(archivo)) return nullptr;
             return System::IO::File::ReadAllText(archivo);
         }
@@ -69,7 +74,9 @@ namespace Controller {
     public:
         ServicioMedicamentos() {
             repo = gcnew PersistanceManager();
-            filePath = "Medicamentos.txt";
+            // Ruta dinámica para medicamentos
+            String^ rutaBase = System::AppDomain::CurrentDomain->BaseDirectory;
+            filePath = rutaBase + "MedicamentosPersistance.txt";
         }
 
         bool RegistrarMedicamento(int id, String^ nombre, String^ principioActivo, double precio, int stock);
@@ -92,7 +99,9 @@ namespace Controller {
     public:
         ServicioVentas() {
             repo = gcnew PersistanceManager();
-            filePath = "Ventas.txt";
+            // Ruta dinámica para ventas
+            String^ rutaBase = System::AppDomain::CurrentDomain->BaseDirectory;
+            filePath = rutaBase + "Ventas.txt";
         }
 
         bool RegistrarVenta(int idVenta, int idPaciente, int idMedicamento, int cantidad);
@@ -121,4 +130,4 @@ namespace Controller {
         bool ValidarAcceso(String^ rol, String^ usuarioDNI, String^ password);
     };
 
-} // FIN DEL NAMESPACE CONTROLLER
+}

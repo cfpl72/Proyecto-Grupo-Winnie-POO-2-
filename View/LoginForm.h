@@ -168,15 +168,17 @@ namespace WinniePOOview {
 			   // 
 			   // btnIngresar
 			   // 
-			   this->btnIngresar->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(32)),
-				   static_cast<System::Int32>(static_cast<System::Byte>(166)), static_cast<System::Int32>(static_cast<System::Byte>(160)));
+			   this->btnIngresar->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(32)), static_cast<System::Int32>(static_cast<System::Byte>(166)),
+				   static_cast<System::Int32>(static_cast<System::Byte>(160)));
+			   this->btnIngresar->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10.2F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				   static_cast<System::Byte>(0)));
 			   this->btnIngresar->ForeColor = System::Drawing::Color::White;
 			   this->btnIngresar->Location = System::Drawing::Point(67, 535);
 			   this->btnIngresar->Margin = System::Windows::Forms::Padding(4);
 			   this->btnIngresar->Name = L"btnIngresar";
 			   this->btnIngresar->Size = System::Drawing::Size(398, 51);
 			   this->btnIngresar->TabIndex = 9;
-			   this->btnIngresar->Text = L"Ingresar";
+			   this->btnIngresar->Text = L"INGRESAR";
 			   this->btnIngresar->UseVisualStyleBackColor = false;
 			   this->btnIngresar->Click += gcnew System::EventHandler(this, &LoginForm::btnIngresar_Click);
 			   // 
@@ -223,6 +225,7 @@ namespace WinniePOOview {
 			   (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBoxOso))->EndInit();
 			   this->ResumeLayout(false);
 			   this->PerformLayout();
+
 		   }
 #pragma endregion
 
@@ -312,6 +315,8 @@ namespace WinniePOOview {
 	}
 
 	private: System::Void LoginForm_Load(System::Object^ sender, System::EventArgs^ e) {
+		this->AcceptButton = this->btnIngresar; // Cambia 'btnIngresar' por el nombre real de tu botón
+		
 	}
 	};
 }

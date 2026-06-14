@@ -53,7 +53,7 @@ namespace ViewPaciente {
 	private: System::Windows::Forms::Label^ label1;
 
 		   // ── Botones nuevos (en panelSuperior) ─────────────────
-	private: System::Windows::Forms::Button^ btnVolver;
+
 	private: System::Windows::Forms::Button^ btnCerrarSesion;
 
 	private: System::Windows::Forms::Panel^ panelDashboard;
@@ -78,7 +78,6 @@ namespace ViewPaciente {
 			   this->label1 = (gcnew System::Windows::Forms::Label());
 			   this->lblBienvenida = (gcnew System::Windows::Forms::Label());
 			   this->lblTituloPpal = (gcnew System::Windows::Forms::Label());
-			   this->btnVolver = (gcnew System::Windows::Forms::Button());
 			   this->btnCerrarSesion = (gcnew System::Windows::Forms::Button());
 			   this->panelDashboard = (gcnew System::Windows::Forms::Panel());
 			   this->btnComprar = (gcnew System::Windows::Forms::Button());
@@ -94,37 +93,39 @@ namespace ViewPaciente {
 			   this->panelDashboard->SuspendLayout();
 			   (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvMedicamentos))->BeginInit();
 			   this->SuspendLayout();
-
-			   // ── panelSuperior (original) ─────────────────────
+			   // 
+			   // panelSuperior
+			   // 
 			   this->panelSuperior->BackColor = System::Drawing::Color::CadetBlue;
 			   this->panelSuperior->Controls->Add(this->label1);
 			   this->panelSuperior->Controls->Add(this->lblBienvenida);
 			   this->panelSuperior->Controls->Add(this->lblTituloPpal);
-			   this->panelSuperior->Controls->Add(this->btnVolver);       // NUEVO
-			   this->panelSuperior->Controls->Add(this->btnCerrarSesion); // NUEVO
+			   this->panelSuperior->Controls->Add(this->btnCerrarSesion);
 			   this->panelSuperior->Location = System::Drawing::Point(0, 0);
 			   this->panelSuperior->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			   this->panelSuperior->Name = L"panelSuperior";
 			   this->panelSuperior->Size = System::Drawing::Size(952, 62);
 			   this->panelSuperior->TabIndex = 0;
 			   this->panelSuperior->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &PacienteForm::panelSuperior_Paint);
-
-			   // label1 (original)
+			   // 
+			   // label1
+			   // 
 			   this->label1->AutoSize = true;
 			   this->label1->BackColor = System::Drawing::Color::Transparent;
-			   this->label1->Font = (gcnew System::Drawing::Font(L"Franklin Gothic Heavy", 13.8F, System::Drawing::FontStyle::Regular,
-				   System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			   this->label1->Font = (gcnew System::Drawing::Font(L"Franklin Gothic Heavy", 13.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				   static_cast<System::Byte>(0)));
 			   this->label1->ForeColor = System::Drawing::Color::Cornsilk;
 			   this->label1->Location = System::Drawing::Point(12, 23);
 			   this->label1->Name = L"label1";
 			   this->label1->Size = System::Drawing::Size(117, 29);
 			   this->label1->TabIndex = 7;
 			   this->label1->Text = L"PACIENTE";
-
-			   // lblBienvenida (original - emoji oso)
+			   // 
+			   // lblBienvenida
+			   // 
 			   this->lblBienvenida->AutoSize = true;
-			   this->lblBienvenida->Font = (gcnew System::Drawing::Font(L"Segoe UI", 16.2F, System::Drawing::FontStyle::Bold,
-				   System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			   this->lblBienvenida->Font = (gcnew System::Drawing::Font(L"Segoe UI", 16.2F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				   static_cast<System::Byte>(0)));
 			   this->lblBienvenida->ForeColor = System::Drawing::SystemColors::Control;
 			   this->lblBienvenida->Location = System::Drawing::Point(884, 10);
 			   this->lblBienvenida->Name = L"lblBienvenida";
@@ -132,50 +133,40 @@ namespace ViewPaciente {
 			   this->lblBienvenida->TabIndex = 6;
 			   this->lblBienvenida->Text = L"🐻";
 			   this->lblBienvenida->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-
-			   // lblTituloPpal (original)
+			   // 
+			   // lblTituloPpal
+			   // 
 			   this->lblTituloPpal->AutoSize = true;
-			   this->lblTituloPpal->Font = (gcnew System::Drawing::Font(L"Arial", 7.8F, System::Drawing::FontStyle::Bold,
-				   System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			   this->lblTituloPpal->Font = (gcnew System::Drawing::Font(L"Arial", 7.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				   static_cast<System::Byte>(0)));
 			   this->lblTituloPpal->ForeColor = System::Drawing::Color::Teal;
 			   this->lblTituloPpal->Location = System::Drawing::Point(13, 10);
 			   this->lblTituloPpal->Name = L"lblTituloPpal";
 			   this->lblTituloPpal->Size = System::Drawing::Size(151, 16);
 			   this->lblTituloPpal->TabIndex = 1;
 			   this->lblTituloPpal->Text = L"Portal de Autoconsulta";
-
-			   // ── NUEVO: btnVolver ─────────────────────────────
-			   this->btnVolver->Text = L"◀ Volver";
-			   this->btnVolver->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 8, System::Drawing::FontStyle::Regular,
-				   System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			   this->btnVolver->BackColor = System::Drawing::Color::FromArgb(95, 158, 160); // CadetBlue más oscuro
-			   this->btnVolver->ForeColor = System::Drawing::Color::White;
-			   this->btnVolver->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			   this->btnVolver->FlatAppearance->BorderSize = 0;
-			   this->btnVolver->Location = System::Drawing::Point(640, 14);
-			   this->btnVolver->Size = System::Drawing::Size(100, 32);
-			   this->btnVolver->TabIndex = 8;
-			   this->btnVolver->Cursor = System::Windows::Forms::Cursors::Hand;
-			   this->btnVolver->Click += gcnew System::EventHandler(this, &PacienteForm::btnVolver_Click);
-
-			   // ── NUEVO: btnCerrarSesion ────────────────────────
-			   this->btnCerrarSesion->Text = L"Cerrar Sesión";
-			   this->btnCerrarSesion->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 8, System::Drawing::FontStyle::Regular,
-				   System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			   this->btnCerrarSesion->BackColor = System::Drawing::Color::FromArgb(160, 60, 60);
-			   this->btnCerrarSesion->ForeColor = System::Drawing::Color::White;
-			   this->btnCerrarSesion->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			   // 
+			   // btnCerrarSesion
+			   // 
+			   this->btnCerrarSesion->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(160)), static_cast<System::Int32>(static_cast<System::Byte>(60)),
+				   static_cast<System::Int32>(static_cast<System::Byte>(60)));
+			   this->btnCerrarSesion->Cursor = System::Windows::Forms::Cursors::Hand;
 			   this->btnCerrarSesion->FlatAppearance->BorderSize = 0;
+			   this->btnCerrarSesion->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			   this->btnCerrarSesion->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 8, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				   static_cast<System::Byte>(0)));
+			   this->btnCerrarSesion->ForeColor = System::Drawing::Color::White;
 			   this->btnCerrarSesion->Location = System::Drawing::Point(750, 14);
+			   this->btnCerrarSesion->Name = L"btnCerrarSesion";
 			   this->btnCerrarSesion->Size = System::Drawing::Size(120, 32);
 			   this->btnCerrarSesion->TabIndex = 9;
-			   this->btnCerrarSesion->Cursor = System::Windows::Forms::Cursors::Hand;
+			   this->btnCerrarSesion->Text = L"Cerrar Sesión";
+			   this->btnCerrarSesion->UseVisualStyleBackColor = false;
 			   this->btnCerrarSesion->Click += gcnew System::EventHandler(this, &PacienteForm::btnCerrarSesion_Click);
-
-			   // ── panelDashboard (original) ────────────────────
-			   this->panelDashboard->BackColor = System::Drawing::Color::FromArgb(
-				   static_cast<System::Int32>(static_cast<System::Byte>(245)),
-				   static_cast<System::Int32>(static_cast<System::Byte>(245)),
+			   // 
+			   // panelDashboard
+			   // 
+			   this->panelDashboard->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(245)), static_cast<System::Int32>(static_cast<System::Byte>(245)),
 				   static_cast<System::Int32>(static_cast<System::Byte>(250)));
 			   this->panelDashboard->Controls->Add(this->btnComprar);
 			   this->panelDashboard->Controls->Add(this->dgvMedicamentos);
@@ -189,12 +180,13 @@ namespace ViewPaciente {
 			   this->panelDashboard->Size = System::Drawing::Size(952, 430);
 			   this->panelDashboard->TabIndex = 2;
 			   this->panelDashboard->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &PacienteForm::panelDashboard_Paint);
-
-			   // btnComprar (original)
+			   // 
+			   // btnComprar
+			   // 
 			   this->btnComprar->BackColor = System::Drawing::Color::SeaGreen;
 			   this->btnComprar->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			   this->btnComprar->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular,
-				   System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			   this->btnComprar->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				   static_cast<System::Byte>(0)));
 			   this->btnComprar->ForeColor = System::Drawing::Color::White;
 			   this->btnComprar->Location = System::Drawing::Point(749, 230);
 			   this->btnComprar->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
@@ -204,59 +196,75 @@ namespace ViewPaciente {
 			   this->btnComprar->Text = L"Realizar Compra";
 			   this->btnComprar->UseVisualStyleBackColor = false;
 			   this->btnComprar->Click += gcnew System::EventHandler(this, &PacienteForm::btnComprar_Click);
-
-			   // dgvMedicamentos (original)
-			   dataGridViewCellStyle1->BackColor = System::Drawing::Color::FromArgb(
-				   static_cast<System::Int32>(static_cast<System::Byte>(224)),
-				   static_cast<System::Int32>(static_cast<System::Byte>(224)),
-				   static_cast<System::Int32>(static_cast<System::Byte>(224)));
+			   // 
+			   // dgvMedicamentos
+			   // 
+			   this->dgvMedicamentos->AllowUserToAddRows = false;
+			   dataGridViewCellStyle1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(224)),
+				   static_cast<System::Int32>(static_cast<System::Byte>(224)), static_cast<System::Int32>(static_cast<System::Byte>(224)));
 			   this->dgvMedicamentos->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
 			   this->dgvMedicamentos->BackgroundColor = System::Drawing::Color::White;
 			   this->dgvMedicamentos->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			   dataGridViewCellStyle2->BackColor = System::Drawing::Color::CadetBlue;
-			   dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9,
-				   System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			   dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				   static_cast<System::Byte>(0)));
 			   dataGridViewCellStyle2->ForeColor = System::Drawing::Color::White;
 			   this->dgvMedicamentos->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
 			   this->dgvMedicamentos->ColumnHeadersHeight = 30;
-			   this->dgvMedicamentos->Columns->AddRange(gcnew cli::array<System::Windows::Forms::DataGridViewColumn^>(3) {
-				   this->colNombre, this->colPrecio, this->colStock
+			   this->dgvMedicamentos->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {
+				   this->colNombre,
+					   this->colPrecio, this->colStock
 			   });
 			   this->dgvMedicamentos->Location = System::Drawing::Point(29, 175);
 			   this->dgvMedicamentos->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			   this->dgvMedicamentos->Name = L"dgvMedicamentos";
 			   this->dgvMedicamentos->ReadOnly = true;
+			   this->dgvMedicamentos->RowHeadersWidth = 51;
 			   this->dgvMedicamentos->SelectionMode = System::Windows::Forms::DataGridViewSelectionMode::FullRowSelect;
 			   this->dgvMedicamentos->Size = System::Drawing::Size(700, 220);
 			   this->dgvMedicamentos->TabIndex = 4;
-			   this->dgvMedicamentos->AllowUserToAddRows = false;
-
-			   // columnas (original)
+			   // 
+			   // colNombre
+			   // 
 			   this->colNombre->HeaderText = L"Medicamento";
+			   this->colNombre->MinimumWidth = 6;
 			   this->colNombre->Name = L"colNombre";
+			   this->colNombre->ReadOnly = true;
 			   this->colNombre->Width = 300;
+			   // 
+			   // colPrecio
+			   // 
 			   this->colPrecio->HeaderText = L"Precio (S/.)";
+			   this->colPrecio->MinimumWidth = 6;
 			   this->colPrecio->Name = L"colPrecio";
+			   this->colPrecio->ReadOnly = true;
 			   this->colPrecio->Width = 150;
+			   // 
+			   // colStock
+			   // 
 			   this->colStock->HeaderText = L"Stock Disponible";
+			   this->colStock->MinimumWidth = 6;
 			   this->colStock->Name = L"colStock";
+			   this->colStock->ReadOnly = true;
 			   this->colStock->Width = 180;
-
-			   // lblRecomendaciones (original)
+			   // 
+			   // lblRecomendaciones
+			   // 
 			   this->lblRecomendaciones->AutoSize = true;
-			   this->lblRecomendaciones->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 10.2F,
-				   System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			   this->lblRecomendaciones->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 10.2F, System::Drawing::FontStyle::Regular,
+				   System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
 			   this->lblRecomendaciones->Location = System::Drawing::Point(29, 150);
 			   this->lblRecomendaciones->Name = L"lblRecomendaciones";
 			   this->lblRecomendaciones->Size = System::Drawing::Size(266, 20);
 			   this->lblRecomendaciones->TabIndex = 3;
 			   this->lblRecomendaciones->Text = L"Medicamentos Recomendados:";
-
-			   // btnEvaluar (original)
+			   // 
+			   // btnEvaluar
+			   // 
 			   this->btnEvaluar->BackColor = System::Drawing::Color::CadetBlue;
 			   this->btnEvaluar->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			   this->btnEvaluar->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9,
-				   System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			   this->btnEvaluar->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				   static_cast<System::Byte>(0)));
 			   this->btnEvaluar->ForeColor = System::Drawing::Color::White;
 			   this->btnEvaluar->Location = System::Drawing::Point(749, 60);
 			   this->btnEvaluar->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
@@ -266,26 +274,29 @@ namespace ViewPaciente {
 			   this->btnEvaluar->Text = L"Evaluar Malestar";
 			   this->btnEvaluar->UseVisualStyleBackColor = false;
 			   this->btnEvaluar->Click += gcnew System::EventHandler(this, &PacienteForm::btnEvaluar_Click);
-
-			   // txtSintomas (original)
+			   // 
+			   // txtSintomas
+			   // 
 			   this->txtSintomas->Location = System::Drawing::Point(35, 60);
 			   this->txtSintomas->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			   this->txtSintomas->Multiline = true;
 			   this->txtSintomas->Name = L"txtSintomas";
 			   this->txtSintomas->Size = System::Drawing::Size(700, 61);
 			   this->txtSintomas->TabIndex = 1;
-
-			   // lblSintomas (original)
+			   // 
+			   // lblSintomas
+			   // 
 			   this->lblSintomas->AutoSize = true;
-			   this->lblSintomas->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 10.2F,
-				   System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			   this->lblSintomas->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 10.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				   static_cast<System::Byte>(0)));
 			   this->lblSintomas->Location = System::Drawing::Point(29, 30);
 			   this->lblSintomas->Name = L"lblSintomas";
 			   this->lblSintomas->Size = System::Drawing::Size(347, 20);
 			   this->lblSintomas->TabIndex = 0;
 			   this->lblSintomas->Text = L"Describa sus sintomas y malestares aqui:";
-
-			   // ── PacienteForm ──────────────────────────────────
+			   // 
+			   // PacienteForm
+			   // 
 			   this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			   this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			   this->ClientSize = System::Drawing::Size(952, 489);
@@ -294,15 +305,15 @@ namespace ViewPaciente {
 			   this->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			   this->Name = L"PacienteForm";
 			   this->Text = L"Sistema de Dispensacion - Paciente";
-			   this->Load += gcnew System::EventHandler(this, &PacienteForm::PacienteForm_Load);
 			   this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &PacienteForm::PacienteForm_FormClosing);
-
+			   this->Load += gcnew System::EventHandler(this, &PacienteForm::PacienteForm_Load);
 			   this->panelSuperior->ResumeLayout(false);
 			   this->panelSuperior->PerformLayout();
 			   this->panelDashboard->ResumeLayout(false);
 			   this->panelDashboard->PerformLayout();
 			   (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvMedicamentos))->EndInit();
 			   this->ResumeLayout(false);
+
 		   }
 #pragma endregion
 
@@ -437,10 +448,7 @@ namespace ViewPaciente {
 		   // ─────────────────────────────────────────────────────────
 		   //  NAVEGACIÓN
 		   // ─────────────────────────────────────────────────────────
-	private: System::Void btnVolver_Click(System::Object^ sender, System::EventArgs^ e) {
-		if (loginRef != nullptr) loginRef->Show();
-		this->Close();
-	}
+	
 
 	private: System::Void btnCerrarSesion_Click(System::Object^ sender, System::EventArgs^ e) {
 		auto r = MessageBox::Show(L"¿Desea cerrar sesión?", L"Cerrar Sesión",

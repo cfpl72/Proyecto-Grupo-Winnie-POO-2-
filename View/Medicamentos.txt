@@ -1,5 +1,0 @@
-101|Aspirina|Acido Acetilsalicilico|1,5|200
-102|Panadol|Paracetamol|2|150
-103|Amoxil|Amoxicilina|8,5|50
-104|Ibuprofeno|Ibuprofeno 400mg|3,2|120
-105|Loratadina|Loratadina 10mg|3,5|100
