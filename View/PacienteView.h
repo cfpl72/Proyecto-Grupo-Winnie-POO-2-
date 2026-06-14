@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "PacienteView.h"
+#include "PacienteViewHistorial.h"
 
 namespace ViewPaciente {
 
@@ -22,6 +23,10 @@ namespace ViewPaciente {
 
 		Controller::ServicioPacientes^ servPacientes = gcnew Controller::ServicioPacientes();
 		Controller::ServicioMedicamentos^ servMedicamentos = gcnew Controller::ServicioMedicamentos();
+	private: System::Windows::Forms::Button^ VerHistorialBtn;
+	public:
+
+	public:
 		Controller::ServicioVentas^ servVentas = gcnew Controller::ServicioVentas();
 
 		// Constructor que recibe el nombre
@@ -87,14 +92,15 @@ namespace ViewPaciente {
 			this->panelDashboard = (gcnew System::Windows::Forms::Panel());
 			this->btnComprar = (gcnew System::Windows::Forms::Button());
 			this->dgvMedicamentos = (gcnew System::Windows::Forms::DataGridView());
-			this->lblRecomendaciones = (gcnew System::Windows::Forms::Label());
-			this->btnEvaluar = (gcnew System::Windows::Forms::Button());
-			this->txtSintomas = (gcnew System::Windows::Forms::TextBox());
-			this->lblSintomas = (gcnew System::Windows::Forms::Label());
 			this->ID = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->colNombre = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->colPrecio = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->colStock = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->lblRecomendaciones = (gcnew System::Windows::Forms::Label());
+			this->btnEvaluar = (gcnew System::Windows::Forms::Button());
+			this->txtSintomas = (gcnew System::Windows::Forms::TextBox());
+			this->lblSintomas = (gcnew System::Windows::Forms::Label());
+			this->VerHistorialBtn = (gcnew System::Windows::Forms::Button());
 			this->panelSuperior->SuspendLayout();
 			this->panelDashboard->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvMedicamentos))->BeginInit();
@@ -157,6 +163,7 @@ namespace ViewPaciente {
 			// 
 			this->panelDashboard->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(245)), static_cast<System::Int32>(static_cast<System::Byte>(245)),
 				static_cast<System::Int32>(static_cast<System::Byte>(250)));
+			this->panelDashboard->Controls->Add(this->VerHistorialBtn);
 			this->panelDashboard->Controls->Add(this->btnComprar);
 			this->panelDashboard->Controls->Add(this->dgvMedicamentos);
 			this->panelDashboard->Controls->Add(this->lblRecomendaciones);
@@ -224,6 +231,34 @@ namespace ViewPaciente {
 			this->dgvMedicamentos->TabIndex = 4;
 			this->dgvMedicamentos->CellContentClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &PacienteForm::dgvMedicamentos_CellContentClick);
 			// 
+			// ID
+			// 
+			this->ID->HeaderText = L"ID";
+			this->ID->MinimumWidth = 6;
+			this->ID->Name = L"ID";
+			this->ID->Width = 125;
+			// 
+			// colNombre
+			// 
+			this->colNombre->HeaderText = L"Medicamento";
+			this->colNombre->MinimumWidth = 6;
+			this->colNombre->Name = L"colNombre";
+			this->colNombre->Width = 200;
+			// 
+			// colPrecio
+			// 
+			this->colPrecio->HeaderText = L"Precio (S/.)";
+			this->colPrecio->MinimumWidth = 6;
+			this->colPrecio->Name = L"colPrecio";
+			this->colPrecio->Width = 150;
+			// 
+			// colStock
+			// 
+			this->colStock->HeaderText = L"Dosis";
+			this->colStock->MinimumWidth = 6;
+			this->colStock->Name = L"colStock";
+			this->colStock->Width = 180;
+			// 
 			// lblRecomendaciones
 			// 
 			this->lblRecomendaciones->AutoSize = true;
@@ -271,33 +306,15 @@ namespace ViewPaciente {
 			this->lblSintomas->TabIndex = 0;
 			this->lblSintomas->Text = L"Describa sus sintomas y malestares aqui:";
 			// 
-			// ID
+			// VerHistorialBtn
 			// 
-			this->ID->HeaderText = L"ID";
-			this->ID->MinimumWidth = 6;
-			this->ID->Name = L"ID";
-			this->ID->Width = 125;
-			// 
-			// colNombre
-			// 
-			this->colNombre->HeaderText = L"Medicamento";
-			this->colNombre->MinimumWidth = 6;
-			this->colNombre->Name = L"colNombre";
-			this->colNombre->Width = 200;
-			// 
-			// colPrecio
-			// 
-			this->colPrecio->HeaderText = L"Precio (S/.)";
-			this->colPrecio->MinimumWidth = 6;
-			this->colPrecio->Name = L"colPrecio";
-			this->colPrecio->Width = 150;
-			// 
-			// colStock
-			// 
-			this->colStock->HeaderText = L"Dosis";
-			this->colStock->MinimumWidth = 6;
-			this->colStock->Name = L"colStock";
-			this->colStock->Width = 180;
+			this->VerHistorialBtn->Location = System::Drawing::Point(35, 357);
+			this->VerHistorialBtn->Name = L"VerHistorialBtn";
+			this->VerHistorialBtn->Size = System::Drawing::Size(160, 30);
+			this->VerHistorialBtn->TabIndex = 6;
+			this->VerHistorialBtn->Text = L"Ver Historial";
+			this->VerHistorialBtn->UseVisualStyleBackColor = true;
+			this->VerHistorialBtn->Click += gcnew System::EventHandler(this, &PacienteForm::button1_Click);
 			// 
 			// PacienteForm
 			// 
@@ -588,25 +605,29 @@ private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e)
 }
 private: System::Void panelDashboard_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 }
- private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
+private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
 
-		   // ... tu código existente de carga ...
-	 Controller::ServicioPacientes^ servPacientes = gcnew ServicioPacientes();
+	Controller::ServicioPacientes^ servPacientes1 = gcnew Controller::ServicioPacientes();
 
-		   // ── Verificar alertas pendientes del farmacéutico ─────────────────────
-		   String^ alertas = Controller::ServicioFarmaceutico::LeerAlertas(servPacientes->ObtenerPorId(idPaciente)->nombre);
+	String^ alertas = Controller::ServicioFarmaceutico::LeerAlertas(servPacientes1->ObtenerPorId(idPaciente)->nombre);
 
-		   if (alertas != nullptr && alertas->Trim() != String::Empty) {
-			   MessageBox::Show(
-				   "Tienes mensajes de tu farmacéutico:\n\n" + alertas,
-				   "Alerta del Farmacéutico",
-				   MessageBoxButtons::OK,
-				   MessageBoxIcon::Information
-			   );
-			   // Borrar alertas tras mostrarlas (opcional)
-		   }
-	   }
+	if (alertas != nullptr && alertas->Trim() != String::Empty) {
+		MessageBox::Show(
+			"Tienes mensajes de tu farmacéutico:\n\n" + alertas,
+			"Alerta del Farmacéutico",
+			MessageBoxButtons::OK,
+			MessageBoxIcon::Information
+		);
+	}
+}
 private: System::Void dgvMedicamentos_CellContentClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
+}
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	WinniePOOview::PacienteViewHistorial^ form = gcnew WinniePOOview::PacienteViewHistorial(idPaciente);
+	form->Show();
+
+	this->Close();
 }
 };
 }

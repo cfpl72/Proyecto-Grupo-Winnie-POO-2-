@@ -1,4 +1,4 @@
-1|Paracetamol 500mg|Acetaminofén|2|150
+1|Paracetamol 500mg|Acetaminofén|2|149
 2|Ibuprofeno 400mg|Ibuprofeno|2|80
 3|Amoxicilina 500mg|Amoxicilina|3.5|60
 4|Ácido Fólico|Ácido fólico|1.2|50
