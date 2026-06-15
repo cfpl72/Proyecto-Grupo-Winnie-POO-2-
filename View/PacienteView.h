@@ -12,8 +12,8 @@ namespace ViewPaciente {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace IA_CLASS;
-	using namespace Controller;
-	using namespace WinniePOO_Modelos;
+	using namespace Controller1;
+	using namespace WinniePOO_Modelos1;
 
 	public ref class PacienteForm : public System::Windows::Forms::Form
 	{
@@ -21,8 +21,8 @@ namespace ViewPaciente {
 
 	public:
 
-		Controller::ServicioPacientes^ servPacientes = gcnew Controller::ServicioPacientes();
-		Controller::ServicioMedicamentos^ servMedicamentos = gcnew Controller::ServicioMedicamentos();
+		ServicioPacientes^ servPacientes = gcnew ServicioPacientes();
+		ServicioMedicamentos^ servMedicamentos = gcnew ServicioMedicamentos();
 	private: System::Windows::Forms::Button^ VerHistorialBtn;
 	public:
 
@@ -561,9 +561,9 @@ namespace ViewPaciente {
 			servPacientes->RegistrarReceta(
 				idPaciente,
 				idReceta,
+				idMedicamento,
 				dosis,
 				DateTime::Now,
-				nombre,
 				true // entregado
 			);
 

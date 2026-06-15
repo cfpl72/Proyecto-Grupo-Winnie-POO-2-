@@ -9,7 +9,8 @@ namespace ViewPacienteHistorial {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-	using namespace Controller;
+	using namespace WinniePOO_Modelos1;
+	using namespace Controller1;
 
 	/// <summary>
 	/// Resumen de PacienteViewHistorial
@@ -20,7 +21,9 @@ namespace ViewPacienteHistorial {
 
 		int idPaciente;
 		ServicioPacientes^ servPacientes;
-		List<WinniePOO_Modelos::Receta^>^ historialRecetas;
+		ServicioMedicamentos^ servMedicamentos;
+		List<Receta^>^ historialRecetas;
+		Dictionary<int, Medicamento^>^ dicMedicamentos;
 
 		PacienteViewHistorial(int idBus)
 		{
@@ -28,23 +31,24 @@ namespace ViewPacienteHistorial {
 			
 			this->idPaciente = idBus;
 			this->servPacientes = gcnew ServicioPacientes();
+			this->servMedicamentos = gcnew ServicioMedicamentos();
 
 			this->historialRecetas = servPacientes->ObtenerHistorial(idPaciente);
+			this->dicMedicamentos = servMedicamentos->ObtenerDiccionarioCompleto();
 
 			CargarHistorial(historialRecetas);
 		}
 	
 //Función para cargar el historial
-	public: void CargarHistorial(List<WinniePOO_Modelos::Receta^>^ historialRecetas)
+	public: void CargarHistorial(List<WinniePOO_Modelos1::Receta^>^ historialRecetas)
 	{
 		dataGridView2->Rows->Clear();
 
-		for each (WinniePOO_Modelos::Receta ^ receta in historialRecetas)
+		for each (WinniePOO_Modelos1::Receta ^ receta in historialRecetas)
 		{
-			String^ nombreMedicamento = receta->medicamento->nombre;
+			String^ nombreMedicamento = dicMedicamentos[receta->idMedicamento]->nombre;
 			int cantidad = receta->dosis;
-			//String^ fecha = receta->fecha.ToString("dd/MM/yyyy"); Este para cuando actualice a SQL y a Controller1
-			String^ fecha = "01/01/26";
+			String^ fecha = receta->fechaEmision.ToString("dd/MM/yyyy");
 
 			dataGridView2->Rows->Add(
 				nombreMedicamento,

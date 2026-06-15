@@ -1,7 +1,7 @@
 #pragma once
 //#include "../Controller/Controller.h"
 
-namespace WinniePOOview {
+namespace ViewRegister {
 
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -9,7 +9,7 @@ namespace WinniePOOview {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-	using namespace Controller;
+	using namespace Controller1;
 
 	public ref class RegisterForm : public System::Windows::Forms::Form
 	{
@@ -281,7 +281,7 @@ namespace WinniePOOview {
 			int edad = Convert::ToInt32(txtEdad->Text);
 
 			// Preparamos el servicio
-			Controller::ServicioPacientes^ pacientesService = gcnew Controller::ServicioPacientes();
+			ServicioPacientes^ pacientesService = gcnew ServicioPacientes();
 
 			// Intentamos registrar. Mandamos "" (vacío) a alergias y síntomas
 			bool exito = pacientesService->RegistrarPaciente(dni, txtPassword->Text, txtNombres->Text, txtApellidos->Text, edad, "", "");

@@ -4,7 +4,7 @@
 #include "PacienteView.h"
 #include "OperadorVentas.h"
 
-namespace WinniePOOview {
+namespace WinniePOOviews {
 
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -12,8 +12,9 @@ namespace WinniePOOview {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-	using namespace WinniePOO_Modelos;
-	using namespace Controller;
+	using namespace WinniePOO_Modelos1;
+	using namespace Controller1;
+	using namespace ViewRegister;
 
 
 	public ref class LoginForm : public System::Windows::Forms::Form
@@ -65,14 +66,19 @@ namespace WinniePOOview {
 			   // 
 			   // pictureBoxOso
 			   // 
-			   this->pictureBoxOso->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBoxOso.Image")));
-			   this->pictureBoxOso->Location = System::Drawing::Point(205, 24);
-			   this->pictureBoxOso->Margin = System::Windows::Forms::Padding(4);
-			   this->pictureBoxOso->Name = L"pictureBoxOso";
-			   this->pictureBoxOso->Size = System::Drawing::Size(138, 135);
-			   this->pictureBoxOso->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
-			   this->pictureBoxOso->TabIndex = 0;
-			   this->pictureBoxOso->TabStop = false;
+			   try {
+				   this->pictureBoxOso->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBoxOso.Image")));
+				   this->pictureBoxOso->Location = System::Drawing::Point(205, 24);
+				   this->pictureBoxOso->Margin = System::Windows::Forms::Padding(4);
+				   this->pictureBoxOso->Name = L"pictureBoxOso";
+				   this->pictureBoxOso->Size = System::Drawing::Size(138, 135);
+				   this->pictureBoxOso->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+				   this->pictureBoxOso->TabIndex = 0;
+				   this->pictureBoxOso->TabStop = false;
+			   }
+			   catch (Exception^ ex) {
+				   Console::WriteLine("ERROR: " + ex->Message);
+			   }
 			   // 
 			   // lblBienvenida
 			   // 
@@ -247,8 +253,8 @@ namespace WinniePOOview {
 
 		// --- NUEVA LÓGICA DE CONEXIÓN ---
 		// 1. Creamos una "instancia" del servicio que acabamos de hacer
-		Controller::ServicioAutenticacion^ authService = gcnew Controller::ServicioAutenticacion();
-		Controller::ServicioPacientes^ pacientesService = gcnew Controller::ServicioPacientes();
+		ServicioAutenticacion^ authService = gcnew ServicioAutenticacion();
+		ServicioPacientes^ pacientesService = gcnew ServicioPacientes();
 
 
 		// 2. Le preguntamos al controlador si las credenciales son válidas
