@@ -101,19 +101,9 @@ namespace Controller {
     }
 
     // ── SEED MEDICAMENTOS ────────────────────────────────────────────────────
-    // Solo inserta datos si el archivo está vacío o no existe.
-    // Llámalo en OperadorVentas_Load ANTES de ActualizarTablas().
+    // Vaciado a petición: Ya no inserta datos demo porque los TXT ya tienen información.
     void ServicioMedicamentos::SeedMedicamentosDemo() {
-        auto dic = ObtenerDiccionarioCompleto();
-        if (dic->Count > 0) return; // ya hay datos, no hacer nada
-
-        dic->Add(101, gcnew Medicamento(101, "Aspirina", "Acido Acetilsalicilico", 1.50, 200));
-        dic->Add(102, gcnew Medicamento(102, "Panadol", "Paracetamol", 2.00, 150));
-        dic->Add(103, gcnew Medicamento(103, "Amoxil", "Amoxicilina", 8.50, 50));
-        dic->Add(104, gcnew Medicamento(104, "Ibuprofeno", "Ibuprofeno 400mg", 3.20, 120));
-        dic->Add(105, gcnew Medicamento(105, "Loratadina", "Loratadina 10mg", 4.00, 80));
-
-        repo->SaveMedicamentos(filePath, dic);
+        return;
     }
 
     // =========================
@@ -136,14 +126,29 @@ namespace Controller {
         auto dic = repo->LoadVentas(filePath);
         if (dic->ContainsKey(idVenta)) return false;
 
-        Medicamento^ dummy = gcnew Medicamento(idMedicamento, "Temp", "", 0, 0);
-        // FIX: DateTime::Now es un valor (DateTime), no un puntero (DateTime^).
-        // El constructor de Venta recibe DateTime^, así que lo tomamos por dirección.
-        DateTime ahora = DateTime::Now;
-        Venta^ v = gcnew Venta(idVenta, idPaciente, cantidad, dummy, % ahora);
+        // 1. Llamamos a ServicioMedicamentos para ver el inventario real
+        ServicioMedicamentos^ servicioMed = gcnew ServicioMedicamentos();
+        auto dicMed = servicioMed->ObtenerDiccionarioCompleto();
 
+        // 2. Comprobamos que el medicamento exista
+        if (!dicMed->ContainsKey(idMedicamento)) return false;
+
+        Medicamento^ medReal = dicMed[idMedicamento];
+
+        // 3. Verificamos que haya suficiente stock (Seguridad)
+        if (medReal->stock < cantidad) return false;
+
+        // 4. Descontamos el stock y lo guardamos en su archivo de texto
+        servicioMed->ActualizarMedicamento(idMedicamento, medReal->precio, medReal->stock - cantidad);
+
+        // 5. Creamos la venta usando el medicamento REAL
+        DateTime ahora = DateTime::Now;
+        Venta^ v = gcnew Venta(idVenta, idPaciente, cantidad, medReal, % ahora);
+
+        // 6. Guardamos la venta en el archivo de ventas
         dic->Add(idVenta, v);
         repo->SaveVentas(filePath, dic);
+
         return true;
     }
 
@@ -183,26 +188,9 @@ namespace Controller {
     }
 
     // ── SEED VENTAS ──────────────────────────────────────────────────────────
-    // Solo inserta datos si el archivo está vacío o no existe.
-    // Llámalo en OperadorVentas_Load ANTES de ActualizarTablas().
+    // Vaciado a petición: Ya no inserta datos demo porque los TXT ya tienen información.
     void ServicioVentas::SeedVentasDemo() {
-        auto dic = repo->LoadVentas(filePath);
-        if (dic->Count > 0) return; // ya hay datos, no hacer nada
-
-        // Medicamentos dummy que coinciden con los IDs del seed de medicamentos
-        Medicamento^ asp = gcnew Medicamento(101, "Aspirina", "Acido Acetilsalicilico", 1.50, 200);
-        Medicamento^ pan = gcnew Medicamento(102, "Panadol", "Paracetamol", 2.00, 150);
-        Medicamento^ amox = gcnew Medicamento(103, "Amoxil", "Amoxicilina", 8.50, 50);
-
-        DateTime f1 = DateTime(2026, 5, 3, 14, 30, 0);
-        DateTime f2 = DateTime(2026, 5, 3, 15, 10, 0);
-        DateTime f3 = DateTime(2026, 5, 3, 15, 45, 0);
-
-        dic->Add(5001, gcnew Venta(5001, 11111111, 2, asp, % f1));
-        dic->Add(5002, gcnew Venta(5002, 22222222, 5, pan, % f2));
-        dic->Add(5003, gcnew Venta(5003, 33333333, 1, amox, % f3));
-
-        repo->SaveVentas(filePath, dic);
+        return;
     }
 
     // =========================
