@@ -3,9 +3,11 @@
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::IO;
-using namespace WinniePOO_Modelos;
+
 
 namespace Persistance {
+
+    using namespace WinniePOO_Modelos;
 
     public ref class PersistanceManager {
     public:
@@ -45,6 +47,57 @@ namespace Persistance {
         );
 
         List<Receta^>^ LoadHistorialRecetas(String^ filePath);
+    };
+
+}
+
+namespace Persistance1 {
+    
+    using namespace WinniePOO_Modelos1;
+
+    public ref class PersistanceManager {
+    public:
+
+        String^ GetConnectionString();
+
+        // =========================
+        // PACIENTES
+        // =========================
+        bool InsertPaciente(Paciente^ p);
+        Dictionary<int, Paciente^>^ GetAllPacientes();
+        Paciente^ GetPacienteById(int id);
+        bool UpdatePaciente(Paciente^ p);
+        bool DeletePaciente(int id);
+
+        // =========================
+        // MEDICAMENTOS
+        // =========================
+        bool InsertMedicamento(Medicamento^ m);
+        Dictionary<int, Medicamento^>^ GetAllMedicamentos();
+        Medicamento^ GetMedicamentoById(int id);
+        bool UpdateMedicamento(int id, double precio, int stock);
+        bool DeleteMedicamento(int id);
+
+        // =========================
+        // VENTAS
+        // =========================
+        bool InsertVenta(Venta^ v);
+        Dictionary<int, Venta^>^ GetAllVentas();
+        Venta^ GetVentaById(int id);
+        bool DeleteVenta(int id);
+
+        // =========================
+        // HISTORIAL RECETAS
+        // =========================
+        bool InsertReceta(int idReceta, int idPaciente, int idMedicamento, int dosis, DateTime fecha, bool entregado);
+
+        List<Receta^>^ GetAllRecetas();
+
+        Receta^ GetRecetaById(int idReceta);
+
+        bool MarcarRecetaComoEntregada(int idReceta);
+
+        bool DeleteReceta(int idReceta);
     };
 
 }

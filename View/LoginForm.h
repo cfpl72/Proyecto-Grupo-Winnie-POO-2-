@@ -1,8 +1,5 @@
 ﻿#pragma once
 #include "RegisterForm.h"
-//#include "../Controller/Controller.h"
-//#include "OperadorVentas.h"
-
 #include "FarmaceuticoView.h"
 #include "PacienteView.h"
 #include "OperadorVentas.h"
@@ -15,10 +12,7 @@ namespace WinniePOOview {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-
-	//using namespace ViewFarmaceutico;
-	//using namespace ViewPaciente;
-
+	using namespace WinniePOO_Modelos;
 	using namespace Controller;
 
 
@@ -254,6 +248,7 @@ namespace WinniePOOview {
 		// --- NUEVA LÓGICA DE CONEXIÓN ---
 		// 1. Creamos una "instancia" del servicio que acabamos de hacer
 		Controller::ServicioAutenticacion^ authService = gcnew Controller::ServicioAutenticacion();
+		Controller::ServicioPacientes^ pacientesService = gcnew Controller::ServicioPacientes();
 
 
 		// 2. Le preguntamos al controlador si las credenciales son válidas
@@ -261,20 +256,25 @@ namespace WinniePOOview {
 
 		if (rol == "Farmacéutico") {   // ajusta según tu condición actual
 			ViewFarmaceutico::Farmaceutico^ form = gcnew ViewFarmaceutico::Farmaceutico();
+			form->Owner = this;
 			form->Show();
 			this->Hide();   // oculta el login, o usa this->Close() si prefieres cerrarlo
-		}
-		else if (rol == "Operador de Ventas") {
-			OperadorVentas^ form = gcnew OperadorVentas();
+		}  
+
+		if (rol == "Operador de Ventas") {   // ajusta según tu condición actual
+			WinniePOOview::OperadorVentas^ form = gcnew WinniePOOview::OperadorVentas();
+			form->Owner = this;
 			form->Show();
-			this->Hide();
+			this->Hide();   // oculta el login, o usa this->Close() si prefieres cerrarlo
 		}
 
 
 		// 3. Reaccionamos a la respuesta
-		if (accesoConcedido) {
+		if (accesoConcedido && rol == "Paciente") {
 			MessageBox::Show("¡Hola " + usuario + "!\nIngresando al sistema como: " + rol, "¡Bienvenido a WinniePOO!", MessageBoxButtons::OK, MessageBoxIcon::Information);
-			ViewPaciente::PacienteForm^ form = gcnew ViewPaciente::PacienteForm(Convert::ToInt32(usuario)); //INVOCACIÓN DEL FORMS DE PACIENTES
+			Paciente^ paciente = pacientesService->ObtenerPorId(Convert::ToInt32(usuario));
+			ViewPaciente::PacienteForm^ form = gcnew ViewPaciente::PacienteForm(paciente->id); //INVOCACIÓN DEL FORMS DE PACIENTES
+			form->Owner = this;
 			form->Show();
 			this->Hide();
 		}

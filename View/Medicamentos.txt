@@ -1,20 +1,20 @@
-101|Aspirina|Ácido Acetilsalicílico|1.50|200
-102|Paracetamol|Paracetamol|2.00|150
-103|Ibuprofeno|Ibuprofeno|2.80|120
-104|Amoxicilina|Amoxicilina|8.50|50
-105|Azitromicina|Azitromicina|12.00|30
-106|Loratadina|Loratadina|3.20|90
-107|Omeprazol|Omeprazol|4.50|80
-108|Salbutamol|Salbutamol|6.00|40
-109|Metformina|Metformina|5.00|70
-110|Enalapril|Enalapril|3.80|60
-111|Losartán|Losartán|4.20|65
-112|Diclofenaco|Diclofenaco|2.50|110
-113|Naproxeno|Naproxeno|3.00|95
-114|Clorfenamina|Clorfenamina|1.80|130
-115|Dexametasona|Dexametasona|7.00|45
-116|Insulina|Insulina Humana|25.00|20
-117|Vitamina C|Ácido Ascórbico|1.20|300
-118|Calcio D|Carbonato de Calcio + Vitamina D|4.00|75
-119|Ranitidina|Ranitidina|3.50|55
-120|Tramadol|Tramadol|9.00|35
+1|Paracetamol 500mg|Acetaminofén|2|149
+2|Ibuprofeno 400mg|Ibuprofeno|2|80
+3|Amoxicilina 500mg|Amoxicilina|3.5|60
+4|Ácido Fólico|Ácido fólico|1.2|50
+5|Loratadina 10mg|Loratadina|2.3|68
+6|Omeprazol 20mg|Omeprazol|2.8|65
+7|Metformina 850mg|Metformina|3|40
+8|Losartán 50mg|Losartán|2.9|55
+9|Salbutamol Inhalador|Salbutamol|15|25
+10|Jarabe Antitusivo|Dextrometorfano|12|30
+11|Diclofenaco 50mg|Diclofenaco|2.2|75
+12|Aspirina 100mg|Ácido acetilsalicílico|1|90
+13|Azitromicina 500mg|Azitromicina|5.5|35
+14|Clorfenamina 4mg|Clorfenamina|1.8|60
+15|Naproxeno 500mg|Naproxeno|2.7|50
+16|Ranitidina 150mg|Ranitidina|2.4|45
+17|Vitamina C 1g|Ácido ascórbico|1.6|85
+18|Prednisona 20mg|Prednisona|4|30
+19|Insulina Rápida|Insulina|25|20
+20|Enalapril 10mg|Enalapril|2.1|55

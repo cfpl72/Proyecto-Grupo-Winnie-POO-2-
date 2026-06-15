@@ -1,72 +1,122 @@
 #pragma once
 #using <System.dll>
 #using <System.Net.Http.dll>
-// Asegúrate de haber agregado la referencia a Newtonsoft.Json.dll como hicimos antes
+#using <System.IO.dll>
 
+// Asegúrate de haber agregado la referencia a Newtonsoft.Json.dll como hicimos antes
 using namespace System;
 using namespace System::Net::Http;
 using namespace System::Text;
 using namespace Newtonsoft::Json::Linq;
+using namespace System::IO;
 
 namespace IA_CLASS {
 
-    // IA.h
     public ref class IA {
     private:
-		String^ apiKey = "apikey"; //Reemplaza con tu clave real
-        String^ apiUrl = "https://api.openai.com/v1/responses";
+        String^ apiKey;
+        String^ apiUrl = "https://api.openai.com/v1/chat/completions";
 
     public:
+
+        // Constructor de la clase que lee el apiKey de forma dinámica desde un archivo local
+        IA() {
+            try {
+                // Busca el archivo en la misma carpeta donde se ejecuta el programa (x64\Debug)
+                String^ rutaBase = System::AppDomain::CurrentDomain->BaseDirectory;
+                String^ ruta = rutaBase + "apiKey.txt";
+
+                if (File::Exists(ruta)) {
+                    apiKey = File::ReadAllText(ruta)->Trim();
+                }
+                else {
+                    throw gcnew Exception("No se encontró el archivo apiKey.txt en: " + ruta);
+                }
+            }
+            catch (Exception^ ex) {
+                apiKey = "";
+                Console::WriteLine("Error al leer API Key: " + ex->Message);
+            }
+        }
+
         // Ahora recibe la lista de medicamentos del sistema
         String^ GenerarRecomendacion(String^ sintomas, String^ historial, String^ listaMedicamentosStock) {
             try {
+                Console::WriteLine("=== INICIO GenerarRecomendacion ===");
+
                 HttpClient^ cliente = gcnew HttpClient();
                 cliente->DefaultRequestHeaders->Add("Authorization", "Bearer " + apiKey);
+                Console::WriteLine("HttpClient creado y header agregado");
 
-                // PROMPT DINÁMICO: Aquí es donde ocurre la magia
+                // Construcción del prompt
                 String^ prompt = "Eres un sistema de farmacia robótica inteligente. " +
                     "SOLO puedes recomendar medicamentos que estén en esta lista: [" + listaMedicamentosStock + "]. " +
                     "Si ningún medicamento de la lista sirve para los síntomas, di que no hay stock disponible. " +
                     "Paciente presenta: " + sintomas + ". Historial: " + historial + ". " +
-                    "Responde de forma breve y profesional.";
 
-                // Construcción del JSON
-                String^ cuerpoJson = "{\"model\": \"gpt-4.1\", \"input\": \"" + prompt + "\"}";
+                    "Responde EXACTAMENTE en este formato:" +
+
+                    "[INICIO_RECOMENDACION]" +
+                    "Texto de recomendación médica profesional" +
+                    "[FIN_RECOMENDACION]" +
+
+                    "[INICIO_RECETA]" +
+                    "id|nombre|principioActivo|dosis (número entero)" +
+                    "(Al final de cada receta añade un [SEPARADOR]" +
+                    "[FIN_RECETA]" +
+
+                    "No agregues nada fuera de estas etiquetas.";
+
+                Console::WriteLine("✔ Prompt construido:");
+                Console::WriteLine(prompt);
+
+                // JSON
+                String^ cuerpoJson = "{\"model\": \"gpt-4o-mini\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
+                Console::WriteLine("JSON enviado:");
+                Console::WriteLine(cuerpoJson);
+
                 StringContent^ contenido = gcnew StringContent(cuerpoJson, Encoding::UTF8, "application/json");
 
+                Console::WriteLine("Enviando request...");
                 auto tarea = cliente->PostAsync(apiUrl, contenido);
                 tarea->Wait();
 
-                String^ respuestaRaw = tarea->Result->Content->ReadAsStringAsync()->Result;
+                Console::WriteLine("Request completado");
+
+                auto response = tarea->Result;
+
+                Console::WriteLine("Status code: " + response->StatusCode.ToString());
+
+                String^ respuestaRaw = response->Content->ReadAsStringAsync()->Result;
 
                 Console::WriteLine("Respuesta RAW:");
                 Console::WriteLine(respuestaRaw);
 
-
                 JObject^ datos = JObject::Parse(respuestaRaw);
-                if (datos["output"] != nullptr &&
-                    datos["output"]->HasValues &&
-                    datos["output"][0]["content"] != nullptr &&
-                    datos["output"][0]["content"]->HasValues &&
-                    datos["output"][0]["content"][0]["text"] != nullptr)
-                {
-                    return datos["output"][0]["content"][0]["text"]->ToString();
+                Console::WriteLine("JSON parseado correctamente");
+
+                // Extraemos la información directamente usando una ruta de texto (Path)
+                JToken^ tokenContenido = datos->SelectToken("choices[0].message.content");
+
+                if (!Object::ReferenceEquals(tokenContenido, nullptr)) {
+                    String^ resultado = tokenContenido->ToString();
+
+                    Console::WriteLine("Contenido extraído:");
+                    Console::WriteLine(resultado);
+
+                    return resultado;
                 }
-                else if (datos["error"] != nullptr)
-                {
-                    return "Error API: " + datos["error"]["message"]->ToString();
-                }
-                else
-                {
-                    return "Respuesta inesperada: " + datos->ToString();
+                else {
+                    Console::WriteLine("❌ No se encontró el contenido esperado en la respuesta");
+                    return "Error en respuesta: estructura inesperada o " + respuestaRaw;
                 }
             }
             catch (Exception^ ex) {
+                Console::WriteLine("EXCEPCIÓN:");
+                Console::WriteLine(ex->Message);
                 return "Error: " + ex->Message;
             }
         }
     };
 
-}
-
-
+} // FIN DEL NAMESPACE IA_CLASS

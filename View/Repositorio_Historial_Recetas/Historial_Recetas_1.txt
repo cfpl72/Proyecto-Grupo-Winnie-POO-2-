@@ -25,4 +25,6 @@
 26|Atorvastatina 20mg|1|02/06/2026|0
 27|Metformina 850mg|2|05/06/2026|1
 28|Losartan 50mg|1|08/06/2026|1
-30|Paracetamol 500mg|1|12/06/2026|1
+30|Paracetamol 500mg|1|12/06/2026|11001|Paracetamol|500|08/06/2026|1
+1001|Paracetamol|500|08/06/2026|1
+1001|Paracetamol|500|08/06/2026|1

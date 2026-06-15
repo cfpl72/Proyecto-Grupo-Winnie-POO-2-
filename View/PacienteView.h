@@ -1,16 +1,19 @@
 ﻿#pragma once
 #include "PacienteView.h"
+#include "PacienteViewHistorial.h"
 
 namespace ViewPaciente {
 
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
+	using namespace System::Collections::Generic;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-	using namespace System::Collections::Generic;
 	using namespace IA_CLASS;
+	using namespace Controller;
+	using namespace WinniePOO_Modelos;
 
 	public ref class PacienteForm : public System::Windows::Forms::Form
 	{
@@ -22,11 +25,20 @@ namespace ViewPaciente {
 		   IA_CLASS::IA^ ia = gcnew IA();
 
 	public:
+
+		Controller::ServicioPacientes^ servPacientes = gcnew Controller::ServicioPacientes();
+		Controller::ServicioMedicamentos^ servMedicamentos = gcnew Controller::ServicioMedicamentos();
+	private: System::Windows::Forms::Button^ VerHistorialBtn;
+	public:
+
+	public:
+		Controller::ServicioVentas^ servVentas = gcnew Controller::ServicioVentas();
+
 		// Constructor que recibe el nombre
-		PacienteForm(int idBus)
+		PacienteForm(int ID)
 		{
 			InitializeComponent();
-			idPaciente = idBus;
+			idPaciente = ID;
 		}
 
 	protected:
@@ -41,6 +53,7 @@ namespace ViewPaciente {
 		// CONTROLES - Panel Superior
 	private: System::Windows::Forms::Panel^ panelSuperior;
 	private: System::Windows::Forms::Label^ lblTituloPpal;
+	private: System::Windows::Forms::Button^ btnVolver;
 
 
 		   // CONTROLES - Panel Principal Paciente (HU02, HU03, HU04)
@@ -50,13 +63,25 @@ namespace ViewPaciente {
 	private: System::Windows::Forms::Button^ btnEvaluar;
 	private: System::Windows::Forms::Label^ lblRecomendaciones;
 	private: System::Windows::Forms::DataGridView^ dgvMedicamentos;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ colNombre;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ colPrecio;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ colStock;
+
+
+
 	private: System::Windows::Forms::Button^ btnComprar;
 
 	private: System::Windows::Forms::Label^ lblBienvenida;
 	private: System::Windows::Forms::Label^ label1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ ID;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ colNombre;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ colPrecio;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ colStock;
+
+
+
+
+
+
+
+
 
 	private:
 		System::ComponentModel::Container^ components;
@@ -71,8 +96,10 @@ namespace ViewPaciente {
 			this->lblBienvenida = (gcnew System::Windows::Forms::Label());
 			this->lblTituloPpal = (gcnew System::Windows::Forms::Label());
 			this->panelDashboard = (gcnew System::Windows::Forms::Panel());
+			this->VerHistorialBtn = (gcnew System::Windows::Forms::Button());
 			this->btnComprar = (gcnew System::Windows::Forms::Button());
 			this->dgvMedicamentos = (gcnew System::Windows::Forms::DataGridView());
+			this->ID = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->colNombre = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->colPrecio = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->colStock = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
@@ -80,6 +107,7 @@ namespace ViewPaciente {
 			this->btnEvaluar = (gcnew System::Windows::Forms::Button());
 			this->txtSintomas = (gcnew System::Windows::Forms::TextBox());
 			this->lblSintomas = (gcnew System::Windows::Forms::Label());
+			this->btnVolver = (gcnew System::Windows::Forms::Button());
 			this->panelSuperior->SuspendLayout();
 			this->panelDashboard->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvMedicamentos))->BeginInit();
@@ -102,12 +130,12 @@ namespace ViewPaciente {
 			// 
 			this->label1->AutoSize = true;
 			this->label1->BackColor = System::Drawing::Color::Transparent;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Franklin Gothic Heavy", 13.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 13.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->label1->ForeColor = System::Drawing::Color::Cornsilk;
 			this->label1->Location = System::Drawing::Point(12, 23);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(117, 29);
+			this->label1->Size = System::Drawing::Size(133, 29);
 			this->label1->TabIndex = 7;
 			this->label1->Text = L"PACIENTE";
 			this->label1->Click += gcnew System::EventHandler(this, &PacienteForm::label1_Click);
@@ -143,12 +171,14 @@ namespace ViewPaciente {
 			// 
 			this->panelDashboard->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(245)), static_cast<System::Int32>(static_cast<System::Byte>(245)),
 				static_cast<System::Int32>(static_cast<System::Byte>(250)));
+			this->panelDashboard->Controls->Add(this->VerHistorialBtn);
 			this->panelDashboard->Controls->Add(this->btnComprar);
 			this->panelDashboard->Controls->Add(this->dgvMedicamentos);
 			this->panelDashboard->Controls->Add(this->lblRecomendaciones);
 			this->panelDashboard->Controls->Add(this->btnEvaluar);
 			this->panelDashboard->Controls->Add(this->txtSintomas);
 			this->panelDashboard->Controls->Add(this->lblSintomas);
+			this->panelDashboard->Controls->Add(this->btnVolver);
 			this->panelDashboard->Location = System::Drawing::Point(0, 62);
 			this->panelDashboard->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->panelDashboard->Name = L"panelDashboard";
@@ -156,11 +186,21 @@ namespace ViewPaciente {
 			this->panelDashboard->TabIndex = 2;
 			this->panelDashboard->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &PacienteForm::panelDashboard_Paint);
 			// 
+			// VerHistorialBtn
+			// 
+			this->VerHistorialBtn->Location = System::Drawing::Point(35, 357);
+			this->VerHistorialBtn->Name = L"VerHistorialBtn";
+			this->VerHistorialBtn->Size = System::Drawing::Size(160, 30);
+			this->VerHistorialBtn->TabIndex = 6;
+			this->VerHistorialBtn->Text = L"Ver Historial";
+			this->VerHistorialBtn->UseVisualStyleBackColor = true;
+			this->VerHistorialBtn->Click += gcnew System::EventHandler(this, &PacienteForm::button1_Click);
+			// 
 			// btnComprar
 			// 
 			this->btnComprar->BackColor = System::Drawing::Color::SeaGreen;
 			this->btnComprar->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->btnComprar->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->btnComprar->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->btnComprar->ForeColor = System::Drawing::Color::White;
 			this->btnComprar->Location = System::Drawing::Point(749, 230);
@@ -179,21 +219,21 @@ namespace ViewPaciente {
 			this->dgvMedicamentos->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
 			dataGridViewCellStyle1->BackColor = System::Drawing::Color::Gainsboro;
-			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			dataGridViewCellStyle1->ForeColor = System::Drawing::Color::DimGray;
 			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::Color::DimGray;
 			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::Color::DimGray;
 			this->dgvMedicamentos->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			this->dgvMedicamentos->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dgvMedicamentos->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {
-				this->colNombre,
+			this->dgvMedicamentos->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {
+				this->ID, this->colNombre,
 					this->colPrecio, this->colStock
 			});
 			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
 			dataGridViewCellStyle2->BackColor = System::Drawing::Color::White;
-			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 7.8F, System::Drawing::FontStyle::Regular,
-				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
 			dataGridViewCellStyle2->ForeColor = System::Drawing::Color::Gray;
 			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::Color::CadetBlue;
 			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::Color::White;
@@ -208,13 +248,21 @@ namespace ViewPaciente {
 			this->dgvMedicamentos->SelectionMode = System::Windows::Forms::DataGridViewSelectionMode::FullRowSelect;
 			this->dgvMedicamentos->Size = System::Drawing::Size(700, 150);
 			this->dgvMedicamentos->TabIndex = 4;
+			this->dgvMedicamentos->CellContentClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &PacienteForm::dgvMedicamentos_CellContentClick);
+			// 
+			// ID
+			// 
+			this->ID->HeaderText = L"ID";
+			this->ID->MinimumWidth = 6;
+			this->ID->Name = L"ID";
+			this->ID->Width = 125;
 			// 
 			// colNombre
 			// 
 			this->colNombre->HeaderText = L"Medicamento";
 			this->colNombre->MinimumWidth = 6;
 			this->colNombre->Name = L"colNombre";
-			this->colNombre->Width = 350;
+			this->colNombre->Width = 200;
 			// 
 			// colPrecio
 			// 
@@ -225,7 +273,7 @@ namespace ViewPaciente {
 			// 
 			// colStock
 			// 
-			this->colStock->HeaderText = L"Stock Disponible";
+			this->colStock->HeaderText = L"Dosis";
 			this->colStock->MinimumWidth = 6;
 			this->colStock->Name = L"colStock";
 			this->colStock->Width = 180;
@@ -233,11 +281,11 @@ namespace ViewPaciente {
 			// lblRecomendaciones
 			// 
 			this->lblRecomendaciones->AutoSize = true;
-			this->lblRecomendaciones->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 10.2F, System::Drawing::FontStyle::Regular,
+			this->lblRecomendaciones->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10.2F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
 			this->lblRecomendaciones->Location = System::Drawing::Point(29, 150);
 			this->lblRecomendaciones->Name = L"lblRecomendaciones";
-			this->lblRecomendaciones->Size = System::Drawing::Size(266, 20);
+			this->lblRecomendaciones->Size = System::Drawing::Size(244, 20);
 			this->lblRecomendaciones->TabIndex = 3;
 			this->lblRecomendaciones->Text = L"Medicamentos Recomendados:";
 			// 
@@ -245,7 +293,7 @@ namespace ViewPaciente {
 			// 
 			this->btnEvaluar->BackColor = System::Drawing::Color::CadetBlue;
 			this->btnEvaluar->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->btnEvaluar->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->btnEvaluar->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->btnEvaluar->ForeColor = System::Drawing::Color::White;
 			this->btnEvaluar->Location = System::Drawing::Point(749, 60);
@@ -270,13 +318,26 @@ namespace ViewPaciente {
 			// lblSintomas
 			// 
 			this->lblSintomas->AutoSize = true;
-			this->lblSintomas->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 10.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->lblSintomas->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->lblSintomas->Location = System::Drawing::Point(29, 30);
 			this->lblSintomas->Name = L"lblSintomas";
-			this->lblSintomas->Size = System::Drawing::Size(347, 20);
+			this->lblSintomas->Size = System::Drawing::Size(324, 20);
 			this->lblSintomas->TabIndex = 0;
 			this->lblSintomas->Text = L"Describa sus sintomas y malestares aqui:";
+			// 
+			// btnVolver
+			// 
+			this->btnVolver->BackColor = System::Drawing::Color::SeaGreen;
+			this->btnVolver->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->btnVolver->ForeColor = System::Drawing::Color::White;
+			this->btnVolver->Location = System::Drawing::Point(748, 347);
+			this->btnVolver->Name = L"btnVolver";
+			this->btnVolver->Size = System::Drawing::Size(150, 40);
+			this->btnVolver->TabIndex = 7;
+			this->btnVolver->Text = L"Volver";
+			this->btnVolver->UseVisualStyleBackColor = false;
+			this->btnVolver->Click += gcnew System::EventHandler(this, &PacienteForm::btnVolver_Click);
 			// 
 			// PacienteForm
 			// 
@@ -332,48 +393,258 @@ namespace ViewPaciente {
 			}
 		}
 
-		// =========================
-		// 3. Lista de medicamentos
-		// =========================
-
-		// (por ahora mock, luego lo sacamos del servicio)
-		String^ listaMedicamentos = "Paracetamol, Ibuprofeno, Jarabe Antitusivo";
+		Console::WriteLine("\n=== INICIO btnEvaluar_Click ===");
 
 		// =========================
-		// 4. Llamada a la IA
+		// 📜 HISTORIAL
+		// =========================
+		List<String^>^ historialPacienteLista = servPacientes->ExaminarHistorialReceta(idPaciente);
+
+		Console::WriteLine("\n--- HISTORIAL PACIENTE (LISTA) ---");
+		for each (String ^ item in historialPacienteLista) {
+			Console::WriteLine(item);
+		}
+
+		String^ historialPaciente = String::Join("|", historialPacienteLista);
+
+		Console::WriteLine("\n--- HISTORIAL STRING ---");
+		Console::WriteLine(historialPaciente);
+
+		// =========================
+		// 💊 STOCK MEDICAMENTOS
+		// =========================
+		List<Medicamento^>^ stockMedicamentosLista = servMedicamentos->ObtenerInventarioCompleto();
+
+		Console::WriteLine("\n--- STOCK MEDICAMENTOS (OBJETOS) ---");
+		for each (Medicamento ^ med in stockMedicamentosLista) {
+			Console::WriteLine("ID: " + med->id +
+				"Nombre: " + med->nombre +
+				" | Principio: " + med->principioActivo +
+				" | Precio: " + med->precio.ToString() +
+				" | Stock: " + med->stock.ToString());
+		}
+
+		List<String^>^ medicamentosTexto = gcnew List<String^>();
+
+		for each (Medicamento ^ med in stockMedicamentosLista) {
+			String^ item = "ID: " + med->id + " - " + med->nombre + " (" + med->principioActivo + ") - Precio: "
+				+ med->precio.ToString() + " - Stock: " + med->stock.ToString();
+
+			medicamentosTexto->Add(item);
+		}
+
+		String^ stockMedicamentos = String::Join("|", medicamentosTexto);
+
+		Console::WriteLine("\n--- STOCK STRING ENVIADO A IA ---");
+		Console::WriteLine(stockMedicamentos);
+
+		// =========================
+		// 🤖 IA
+		// =========================
+		IA_CLASS::IA^ iaManager = gcnew IA_CLASS::IA();
+
+		Console::WriteLine("\n➡ Enviando a IA...");
+		Console::WriteLine("Síntomas: " + txtSintomas->Text);
+
+		MessageBox::Show("Analizando síntomas...", "Evaluación en curso", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
+		String^ respuesta = iaManager->GenerarRecomendacion(
+			txtSintomas->Text,
+			historialPaciente,
+			stockMedicamentos
+		);
+
+		Console::WriteLine("\n=== RESPUESTA IA ===");
+		Console::WriteLine(respuesta);
+
+		// =========================
+		// 🔍 PARSEO
 		// =========================
 
-		String^ recomendacion = ia->GenerarRecomendacion(sintomas, historial, listaMedicamentos);
+		String^ tagInicioRec = "[INICIO_RECOMENDACION]";
+		String^ tagFinRec = "[FIN_RECOMENDACION]";
+
+		int iniRec = respuesta->IndexOf(tagInicioRec);
+		int finRec = respuesta->IndexOf(tagFinRec);
+
+		String^ recomendacion = "";
+
+		if (iniRec != -1 && finRec != -1) {
+			iniRec += tagInicioRec->Length;
+			recomendacion = respuesta->Substring(iniRec, finRec - iniRec)->Trim();
+		}
+
+		String^ tagInicioReceta = "[INICIO_RECETA]";
+		String^ tagFinReceta = "[FIN_RECETA]";
+
+		int iniReceta = respuesta->IndexOf(tagInicioReceta);
+		int finReceta = respuesta->IndexOf(tagFinReceta);
+
+		String^ receta = "";
+
+		if (iniReceta != -1 && finReceta != -1) {
+			iniReceta += tagInicioReceta->Length;
+			receta = respuesta->Substring(iniReceta, finReceta - iniReceta)->Trim();
+		}
+
+		Console::WriteLine("\n--- RECETA CRUDA ---");
+		Console::WriteLine(receta);
+
+		MessageBox::Show(recomendacion, "Recomendación médica", MessageBoxButtons::OK, MessageBoxIcon::Information);
 
 		// =========================
-		// 5. Mostrar recomendación
-		// =========================
-
-		MessageBox::Show(recomendacion,
-			"Recomendación IA", MessageBoxButtons::OK, MessageBoxIcon::Information);
-
-		// =========================
-		// 6. Tabla (se mantiene igual)
+		// 📊 DATAGRID (NUEVO PARSEO)
 		// =========================
 
 		dgvMedicamentos->Rows->Clear();
 
-		dgvMedicamentos->Rows->Add("Paracetamol 500mg", "1.50", "50");
-		dgvMedicamentos->Rows->Add("Ibuprofeno 400mg", "2.00", "30");
-		dgvMedicamentos->Rows->Add("Jarabe Antitusivo", "15.00", "12");
+		if (receta != "SIN_STOCK") {
+
+			Console::WriteLine("\n--- DIVIDIENDO POR [SEPARADOR] ---");
+
+			array<String^>^ items = receta->Split(gcnew array<String^>{"[SEPARADOR]"}, StringSplitOptions::RemoveEmptyEntries);
+
+			for each (String ^ item in items) {
+
+				String^ linea = item->Trim();
+
+				if (String::IsNullOrWhiteSpace(linea)) continue;
+
+				Console::WriteLine("\nProcesando item:");
+				Console::WriteLine(linea);
+
+				array<String^>^ campos = linea->Split('|');
+
+				if (campos->Length >= 4) {
+					Console::WriteLine("✔ Parse correcto");
+
+					dgvMedicamentos->Rows->Add(
+						campos[0], // id
+						campos[1], // nombre
+						campos[2], // principio activo
+						campos[3]  // dosis
+					);
+				}
+				else {
+					Console::WriteLine("❌ Item mal formado");
+				}
+			}
+		}
+		else {
+			Console::WriteLine("⚠ SIN STOCK");
+			MessageBox::Show("No hay medicamentos disponibles en stock.", "Sin stock", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+		}
 	}
 
 
 
 		   // HU04 (Extension): Compra del medicamento
 	private: System::Void btnComprar_Click(System::Object^ sender, System::EventArgs^ e) {
+
+		Console::WriteLine("\n=== INICIO btnComprar_Click ===");
+
 		if (dgvMedicamentos->SelectedRows->Count > 0 || dgvMedicamentos->CurrentCell != nullptr) {
-			MessageBox::Show("Compra procesada con exito!\nPor favor, retire su medicamento del dispensador.", "Operacion Exitosa", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
+			DataGridViewRow^ fila = dgvMedicamentos->CurrentRow;
+
+			// =========================
+			// 🔍 OBTENER DATOS
+			// =========================
+			int idMedicamento = Convert::ToInt32(fila->Cells[0]->Value);
+			String^ nombre = fila->Cells[1]->Value->ToString();
+			String^ principio = fila->Cells[2]->Value->ToString();
+			int dosis = Convert::ToInt32(fila->Cells[3]->Value);
+
+			Console::WriteLine("✔ Medicamento seleccionado:");
+			Console::WriteLine("ID: " + idMedicamento);
+			Console::WriteLine("Nombre: " + nombre);
+			Console::WriteLine("Principio: " + principio);
+			Console::WriteLine("Dosis: " + dosis);
+
+			// =========================
+			// 💊 ACTUALIZAR STOCK
+			// =========================
+			auto dic = servMedicamentos->ObtenerDiccionarioCompleto();
+
+			if (!dic->ContainsKey(idMedicamento)) {
+				Console::WriteLine("❌ Medicamento no encontrado en inventario");
+				return;
+			}
+
+			Medicamento^ med = dic[idMedicamento];
+
+			Console::WriteLine("Stock antes: " + med->stock);
+
+			if (med->stock <= 0) {
+				Console::WriteLine("❌ Sin stock disponible");
+				MessageBox::Show("Este medicamento ya no tiene stock.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				return;
+			}
+
+			int nuevoStock = med->stock - 1;
+
+			servMedicamentos->ActualizarMedicamento(idMedicamento, med->precio, nuevoStock);
+
+			Console::WriteLine("✔ Stock actualizado: " + nuevoStock);
+
+			// =========================
+			// 🧾 REGISTRAR RECETA
+			// =========================
+			int idReceta = (int)(DateTime::Now.Ticks % 100000); // simple ID
+
+			Console::WriteLine("Registrando receta ID: " + idReceta);
+
+			servPacientes->RegistrarReceta(
+				idPaciente,
+				idReceta,
+				dosis,
+				DateTime::Now,
+				nombre,
+				true // entregado
+			);
+
+			Console::WriteLine("✔ Receta registrada");
+
+			// =========================
+			// 💰 REGISTRAR VENTA
+			// =========================
+			int idVenta = (int)(DateTime::Now.Ticks % 100000);
+
+			Console::WriteLine("Registrando venta ID: " + idVenta);
+
+			servVentas->RegistrarVenta(
+				idVenta,
+				idPaciente,
+				idMedicamento,
+				1 // cantidad
+			);
+
+			Console::WriteLine("✔ Venta registrada");
+
+			// =========================
+			// 🖥️ UI
+			// =========================
+			MessageBox::Show(
+				"Compra procesada con éxito!\nPor favor, retire su medicamento del dispensador.",
+				"Operación Exitosa",
+				MessageBoxButtons::OK,
+				MessageBoxIcon::Information
+			);
+
 			txtSintomas->Text = "";
 			dgvMedicamentos->Rows->Clear();
+
+			Console::WriteLine("=== FIN btnComprar_Click ===");
 		}
 		else {
-			MessageBox::Show("Seleccione un medicamento de la tabla para realizar la compra.", "Aviso", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			Console::WriteLine("No hay selección en el DataGrid");
+
+			MessageBox::Show(
+				"Seleccione un medicamento de la tabla para realizar la compra.",
+				"Aviso",
+				MessageBoxButtons::OK,
+				MessageBoxIcon::Warning
+			);
 		}
 	}
 	private: System::Void lblUsuarioActivo_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -388,29 +659,33 @@ private: System::Void panelDashboard_Paint(System::Object^ sender, System::Windo
 }
 private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
 
-	// Obtener nombre del paciente desde el ID que YA tienes
-	WinniePOO_Modelos::Paciente^ p = pacienteService->ObtenerPorId(idPaciente);
-	if (p == nullptr) return;
+	Controller::ServicioPacientes^ servPacientes1 = gcnew Controller::ServicioPacientes();
 
-	String^ nombrePaciente = p->nombre + " " + p->apellido;
+	String^ alertas = Controller::ServicioFarmaceutico::LeerAlertas(servPacientes1->ObtenerPorId(idPaciente)->nombre);
 
-	// Leer alertas desde el controller correcto
-	String^ alertas = Controller::ServicioFarmaceutico::LeerAlertas(nombrePaciente);
-
-	// Mostrar popup
-	if (!String::IsNullOrWhiteSpace(alertas)) {
-
+	if (alertas != nullptr && alertas->Trim() != String::Empty) {
 		MessageBox::Show(
-			"Tienes mensajes del farmacéutico:\n\n" + alertas,
+			"Tienes mensajes de tu farmacéutico:\n\n" + alertas,
 			"Alerta del Farmacéutico",
 			MessageBoxButtons::OK,
 			MessageBoxIcon::Information
 		);
 	}
 }
-private: System::Void txtSintomas_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+private: System::Void dgvMedicamentos_CellContentClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
 }
-private: System::Void panelSuperior_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	ViewPacienteHistorial::PacienteViewHistorial^ form = gcnew ViewPacienteHistorial::PacienteViewHistorial(idPaciente);
+	form->Owner = this;  
+	form->Show();
+	this->Hide();        
 }
+
+private: System::Void btnVolver_Click(System::Object^ sender, System::EventArgs^ e) {
+	this->Owner->Show();
+	this->Close();
+}
+
 };
 }

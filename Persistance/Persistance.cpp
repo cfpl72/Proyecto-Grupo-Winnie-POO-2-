@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "Persistance.h"
 
+using namespace System::Data;
+using namespace System::Data::SqlClient;
+
 namespace Persistance {
 
     // =========================
@@ -200,8 +203,10 @@ namespace Persistance {
                     Convert::ToInt32(campos[0]),
                     Convert::ToInt32(campos[1]),
                     Convert::ToInt32(campos[3]),
-                    dummy,
-                    DateTime::Now   // no estás persistiendo fecha aún
+                    1,
+                    1.5,
+                    "A",
+                    DateTime::Now// no estás persistiendo fecha aún
                 );
 
                 if (!dic->ContainsKey(v->id))
@@ -342,5 +347,626 @@ namespace Persistance {
         }
 
         return lista;
+    }
+}
+
+namespace Persistance1 {
+
+    // =========================
+    // 🔌 CONNECTION STRING
+    // =========================
+    String^ PersistanceManager::GetConnectionString() {
+        return "Server=idb1inf53.clzlex5tfzm6.us-east-1.rds.amazonaws.com;Database=FarmaciaDB;User Id=admin;Password=Ch2DXr8sbtJxrGV;";
+    }
+
+    // =========================
+    // Pacientes
+    // =========================
+
+    bool PersistanceManager::InsertPaciente(Paciente^ p) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            String^ query = "INSERT INTO Pacientes (id, verificationToken, nombre, apellido, edad, alergias, sintomas) "
+                "VALUES (@id, @token, @nombre, @apellido, @edad, @alergias, @sintomas)";
+
+            SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+
+            cmd->Parameters->AddWithValue("@id", p->id);
+            cmd->Parameters->AddWithValue("@token", p->verificationToken);
+            cmd->Parameters->AddWithValue("@nombre", p->nombre);
+            cmd->Parameters->AddWithValue("@apellido", p->apellido);
+            cmd->Parameters->AddWithValue("@edad", p->edad);
+            cmd->Parameters->AddWithValue("@alergias", p->alergias);
+            cmd->Parameters->AddWithValue("@sintomas", p->sintomas);
+
+            cmd->ExecuteNonQuery();
+
+            Console::WriteLine("✔ INSERT Paciente ID: " + p->id);
+            return true;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ INSERT ERROR: " + ex->Message);
+            return false;
+        }
+        finally {
+            conn->Close();
+        }
+    }
+
+    Dictionary<int, Paciente^>^ PersistanceManager::GetAllPacientes() {
+
+        auto dic = gcnew Dictionary<int, Paciente^>();
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            SqlCommand^ cmd = gcnew SqlCommand("SELECT * FROM Pacientes", conn);
+            SqlDataReader^ r = cmd->ExecuteReader();
+
+            while (r->Read()) {
+
+                Paciente^ p = gcnew Paciente(
+                    r->GetInt32(0),
+                    r->GetString(1)
+                );
+
+                p->nombre = r->GetString(2);
+                p->apellido = r->GetString(3);
+                p->edad = r->GetInt32(4);
+                p->alergias = r->GetString(5);
+                p->sintomas = r->GetString(6);
+
+                dic[p->id] = p;
+            }
+
+            r->Close();
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ GET ALL ERROR: " + ex->Message);
+        }
+        finally {
+            conn->Close();
+        }
+
+        return dic;
+    }
+
+    Paciente^ PersistanceManager::GetPacienteById(int id) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            SqlCommand^ cmd = gcnew SqlCommand("SELECT * FROM Pacientes WHERE id=@id", conn);
+            cmd->Parameters->AddWithValue("@id", id);
+
+            SqlDataReader^ r = cmd->ExecuteReader();
+
+            if (r->Read()) {
+
+                Paciente^ p = gcnew Paciente(
+                    r->GetInt32(0),
+                    r->GetString(1)
+                );
+
+                p->nombre = r->GetString(2);
+                p->apellido = r->GetString(3);
+                p->edad = r->GetInt32(4);
+                p->alergias = r->GetString(5);
+                p->sintomas = r->GetString(6);
+
+                r->Close();
+                return p;
+            }
+
+            r->Close();
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ GET BY ID ERROR: " + ex->Message);
+        }
+        finally {
+            conn->Close();
+        }
+
+        return nullptr;
+    }
+
+    bool PersistanceManager::UpdatePaciente(Paciente^ p) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            String^ query = "UPDATE Pacientes SET "
+                "verificationToken=@token, nombre=@nombre, apellido=@apellido, edad=@edad, alergias=@alergias, sintomas=@sintomas "
+                "WHERE id=@id";
+
+            SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+
+            cmd->Parameters->AddWithValue("@id", p->id);
+            cmd->Parameters->AddWithValue("@token", p->verificationToken);
+            cmd->Parameters->AddWithValue("@nombre", p->nombre);
+            cmd->Parameters->AddWithValue("@apellido", p->apellido);
+            cmd->Parameters->AddWithValue("@edad", p->edad);
+            cmd->Parameters->AddWithValue("@alergias", p->alergias);
+            cmd->Parameters->AddWithValue("@sintomas", p->sintomas);
+
+            int rows = cmd->ExecuteNonQuery();
+
+            Console::WriteLine("✔ UPDATE rows: " + rows);
+            return rows > 0;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ UPDATE ERROR: " + ex->Message);
+            return false;
+        }
+        finally {
+            conn->Close();
+        }
+    }
+
+    bool PersistanceManager::DeletePaciente(int id) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            SqlCommand^ cmd = gcnew SqlCommand("DELETE FROM Pacientes WHERE id=@id", conn);
+            cmd->Parameters->AddWithValue("@id", id);
+
+            int rows = cmd->ExecuteNonQuery();
+
+            Console::WriteLine("✔ DELETE rows: " + rows);
+            return rows > 0;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ DELETE ERROR: " + ex->Message);
+            return false;
+        }
+        finally {
+            conn->Close();
+        }
+    }
+
+    // =========================
+    // MEDICAMENTOS
+    // =========================
+
+    bool PersistanceManager::InsertMedicamento(Medicamento^ m) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            String^ query = "INSERT INTO Medicamentos (id, nombre, principioActivo, precio, stock) "
+                "VALUES (@id, @nombre, @principio, @precio, @stock)";
+
+            SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+
+            cmd->Parameters->AddWithValue("@id", m->id);
+            cmd->Parameters->AddWithValue("@nombre", m->nombre);
+            cmd->Parameters->AddWithValue("@principio", m->principioActivo);
+            cmd->Parameters->AddWithValue("@precio", m->precio);
+            cmd->Parameters->AddWithValue("@stock", m->stock);
+
+            cmd->ExecuteNonQuery();
+
+            Console::WriteLine("✔ INSERT OK ID: " + m->id);
+            return true;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ INSERT ERROR: " + ex->Message);
+            return false;
+        }
+        finally {
+            conn->Close();
+        }
+    }
+
+    Dictionary<int, Medicamento^>^ PersistanceManager::GetAllMedicamentos() {
+
+        Dictionary<int, Medicamento^>^ dic = gcnew Dictionary<int, Medicamento^>();
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            SqlCommand^ cmd = gcnew SqlCommand("SELECT * FROM Medicamentos", conn);
+            SqlDataReader^ r = cmd->ExecuteReader();
+
+            while (r->Read()) {
+
+                Medicamento^ m = gcnew Medicamento(
+                    r->GetInt32(0),
+                    r->GetString(1),
+                    r->GetString(2),
+                    Convert::ToDouble(r->GetDecimal(3)),
+                    r->GetInt32(4)
+                );
+
+                dic[m->id] = m;
+            }
+
+            r->Close();
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ GET ALL ERROR: " + ex->Message);
+        }
+        finally {
+            conn->Close();
+        }
+
+        return dic;
+    }
+
+    Medicamento^ PersistanceManager::GetMedicamentoById(int id) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            SqlCommand^ cmd = gcnew SqlCommand("SELECT * FROM Medicamentos WHERE id=@id", conn);
+            cmd->Parameters->AddWithValue("@id", id);
+
+            SqlDataReader^ r = cmd->ExecuteReader();
+
+            if (r->Read()) {
+
+                Medicamento^ m = gcnew Medicamento(
+                    r->GetInt32(0),
+                    r->GetString(1),
+                    r->GetString(2),
+                    Convert::ToDouble(r->GetDecimal(3)),
+                    r->GetInt32(4)
+                );
+
+                r->Close();
+                return m;
+            }
+
+            r->Close();
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ GET BY ID ERROR: " + ex->Message);
+        }
+        finally {
+            conn->Close();
+        }
+
+        return nullptr;
+    }
+
+    bool PersistanceManager::UpdateMedicamento(int id, double precio, int stock) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            String^ query = "UPDATE Medicamentos SET precio=@precio, stock=@stock WHERE id=@id";
+
+            SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+
+            cmd->Parameters->AddWithValue("@id", id);
+            cmd->Parameters->AddWithValue("@precio", precio);
+            cmd->Parameters->AddWithValue("@stock", stock);
+
+            int rows = cmd->ExecuteNonQuery();
+
+            Console::WriteLine("✔ UPDATE rows: " + rows);
+            return rows > 0;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ UPDATE ERROR: " + ex->Message);
+            return false;
+        }
+        finally {
+            conn->Close();
+        }
+    }
+
+    bool PersistanceManager::DeleteMedicamento(int id) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            SqlCommand^ cmd = gcnew SqlCommand("DELETE FROM Medicamentos WHERE id=@id", conn);
+            cmd->Parameters->AddWithValue("@id", id);
+
+            int rows = cmd->ExecuteNonQuery();
+
+            Console::WriteLine("✔ DELETE rows: " + rows);
+            return rows > 0;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ DELETE ERROR: " + ex->Message);
+            return false;
+        }
+        finally {
+            conn->Close();
+        }
+    }
+
+    // =========================
+    // VENTAS
+    // =========================
+
+    bool PersistanceManager::InsertVenta(Venta^ v) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            String^ query = "INSERT INTO Ventas (id, idPaciente, idMedicamento, cantidadVendida, precioMedicamento, totalVenta, nombreMedicamento, fecha) "
+                "VALUES (@id, @idPaciente, @idMed, @cantidad, @precio, @total, @nombre, @fecha)";
+
+            SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+
+            cmd->Parameters->AddWithValue("@id", v->id);
+            cmd->Parameters->AddWithValue("@idPaciente", v->idPaciente);
+            cmd->Parameters->AddWithValue("@idMed", v->idMedicamento);
+            cmd->Parameters->AddWithValue("@cantidad", v->cantidadVendida);
+            cmd->Parameters->AddWithValue("@precio", v->precioMedicamento);
+            cmd->Parameters->AddWithValue("@total", v->totalVenta);
+            cmd->Parameters->AddWithValue("@nombre", v->nombreMedicamento);
+            cmd->Parameters->AddWithValue("@fecha", v->fecha);
+
+            cmd->ExecuteNonQuery();
+
+            Console::WriteLine("✔ INSERT Venta ID: " + v->id);
+            return true;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ INSERT ERROR: " + ex->Message);
+            return false;
+        }
+        finally {
+            conn->Close();
+        }
+    }
+
+    Dictionary<int, Venta^>^ PersistanceManager::GetAllVentas() {
+
+        Dictionary<int, Venta^>^ dic = gcnew Dictionary<int, Venta^>();
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            SqlCommand^ cmd = gcnew SqlCommand("SELECT * FROM Ventas", conn);
+            SqlDataReader^ r = cmd->ExecuteReader();
+
+            while (r->Read()) {
+
+                int id = r->GetInt32(0);
+                int idPaciente = r->GetInt32(1);
+                int idMedicamento = r->GetInt32(2);
+                int cantidad = r->GetInt32(3);
+                double precio = Convert::ToDouble(r->GetDecimal(4));
+                double total = Convert::ToDouble(r->GetDecimal(5));
+                String^ nombre = r->GetString(6);
+                DateTime fecha = r->GetDateTime(7);
+
+                Venta^ v = gcnew Venta(
+                    id,
+                    idPaciente,
+                    cantidad,
+                    idMedicamento,
+                    precio,
+                    nombre,
+                    fecha
+                );
+
+                dic[id] = v;
+            }
+
+            r->Close();
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ GET ALL ERROR: " + ex->Message);
+        }
+        finally {
+            conn->Close();
+        }
+
+        return dic;
+    }
+
+    Venta^ PersistanceManager::GetVentaById(int id) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            SqlCommand^ cmd = gcnew SqlCommand("SELECT * FROM Ventas WHERE id=@id", conn);
+            cmd->Parameters->AddWithValue("@id", id);
+
+            SqlDataReader^ r = cmd->ExecuteReader();
+
+            if (r->Read()) {
+
+                int idPaciente = r->GetInt32(1);
+                int idMedicamento = r->GetInt32(2);
+                int cantidad = r->GetInt32(3);
+                double precio = Convert::ToDouble(r->GetDecimal(4));
+                String^ nombre = r->GetString(6);
+                DateTime fecha = r->GetDateTime(7);
+
+                Venta^ v = gcnew Venta(
+                    id,
+                    idPaciente,
+                    cantidad,
+                    idMedicamento,
+                    precio,
+                    nombre,
+                    fecha
+                );
+
+                r->Close();
+                return v;
+            }
+
+            r->Close();
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ GET ERROR: " + ex->Message);
+        }
+        finally {
+            conn->Close();
+        }
+
+        return nullptr;
+    }
+
+    bool PersistanceManager::DeleteVenta(int id) {
+
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+
+        try {
+            conn->Open();
+
+            SqlCommand^ cmd = gcnew SqlCommand("DELETE FROM Ventas WHERE id=@id", conn);
+            cmd->Parameters->AddWithValue("@id", id);
+
+            int rows = cmd->ExecuteNonQuery();
+
+            Console::WriteLine("✔ DELETE rows: " + rows);
+            return rows > 0;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("❌ DELETE ERROR: " + ex->Message);
+            return false;
+        }
+        finally {
+            conn->Close();
+        }
+    }
+
+    // =========================
+    // HISTORIAL RECETAS
+    // =========================
+
+    bool PersistanceManager::InsertReceta(int idReceta, int idPaciente, int idMedicamento, int dosis, DateTime fecha, bool entregado) {
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+        try {
+            conn->Open();
+            String^ query = "INSERT INTO Recetas (idReceta,idPaciente,idMedicamento,dosis,fechaEmision,entregado) VALUES (@id,@idPaciente,@idMed,@dosis,@fecha,@entregado)";
+            SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+            cmd->Parameters->AddWithValue("@id", idReceta);
+            cmd->Parameters->AddWithValue("@idPaciente", idPaciente);
+            cmd->Parameters->AddWithValue("@idMed", idMedicamento);
+            cmd->Parameters->AddWithValue("@dosis", dosis);
+            cmd->Parameters->AddWithValue("@fecha", fecha);
+            cmd->Parameters->AddWithValue("@entregado", entregado);
+            cmd->ExecuteNonQuery();
+            return true;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR INSERT RECETA: " + ex->Message);
+            return false;
+        }
+        finally { conn->Close(); }
+    }
+
+    List<Receta^>^ PersistanceManager::GetAllRecetas() {
+        List<Receta^>^ lista = gcnew List<Receta^>();
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+        try {
+            conn->Open();
+            SqlCommand^ cmd = gcnew SqlCommand("SELECT * FROM Recetas", conn);
+            SqlDataReader^ r = cmd->ExecuteReader();
+            while (r->Read()) {
+                Receta^ rec = gcnew Receta();
+                rec->idReceta = r->GetInt32(0);
+                rec->idPaciente = r->GetInt32(1);
+                rec->idMedicamento = r->GetInt32(2);
+                rec->dosis = r->GetInt32(3);
+                rec->fechaEmision = r->GetDateTime(4);
+                rec->entregado = r->GetBoolean(5);
+                lista->Add(rec);
+            }
+            r->Close();
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR GET RECETAS: " + ex->Message);
+        }
+        finally { conn->Close(); }
+        return lista;
+    }
+
+    Receta^ PersistanceManager::GetRecetaById(int idReceta) {
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+        try {
+            conn->Open();
+            SqlCommand^ cmd = gcnew SqlCommand("SELECT * FROM Recetas WHERE idReceta=@id", conn);
+            cmd->Parameters->AddWithValue("@id", idReceta);
+            SqlDataReader^ r = cmd->ExecuteReader();
+            if (r->Read()) {
+                Receta^ rec = gcnew Receta();
+                rec->idReceta = r->GetInt32(0);
+                rec->idPaciente = r->GetInt32(1);
+                rec->idMedicamento = r->GetInt32(2);
+                rec->dosis = r->GetInt32(3);
+                rec->fechaEmision = r->GetDateTime(4);
+                rec->entregado = r->GetBoolean(5);
+                r->Close();
+                return rec;
+            }
+            r->Close();
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR GET RECETA: " + ex->Message);
+        }
+        finally { conn->Close(); }
+        return nullptr;
+    }
+
+    bool PersistanceManager::MarcarRecetaComoEntregada(int idReceta) {
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+        try {
+            conn->Open();
+            SqlCommand^ cmd = gcnew SqlCommand("UPDATE Recetas SET entregado=1 WHERE idReceta=@id", conn);
+            cmd->Parameters->AddWithValue("@id", idReceta);
+            int rows = cmd->ExecuteNonQuery();
+            return rows > 0;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR UPDATE RECETA: " + ex->Message);
+            return false;
+        }
+        finally { conn->Close(); }
+    }
+
+    bool PersistanceManager::DeleteReceta(int idReceta) {
+        SqlConnection^ conn = gcnew SqlConnection(GetConnectionString());
+        try {
+            conn->Open();
+            SqlCommand^ cmd = gcnew SqlCommand("DELETE FROM Recetas WHERE idReceta=@id", conn);
+            cmd->Parameters->AddWithValue("@id", idReceta);
+            int rows = cmd->ExecuteNonQuery();
+            return rows > 0;
+        }
+        catch (Exception^ ex) {
+            Console::WriteLine("ERROR DELETE RECETA: " + ex->Message);
+            return false;
+        }
+        finally { conn->Close(); }
     }
 }
