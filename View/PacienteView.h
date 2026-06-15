@@ -96,6 +96,7 @@ namespace ViewPaciente {
 			this->panelSuperior->Name = L"panelSuperior";
 			this->panelSuperior->Size = System::Drawing::Size(952, 62);
 			this->panelSuperior->TabIndex = 0;
+			this->panelSuperior->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &PacienteForm::panelSuperior_Paint);
 			// 
 			// label1
 			// 
@@ -287,6 +288,7 @@ namespace ViewPaciente {
 			this->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->Name = L"PacienteForm";
 			this->Text = L"Sistema de Dispensacion - Paciente";
+			this->Load += gcnew System::EventHandler(this, &PacienteForm::MyForm_Load);
 			this->panelSuperior->ResumeLayout(false);
 			this->panelSuperior->PerformLayout();
 			this->panelDashboard->ResumeLayout(false);
@@ -399,7 +401,7 @@ private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) 
 	if (!String::IsNullOrWhiteSpace(alertas)) {
 
 		MessageBox::Show(
-			"📢 Tienes mensajes del farmacéutico:\n\n" + alertas,
+			"Tienes mensajes del farmacéutico:\n\n" + alertas,
 			"Alerta del Farmacéutico",
 			MessageBoxButtons::OK,
 			MessageBoxIcon::Information
@@ -407,6 +409,8 @@ private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) 
 	}
 }
 private: System::Void txtSintomas_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void panelSuperior_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 }
 };
 }
