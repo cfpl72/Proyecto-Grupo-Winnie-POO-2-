@@ -256,12 +256,14 @@ namespace WinniePOOview {
 
 		if (rol == "Farmacéutico") {   // ajusta según tu condición actual
 			ViewFarmaceutico::Farmaceutico^ form = gcnew ViewFarmaceutico::Farmaceutico();
+			form->Owner = this;
 			form->Show();
 			this->Hide();   // oculta el login, o usa this->Close() si prefieres cerrarlo
 		}  
 
 		if (rol == "Operador de Ventas") {   // ajusta según tu condición actual
 			WinniePOOview::OperadorVentas^ form = gcnew WinniePOOview::OperadorVentas();
+			form->Owner = this;
 			form->Show();
 			this->Hide();   // oculta el login, o usa this->Close() si prefieres cerrarlo
 		}
@@ -272,6 +274,7 @@ namespace WinniePOOview {
 			MessageBox::Show("¡Hola " + usuario + "!\nIngresando al sistema como: " + rol, "¡Bienvenido a WinniePOO!", MessageBoxButtons::OK, MessageBoxIcon::Information);
 			Paciente^ paciente = pacientesService->ObtenerPorId(Convert::ToInt32(usuario));
 			ViewPaciente::PacienteForm^ form = gcnew ViewPaciente::PacienteForm(paciente->id); //INVOCACIÓN DEL FORMS DE PACIENTES
+			form->Owner = this;
 			form->Show();
 			this->Hide();
 		}

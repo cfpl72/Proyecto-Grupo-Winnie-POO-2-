@@ -48,6 +48,7 @@ namespace ViewPaciente {
 		// CONTROLES - Panel Superior
 	private: System::Windows::Forms::Panel^ panelSuperior;
 	private: System::Windows::Forms::Label^ lblTituloPpal;
+	private: System::Windows::Forms::Button^ btnVolver;
 
 
 		   // CONTROLES - Panel Principal Paciente (HU02, HU03, HU04)
@@ -90,6 +91,7 @@ namespace ViewPaciente {
 			this->lblBienvenida = (gcnew System::Windows::Forms::Label());
 			this->lblTituloPpal = (gcnew System::Windows::Forms::Label());
 			this->panelDashboard = (gcnew System::Windows::Forms::Panel());
+			this->VerHistorialBtn = (gcnew System::Windows::Forms::Button());
 			this->btnComprar = (gcnew System::Windows::Forms::Button());
 			this->dgvMedicamentos = (gcnew System::Windows::Forms::DataGridView());
 			this->ID = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
@@ -100,7 +102,7 @@ namespace ViewPaciente {
 			this->btnEvaluar = (gcnew System::Windows::Forms::Button());
 			this->txtSintomas = (gcnew System::Windows::Forms::TextBox());
 			this->lblSintomas = (gcnew System::Windows::Forms::Label());
-			this->VerHistorialBtn = (gcnew System::Windows::Forms::Button());
+			this->btnVolver = (gcnew System::Windows::Forms::Button());
 			this->panelSuperior->SuspendLayout();
 			this->panelDashboard->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvMedicamentos))->BeginInit();
@@ -170,12 +172,23 @@ namespace ViewPaciente {
 			this->panelDashboard->Controls->Add(this->btnEvaluar);
 			this->panelDashboard->Controls->Add(this->txtSintomas);
 			this->panelDashboard->Controls->Add(this->lblSintomas);
+			this->panelDashboard->Controls->Add(this->btnVolver);
 			this->panelDashboard->Location = System::Drawing::Point(0, 62);
 			this->panelDashboard->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->panelDashboard->Name = L"panelDashboard";
 			this->panelDashboard->Size = System::Drawing::Size(952, 430);
 			this->panelDashboard->TabIndex = 2;
 			this->panelDashboard->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &PacienteForm::panelDashboard_Paint);
+			// 
+			// VerHistorialBtn
+			// 
+			this->VerHistorialBtn->Location = System::Drawing::Point(35, 357);
+			this->VerHistorialBtn->Name = L"VerHistorialBtn";
+			this->VerHistorialBtn->Size = System::Drawing::Size(160, 30);
+			this->VerHistorialBtn->TabIndex = 6;
+			this->VerHistorialBtn->Text = L"Ver Historial";
+			this->VerHistorialBtn->UseVisualStyleBackColor = true;
+			this->VerHistorialBtn->Click += gcnew System::EventHandler(this, &PacienteForm::button1_Click);
 			// 
 			// btnComprar
 			// 
@@ -306,15 +319,18 @@ namespace ViewPaciente {
 			this->lblSintomas->TabIndex = 0;
 			this->lblSintomas->Text = L"Describa sus sintomas y malestares aqui:";
 			// 
-			// VerHistorialBtn
+			// btnVolver
 			// 
-			this->VerHistorialBtn->Location = System::Drawing::Point(35, 357);
-			this->VerHistorialBtn->Name = L"VerHistorialBtn";
-			this->VerHistorialBtn->Size = System::Drawing::Size(160, 30);
-			this->VerHistorialBtn->TabIndex = 6;
-			this->VerHistorialBtn->Text = L"Ver Historial";
-			this->VerHistorialBtn->UseVisualStyleBackColor = true;
-			this->VerHistorialBtn->Click += gcnew System::EventHandler(this, &PacienteForm::button1_Click);
+			this->btnVolver->BackColor = System::Drawing::Color::SeaGreen;
+			this->btnVolver->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->btnVolver->ForeColor = System::Drawing::Color::White;
+			this->btnVolver->Location = System::Drawing::Point(748, 347);
+			this->btnVolver->Name = L"btnVolver";
+			this->btnVolver->Size = System::Drawing::Size(150, 40);
+			this->btnVolver->TabIndex = 7;
+			this->btnVolver->Text = L"Volver";
+			this->btnVolver->UseVisualStyleBackColor = false;
+			this->btnVolver->Click += gcnew System::EventHandler(this, &PacienteForm::btnVolver_Click);
 			// 
 			// PacienteForm
 			// 
@@ -585,7 +601,7 @@ namespace ViewPaciente {
 			Console::WriteLine("=== FIN btnComprar_Click ===");
 		}
 		else {
-			Console::WriteLine("⚠ No hay selección en el DataGrid");
+			Console::WriteLine("No hay selección en el DataGrid");
 
 			MessageBox::Show(
 				"Seleccione un medicamento de la tabla para realizar la compra.",
@@ -624,10 +640,16 @@ private: System::Void dgvMedicamentos_CellContentClick(System::Object^ sender, S
 }
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 
-	WinniePOOview::PacienteViewHistorial^ form = gcnew WinniePOOview::PacienteViewHistorial(idPaciente);
+	ViewPacienteHistorial::PacienteViewHistorial^ form = gcnew ViewPacienteHistorial::PacienteViewHistorial(idPaciente);
+	form->Owner = this;  
 	form->Show();
+	this->Hide();        
+}
 
+private: System::Void btnVolver_Click(System::Object^ sender, System::EventArgs^ e) {
+	this->Owner->Show();
 	this->Close();
 }
+
 };
 }
