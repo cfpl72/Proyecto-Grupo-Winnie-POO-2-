@@ -321,14 +321,14 @@ namespace ViewPaciente {
 			// 
 			// btnVolver
 			// 
-			this->btnVolver->BackColor = System::Drawing::Color::SeaGreen;
+			this->btnVolver->BackColor = System::Drawing::Color::Tomato;
 			this->btnVolver->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->btnVolver->ForeColor = System::Drawing::Color::White;
 			this->btnVolver->Location = System::Drawing::Point(748, 347);
 			this->btnVolver->Name = L"btnVolver";
 			this->btnVolver->Size = System::Drawing::Size(150, 40);
 			this->btnVolver->TabIndex = 7;
-			this->btnVolver->Text = L"Volver";
+			this->btnVolver->Text = L"Cerrar Sesion";
 			this->btnVolver->UseVisualStyleBackColor = false;
 			this->btnVolver->Click += gcnew System::EventHandler(this, &PacienteForm::btnVolver_Click);
 			// 
