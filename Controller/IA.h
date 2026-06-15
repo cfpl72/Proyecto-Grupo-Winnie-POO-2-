@@ -2,8 +2,8 @@
 #using <System.dll>
 #using <System.Net.Http.dll>
 #using <System.IO.dll>
-// Asegúrate de haber agregado la referencia a Newtonsoft.Json.dll como hicimos antes
 
+// Asegúrate de haber agregado la referencia a Newtonsoft.Json.dll como hicimos antes
 using namespace System;
 using namespace System::Net::Http;
 using namespace System::Text;
@@ -12,25 +12,25 @@ using namespace System::IO;
 
 namespace IA_CLASS {
 
-    // IA.h
     public ref class IA {
     private:
-        String^ apiKey ;
+        String^ apiKey;
         String^ apiUrl = "https://api.openai.com/v1/chat/completions";
 
     public:
 
-
-        // Constructor de la clase que lee el apiKey desde un archivo local
+        // Constructor de la clase que lee el apiKey de forma dinámica desde un archivo local
         IA() {
             try {
-                String^ ruta = "C:\\Users\\music\\OneDrive\\Escritorio\\apiKey.txt";
+                // Busca el archivo en la misma carpeta donde se ejecuta el programa (x64\Debug)
+                String^ rutaBase = System::AppDomain::CurrentDomain->BaseDirectory;
+                String^ ruta = rutaBase + "apiKey.txt";
 
                 if (File::Exists(ruta)) {
                     apiKey = File::ReadAllText(ruta)->Trim();
                 }
                 else {
-                    throw gcnew Exception("No se encontró el archivo apiKey.txt");
+                    throw gcnew Exception("No se encontró el archivo apiKey.txt en: " + ruta);
                 }
             }
             catch (Exception^ ex) {
@@ -49,7 +49,7 @@ namespace IA_CLASS {
                 Console::WriteLine("HttpClient creado y header agregado");
 
                 // Construcción del prompt
-                String^ prompt ="Eres un sistema de farmacia robótica inteligente. " +
+                String^ prompt = "Eres un sistema de farmacia robótica inteligente. " +
                     "SOLO puedes recomendar medicamentos que estén en esta lista: [" + listaMedicamentosStock + "]. " +
                     "Si ningún medicamento de la lista sirve para los síntomas, di que no hay stock disponible. " +
                     "Paciente presenta: " + sintomas + ". Historial: " + historial + ". " +
@@ -95,27 +95,20 @@ namespace IA_CLASS {
                 JObject^ datos = JObject::Parse(respuestaRaw);
                 Console::WriteLine("JSON parseado correctamente");
 
-                // Validación antes de acceder
-                if (datos["choices"] != nullptr && datos["choices"]->HasValues) {
-                    // Convertir a JArray para usar el indexador por entero y evitar boxing implícito
-                    JArray^ choices = (JArray^)datos["choices"];
+                // Extraemos la información directamente usando una ruta de texto (Path)
+                JToken^ tokenContenido = datos->SelectToken("choices[0].message.content");
 
-                    if (choices != nullptr && choices->Count > 0 && choices[0]["message"] != nullptr && choices[0]["message"]["content"] != nullptr) {
-                        String^ resultado = choices[0]["message"]["content"]->ToString();
+                if (!Object::ReferenceEquals(tokenContenido, nullptr)) {
+                    String^ resultado = tokenContenido->ToString();
 
-                        Console::WriteLine("Contenido extraído:");
-                        Console::WriteLine(resultado);
+                    Console::WriteLine("Contenido extraído:");
+                    Console::WriteLine(resultado);
 
-                        return resultado;
-                    }
-                    else {
-                        Console::WriteLine("Estructura inesperada en 'choices'");
-                        return "Error en respuesta: estructura inesperada";
-                    }
+                    return resultado;
                 }
                 else {
-                    Console::WriteLine("No se encontró 'choices' en la respuesta");
-                    return "Error en respuesta: " + respuestaRaw;
+                    Console::WriteLine("❌ No se encontró el contenido esperado en la respuesta");
+                    return "Error en respuesta: estructura inesperada o " + respuestaRaw;
                 }
             }
             catch (Exception^ ex) {
@@ -126,6 +119,4 @@ namespace IA_CLASS {
         }
     };
 
-}
-
-
+} // FIN DEL NAMESPACE IA_CLASS
