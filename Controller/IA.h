@@ -20,16 +20,18 @@ namespace IA_CLASS {
 
     public:
 
-        // Constructor de la clase que lee el apiKey desde un archivo local
+        // Constructor de la clase que lee el apiKey de forma dinámica
         IA() {
             try {
-                String^ ruta = "C:\\Users\\music\\OneDrive\\Escritorio\\apiKey.txt";
+                // Busca el archivo en la misma carpeta donde se ejecuta el programa (x64\Debug)
+                String^ rutaBase = System::AppDomain::CurrentDomain->BaseDirectory;
+                String^ ruta = rutaBase + "apiKey.txt";
 
                 if (File::Exists(ruta)) {
                     apiKey = File::ReadAllText(ruta)->Trim();
                 }
                 else {
-                    throw gcnew Exception("No se encontró el archivo apiKey.txt");
+                    throw gcnew Exception("No se encontró el archivo apiKey.txt en: " + ruta);
                 }
             }
             catch (Exception^ ex) {
@@ -82,9 +84,11 @@ namespace IA_CLASS {
                 JObject^ datos = JObject::Parse(respuestaRaw);
                 Console::WriteLine("✔ JSON parseado correctamente");
 
-                // Validación antes de acceder
-                if (datos["choices"] != nullptr && datos["choices"]->HasValues) {
-                    String^ resultado = datos["choices"][0]["message"]["content"]->ToString();
+                // Extraemos la información directamente usando una ruta de texto (Path)
+                JToken^ tokenContenido = datos->SelectToken("choices[0].message.content");
+
+                if (!Object::ReferenceEquals(tokenContenido, nullptr)) {
+                    String^ resultado = tokenContenido->ToString();
 
                     Console::WriteLine("✔ Contenido extraído:");
                     Console::WriteLine(resultado);
@@ -92,7 +96,7 @@ namespace IA_CLASS {
                     return resultado;
                 }
                 else {
-                    Console::WriteLine("❌ No se encontró 'choices' en la respuesta");
+                    Console::WriteLine("❌ No se encontró el contenido esperado en la respuesta");
                     return "Error en respuesta: " + respuestaRaw;
                 }
             }

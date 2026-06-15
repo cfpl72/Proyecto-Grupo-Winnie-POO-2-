@@ -876,7 +876,8 @@ namespace ViewFarmaceutico {
 			int sem = GetSemana(fecha.Day);
 			if (!_datosSemanales->ContainsKey(med))
 				_datosSemanales->Add(med, gcnew array<int>(5) { 0, 0, 0, 0, 0 });
-			_datosSemanales[med][sem]++;
+			array<int>^ arregloTemporal = _datosSemanales[med];
+			arregloTemporal[sem]++;
 			if (!_frecuenciasTotales->ContainsKey(med))
 				_frecuenciasTotales->Add(med, 0);
 			_frecuenciasTotales[med]++;
