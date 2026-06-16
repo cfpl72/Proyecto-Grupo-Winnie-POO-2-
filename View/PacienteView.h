@@ -623,13 +623,20 @@ private: System::Void panelDashboard_Paint(System::Object^ sender, System::Windo
 }
 private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
 
-	Controller::ServicioPacientes^ servPacientes1 = gcnew Controller::ServicioPacientes();
+	// Obtener nombre del paciente desde el ID que YA tienes
+	Paciente^ p = servPacientes->ObtenerPorId(idPaciente);
+	if (p == nullptr) return;
 
-	String^ alertas = Controller::ServicioFarmaceutico::LeerAlertas(servPacientes1->ObtenerPorId(idPaciente)->nombre);
+	String^ nombrePaciente = p->nombre + " " + p->apellido;
 
-	if (alertas != nullptr && alertas->Trim() != String::Empty) {
+	// Leer alertas desde el controller correcto
+	String^ alertas = Controller::ServicioFarmaceutico::LeerAlertas(nombrePaciente);
+
+	// Mostrar popup
+	if (!String::IsNullOrWhiteSpace(alertas)) {
+
 		MessageBox::Show(
-			"Tienes mensajes de tu farmacéutico:\n\n" + alertas,
+			"📢 Tienes mensajes del farmacéutico:\n\n" + alertas,
 			"Alerta del Farmacéutico",
 			MessageBoxButtons::OK,
 			MessageBoxIcon::Information
@@ -651,5 +658,7 @@ private: System::Void btnVolver_Click(System::Object^ sender, System::EventArgs^
 	this->Close();
 }
 
+private: System::Void panelSuperior_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+}
 };
 }
